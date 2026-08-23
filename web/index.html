@@ -4,33 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ESC Opportunity Finder</title>
-    <meta
-      name="description"
-      content="Find European Solidarity Corps volunteering opportunities open to participants from your country."
-    />
-
+    <meta name="description" content="Find European Solidarity Corps volunteering opportunities open to participants from your country." />
     <link rel="stylesheet" href="style.css?v=10" />
     <link rel="stylesheet" href="ui-fixes.css?v=2" />
-
     <script>
       (() => {
         const savedTheme = localStorage.getItem("esc_theme");
-        const systemDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-
-        const theme =
-          savedTheme === "dark" || savedTheme === "light"
-            ? savedTheme
-            : systemDark
-              ? "dark"
-              : "light";
-
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = savedTheme === "dark" || savedTheme === "light" ? savedTheme : systemDark ? "dark" : "light";
         document.documentElement.dataset.theme = theme;
       })();
     </script>
   </head>
-
   <body>
     <main class="container">
       <header class="header">
@@ -38,273 +23,93 @@
           <div class="brand-icon">🇪🇺</div>
           <div>
             <h1 data-i18n="title">European Solidarity Corps</h1>
-            <p class="subtitle" data-i18n="subtitle">
-              Find European Solidarity Corps volunteering opportunities open to participants from your country
-            </p>
+            <p class="subtitle" data-i18n="subtitle">Find European Solidarity Corps volunteering opportunities open to participants from your country</p>
           </div>
         </div>
-
         <div class="header-actions">
           <div class="language-dropdown">
-            <button
-              id="language-dropdown-toggle"
-              class="language-dropdown-toggle"
-              type="button"
-              aria-haspopup="true"
-              aria-expanded="false"
-              title="Language"
-              aria-label="Language"
-            >
+            <button id="language-dropdown-toggle" class="language-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false" title="Language" aria-label="Language">
               <span id="language-dropdown-flag" class="language-flag" aria-hidden="true">🇬🇧</span>
               <span id="language-dropdown-label">EN</span>
               <span class="language-dropdown-arrow" aria-hidden="true">▾</span>
             </button>
-
-            <div
-              id="language-dropdown-menu"
-              class="language-dropdown-menu"
-              role="menu"
-              hidden
-            >
-              <button class="language-option" data-language="en" type="button" role="menuitem">
-                <span class="language-flag" aria-hidden="true">🇬🇧</span>
-                <span>English</span>
-              </button>
-              <button class="language-option" data-language="fr" type="button" role="menuitem">
-                <span class="language-flag" aria-hidden="true">🇫🇷</span>
-                <span>Français</span>
-              </button>
-              <button class="language-option" data-language="ar" type="button" role="menuitem">
-                <span class="language-flag" aria-hidden="true">🇸🇦</span>
-                <span>العربية</span>
-              </button>
+            <div id="language-dropdown-menu" class="language-dropdown-menu" role="menu" hidden>
+              <button class="language-option" data-language="en" type="button" role="menuitem"><span class="language-flag" aria-hidden="true">🇬🇧</span><span>English</span></button>
+              <button class="language-option" data-language="fr" type="button" role="menuitem"><span class="language-flag" aria-hidden="true">🇫🇷</span><span>Français</span></button>
+              <button class="language-option" data-language="ar" type="button" role="menuitem"><span class="language-flag" aria-hidden="true">🇸🇦</span><span>العربية</span></button>
             </div>
           </div>
-
-          <button
-            id="theme-toggle"
-            class="theme-toggle"
-            type="button"
-            title="Dark mode"
-            aria-label="Dark mode"
-          >
-            <span id="theme-icon" aria-hidden="true">🌙</span>
-          </button>
+          <button id="theme-toggle" class="theme-toggle" type="button" title="Dark mode" aria-label="Dark mode"><span id="theme-icon" aria-hidden="true">🌙</span></button>
         </div>
       </header>
 
       <section class="intro">
-        <p data-i18n="intro">
-          Find active European Solidarity Corps volunteering opportunities open to participants from your country.
-        </p>
-        <p class="intro-note" data-i18n="introNote">
-          The list is automatically refreshed from the European Youth Portal.
-        </p>
-
+        <p data-i18n="intro">Find active European Solidarity Corps volunteering opportunities open to participants from your country.</p>
+        <p class="intro-note" data-i18n="introNote">The list is automatically refreshed from the European Youth Portal.</p>
         <div class="participant-selector">
           <div class="participant-selector-field">
             <label for="participant-country" data-i18n="participantCountry">Participant Country</label>
-            <select id="participant-country" autocomplete="country-name">
-              <option value="">Select Participant Country</option>
-            </select>
+            <select id="participant-country" autocomplete="country-name"><option value="">Select Participant Country</option></select>
           </div>
-
-          <button
-            id="apply-participant-country"
-            class="clear-button"
-            type="button"
-            data-i18n="apply"
-          >
-            Search
-          </button>
+          <button id="apply-participant-country" class="clear-button" type="button" data-i18n="apply">Search</button>
         </div>
       </section>
 
       <section class="status-card">
-        <div class="status-item">
-          <span class="status-label" data-i18n="activeOpportunities">Active opportunities</span>
-          <strong id="opportunity-count" class="status-value">0 results</strong>
-        </div>
-        <div class="status-item">
-          <span class="status-label" data-i18n="lastUpdated">Last updated</span>
-          <strong id="last-updated" class="status-value">—</strong>
-        </div>
+        <div class="status-item"><span class="status-label" data-i18n="activeOpportunities">Active opportunities</span><strong id="opportunity-count" class="status-value">0 results</strong></div>
+        <div class="status-item"><span class="status-label" data-i18n="lastUpdated">Last updated</span><strong id="last-updated" class="status-value">—</strong></div>
       </section>
 
       <section class="controls">
-        <div class="search-box">
-          <label for="search-input" data-i18n="search">Search</label>
-          <input
-            id="search-input"
-            type="search"
-            placeholder="Search opportunities..."
-            data-i18n-placeholder="searchPlaceholder"
-          />
-        </div>
-
-        <div class="filter-box">
-          <label for="country-filter" data-i18n="country">Country</label>
-          <select id="country-filter">
-            <option value="" data-i18n="allCountries">All countries</option>
-          </select>
-        </div>
-
-        <div class="filter-box">
-          <label for="type-filter" data-i18n="type">Type</label>
-          <select id="type-filter">
-            <option value="" data-i18n="allTypes">All types</option>
-          </select>
-        </div>
-
-        <div class="sort-box">
-          <label for="sort-select" data-i18n="sortBy">Sort by</label>
-          <select id="sort-select">
-            <option value="deadline" data-i18n="sortDeadline">Application deadline</option>
-            <option value="start" data-i18n="sortStart">Activity start date</option>
-            <option value="created" data-i18n="sortCreated">Recently added</option>
-          </select>
-        </div>
-
-        <button id="clear-filters" class="clear-button" type="button">
-          ↻ <span data-i18n="clear">Refresh</span>
-        </button>
+        <div class="search-box"><label for="search-input" data-i18n="search">Search</label><input id="search-input" type="search" placeholder="Search opportunities..." data-i18n-placeholder="searchPlaceholder" /></div>
+        <div class="filter-box"><label for="country-filter" data-i18n="country">Country</label><select id="country-filter"><option value="" data-i18n="allCountries">All countries</option></select></div>
+        <div class="filter-box"><label for="type-filter" data-i18n="type">Type</label><select id="type-filter"><option value="" data-i18n="allTypes">All types</option></select></div>
+        <div class="sort-box"><label for="sort-select" data-i18n="sortBy">Sort by</label><select id="sort-select"><option value="deadline" data-i18n="sortDeadline">Application deadline</option><option value="start" data-i18n="sortStart">Activity start date</option><option value="created" data-i18n="sortCreated">Recently added</option></select></div>
+        <button id="clear-filters" class="clear-button" type="button">↻ <span data-i18n="clear">Clear</span></button>
       </section>
 
-      <section id="loading-message" class="message">
-        <strong data-i18n="loading">Loading opportunities...</strong>
-      </section>
-
-      <section id="error-message" class="message error-message hidden">
-        <strong data-i18n="errorTitle">We couldn't load the opportunities.</strong>
-        <p data-i18n="errorText">Please try again later.</p>
-      </section>
+      <section id="loading-message" class="message"><strong data-i18n="loading">Loading opportunities...</strong></section>
+      <section id="error-message" class="message error-message hidden"><strong data-i18n="errorTitle">We couldn't load the opportunities.</strong><p data-i18n="errorText">Please try again later.</p></section>
 
       <section id="active-section">
-        <div class="section-header">
-          <div>
-            <h2 data-i18n="availableNow">Available now</h2>
-            <p id="active-result-count" class="section-count">—</p>
-          </div>
-        </div>
-
-        <div id="opportunities" class="table-wrapper">
-          <table class="opportunity-table">
-            <thead>
-              <tr>
-                <th data-i18n="opportunity">Opportunity</th>
-                <th data-i18n="location">Location</th>
-                <th data-i18n="activity">Activity</th>
-                <th data-i18n="deadline">Deadline</th>
-                <th data-i18n="type">Type</th>
-                <th class="apply-column"></th>
-              </tr>
-            </thead>
-            <tbody id="opportunities-body"></tbody>
-          </table>
-        </div>
+        <div class="section-header"><div><h2 data-i18n="availableNow">Available now</h2><p id="active-result-count" class="section-count">—</p></div></div>
+        <div id="opportunities" class="table-wrapper"><table class="opportunity-table"><thead><tr><th data-i18n="opportunity">Opportunity</th><th data-i18n="location">Location</th><th data-i18n="activity">Activity</th><th data-i18n="deadline">Deadline</th><th data-i18n="type">Type</th><th class="apply-column"></th></tr></thead><tbody id="opportunities-body"></tbody></table></div>
       </section>
 
-      <section id="empty-message" class="message hidden">
-        <strong data-i18n="noResultsTitle">No opportunities found.</strong>
-        <p data-i18n="noResultsText">Try changing your search or filters.</p>
-      </section>
+      <section id="empty-message" class="message hidden"><strong data-i18n="noResultsTitle">No opportunities found.</strong><p data-i18n="noResultsText">Try changing your search or filters.</p></section>
 
       <section id="expired-section" class="expired-section hidden">
-        <button id="expired-toggle" class="expired-toggle" type="button">
-          <span>
-            <span data-i18n="archivedOpportunities">Recently expired</span>
-            <span id="expired-count" class="expired-count">0</span>
-          </span>
-          <span id="expired-arrow" class="expired-arrow">▾</span>
-        </button>
-
-        <div id="expired-content" class="table-wrapper expired-content hidden">
-          <table class="opportunity-table expired-table">
-            <thead>
-              <tr>
-                <th data-i18n="opportunity">Opportunity</th>
-                <th data-i18n="location">Location</th>
-                <th data-i18n="activity">Activity</th>
-                <th data-i18n="expired">Expired</th>
-                <th data-i18n="type">Type</th>
-                <th class="apply-column"></th>
-              </tr>
-            </thead>
-            <tbody id="expired-body"></tbody>
-          </table>
-        </div>
+        <button id="expired-toggle" class="expired-toggle" type="button"><span><span data-i18n="archivedOpportunities">Recently expired</span><span id="expired-count" class="expired-count">0</span></span><span id="expired-arrow" class="expired-arrow">▾</span></button>
+        <div id="expired-content" class="table-wrapper expired-content hidden"><table class="opportunity-table expired-table"><thead><tr><th data-i18n="opportunity">Opportunity</th><th data-i18n="location">Location</th><th data-i18n="activity">Activity</th><th data-i18n="expired">Expired</th><th data-i18n="type">Type</th><th class="apply-column"></th></tr></thead><tbody id="expired-body"></tbody></table></div>
       </section>
 
-      <footer class="footer">
-        <p>
-          <span data-i18n="source">Data sourced from</span>
-          <a
-            href="https://youth.europa.eu/go-abroad/volunteering/opportunities_en"
-            target="_blank"
-            rel="noopener noreferrer"
-          >European Youth Portal</a>.
-        </p>
-        <p data-i18n="footerNote">
-          Always check the official opportunity page before applying.
-        </p>
-      </footer>
+      <footer class="footer"><p><span data-i18n="source">Data sourced from</span> <a href="https://youth.europa.eu/go-abroad/volunteering/opportunities_en" target="_blank" rel="noopener noreferrer">European Youth Portal</a>.</p><p data-i18n="footerNote">Always check the official opportunity page before applying.</p></footer>
     </main>
 
     <script>
       (() => {
         const toggle = document.getElementById("theme-toggle");
         const icon = document.getElementById("theme-icon");
-
-        if (!toggle) {
-          return;
-        }
-
+        if (!toggle) return;
         const update = () => {
-          const dark =
-            document.documentElement.dataset.theme === "dark";
-
-          if (icon) {
-            icon.textContent = dark ? "☀️" : "🌙";
-          }
-
-          toggle.setAttribute(
-            "aria-label",
-            dark ? "Light mode" : "Dark mode",
-          );
-
-          toggle.setAttribute(
-            "title",
-            dark ? "Light mode" : "Dark mode",
-          );
+          const dark = document.documentElement.dataset.theme === "dark";
+          if (icon) icon.textContent = dark ? "☀️" : "🌙";
+          toggle.setAttribute("aria-label", dark ? "Light mode" : "Dark mode");
+          toggle.setAttribute("title", dark ? "Light mode" : "Dark mode");
         };
-
-        if (
-          toggle.dataset.themeHandlerBound !== "true"
-        ) {
+        if (toggle.dataset.themeHandlerBound !== "true") {
           toggle.dataset.themeHandlerBound = "true";
-
           toggle.addEventListener("click", () => {
-            const next =
-              document.documentElement.dataset.theme === "dark"
-                ? "light"
-                : "dark";
-
+            const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
             document.documentElement.dataset.theme = next;
-
-            try {
-              localStorage.setItem("esc_theme", next);
-            } catch {
-              // Theme persistence is optional.
-            }
-
+            try { localStorage.setItem("esc_theme", next); } catch {}
             update();
           });
         }
-
         update();
       })();
     </script>
-
+    <script src="country-normalization.js?v=1"></script>
     <script type="module" src="app.js?v=24"></script>
   </body>
 </html>
