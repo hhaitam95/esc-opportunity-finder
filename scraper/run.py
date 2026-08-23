@@ -6,6 +6,19 @@ from datetime import datetime
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+SCRAPER_DIR = Path(__file__).resolve().parent
+
+# When executing scraper/run.py directly, Python puts the scraper directory
+# first on sys.path. That makes `import scraper.scraper` resolve scraper.py as
+# a top-level module named `scraper`, which is not a package. Remove that
+# script-directory entry so the repository-root namespace package is resolved
+# correctly.
+sys.path[:] = [
+    entry
+    for entry in sys.path
+    if Path(entry or ".").resolve() != SCRAPER_DIR
+]
+
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
