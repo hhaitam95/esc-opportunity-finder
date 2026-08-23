@@ -153,6 +153,25 @@
   border-color: var(--primary);
 }
 
+/* Keep the opportunity logo and title visually aligned as one unit. */
+.title-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.opportunity-image {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.title-main > span:last-child {
+  min-width: 0;
+}
+
 @media (max-width: 700px) {
   .participant-selector {
     grid-template-columns: 1fr;
