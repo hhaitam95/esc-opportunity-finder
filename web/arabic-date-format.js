@@ -25,7 +25,7 @@
       timeZone: "UTC",
     }).format(date);
 
-    element.textContent = `آخر تحديث ${day} ${monthName} ${year}، الساعة ${hour}:${minute}`;
+    element.textContent = `${day} ${monthName} ${year}، الساعة ${hour}:${minute}`;
     element.dataset.arabicLastUpdated = data;
   }
 
