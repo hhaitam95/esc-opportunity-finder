@@ -43,10 +43,10 @@ def main():
         deadline = parse_date(opportunity.get("deadline"))
         end_date = parse_date(opportunity.get("end_date"))
 
-        # Deadline-based opportunities are recent while their deadline is
-        # within the configured window. No-deadline opportunities remain
-        # recently expired for one week after their activity ends.
-        expiry_date = deadline or end_date
+        # A deadline is the expiry date when one exists. For opportunities
+        # without a deadline, the activity itself must have ended before the
+        # opportunity can be considered recently expired.
+        expiry_date = deadline if deadline is not None else end_date
 
         if expiry_date is None:
             removed += 1
@@ -54,11 +54,8 @@ def main():
 
         age_days = (today - expiry_date).days
 
+        # Never publish future-dated records in the recently expired table.
         if 0 <= age_days <= RECENTLY_EXPIRED_DAYS:
-            kept.append(opportunity)
-        elif age_days < 0:
-            # Defensive: don't discard a future-dated record if it is present
-            # in the archive due to a delayed backend transition.
             kept.append(opportunity)
         else:
             removed += 1
@@ -86,7 +83,7 @@ def main():
     temporary.replace(EXPIRED_FILE)
 
     print(f"PASS: retained {len(kept)} recently expired opportunities.")
-    print(f"PASS: removed {removed} opportunities older than {RECENTLY_EXPIRED_DAYS} days.")
+    print(f"PASS: removed {removed} invalid or older-than-{RECENTLY_EXPIRED_DAYS}-day opportunities.")
     return 0
 
 
