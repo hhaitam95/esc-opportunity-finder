@@ -2,6 +2,8 @@ const DATA_BASE =
   "https://raw.githubusercontent.com/"
   + "hhaitam95/esc-opportunity-finder/main/data/";
 
+const RECENTLY_EXPIRED_DAYS = 7;
+
 async function fetchJson(filename) {
   const response = await fetch(
     `${DATA_BASE}${filename}?v=${Date.now()}`,
@@ -86,10 +88,6 @@ function normalizeOpportunity(
     item.deadline ||
     "";
 
-  // A date-only deadline means the opportunity is open through the
-  // entire calendar day. Normalize it to the end of that day so the
-  // table countdown and active/expired classification share the same
-  // semantics.
   const deadlineRaw = String(item.deadline).trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(deadlineRaw)) {
     item.deadline = `${deadlineRaw}T23:59:59`;
@@ -192,9 +190,6 @@ function activityHasEnded(opportunity) {
 }
 
 function shouldArchive(opportunity) {
-  // An application deadline is decisive when one exists.
-  // For no-deadline opportunities, the activity itself must have ended
-  // before the opportunity can move to the expired section.
   if (deadlineHasPassed(opportunity)) {
     return true;
   }
@@ -204,6 +199,24 @@ function shouldArchive(opportunity) {
   }
 
   return false;
+}
+
+function recentlyExpired(opportunity) {
+  const expiry = opportunity.deadline || opportunity.end_date;
+  const expiryDate = parseDateOnlyOrValue(expiry, true);
+
+  if (!expiryDate) {
+    return false;
+  }
+
+  const age = Date.now() - expiryDate.getTime();
+  const maxAge = RECENTLY_EXPIRED_DAYS * 24 * 60 * 60 * 1000;
+
+  return age >= 0 && age <= maxAge;
+}
+
+function validRecentlyExpired(opportunity) {
+  return shouldArchive(opportunity) && recentlyExpired(opportunity);
 }
 
 function mergeArchived(
@@ -217,6 +230,10 @@ function mergeArchived(
     ...archived,
     ...expiredFromActive,
   ]) {
+    if (!validRecentlyExpired(opportunity)) {
+      continue;
+    }
+
     const id = String(
       opportunity.id || "",
     ).trim();
@@ -264,10 +281,6 @@ export async function loadData() {
     );
   }
 
-  // Keep the UI truthful when the backend dataset has not yet moved a
-  // record to the archive. Deadline-based opportunities expire when the
-  // deadline passes. No-deadline opportunities expire only after the
-  // activity itself has ended.
   const active = [];
   const expiredFromActive = [];
 
