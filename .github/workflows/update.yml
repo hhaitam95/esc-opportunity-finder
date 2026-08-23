@@ -2,7 +2,7 @@ name: Update ESC Opportunities
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "7,37 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -16,10 +16,11 @@ jobs:
   update:
     name: Scrape and save ESC opportunities
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -32,6 +33,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install pycountry requests beautifulsoup4
+
+      - name: Validate Python sources
+        run: |
+          python -m py_compile scraper/run.py scraper/scraper.py scraper/prune_expired.py scraper/validate_published.py
+          echo "PASS: scraper Python sources compile successfully."
 
       - name: Verify scraper dependencies
         run: |
@@ -53,11 +59,21 @@ jobs:
         run: |
           python scraper/prune_expired.py
 
+      - name: Validate published dataset
+        run: |
+          python scraper/validate_published.py
+
+      - name: Validate web JavaScript syntax
+        run: |
+          find web -maxdepth 2 -type f -name '*.js' -print0 | while IFS= read -r -d '' file; do
+            node --check "$file"
+          done
+          echo "PASS: web JavaScript sources pass syntax validation."
+
       - name: Validate saved data
         run: |
           python - <<'PY'
           import json
-          from datetime import date, datetime, timedelta
           from pathlib import Path
 
           opportunities_path = Path("data/opportunities.json")
@@ -65,79 +81,23 @@ jobs:
 
           if not opportunities_path.exists():
               raise SystemExit("ERROR: data/opportunities.json was not created.")
+          if not expired_path.exists():
+              raise SystemExit("ERROR: data/expired.json was not created.")
 
-          data = json.loads(
-              opportunities_path.read_text(encoding="utf-8")
-          )
+          opportunities = json.loads(opportunities_path.read_text(encoding="utf-8"))
+          expired = json.loads(expired_path.read_text(encoding="utf-8"))
 
-          if not isinstance(data, dict):
-              raise SystemExit(
-                  "ERROR: data/opportunities.json must contain an object."
-              )
+          if not isinstance(opportunities, dict):
+              raise SystemExit("ERROR: data/opportunities.json must contain an object.")
+          if not isinstance(expired, dict):
+              raise SystemExit("ERROR: data/expired.json must contain an object.")
+          if not isinstance(opportunities.get("opportunities"), list) or not opportunities["opportunities"]:
+              raise SystemExit("ERROR: scraper produced an empty opportunities list.")
+          if not isinstance(expired.get("opportunities"), list):
+              raise SystemExit("ERROR: data/expired.json has no opportunities list.")
 
-          opportunities = data.get("opportunities")
-
-          if not isinstance(opportunities, list):
-              raise SystemExit(
-                  "ERROR: data/opportunities.json has no opportunities list."
-              )
-
-          if not opportunities:
-              raise SystemExit(
-                  "ERROR: scraper produced an empty opportunities list."
-              )
-
-          if expired_path.exists():
-              expired = json.loads(
-                  expired_path.read_text(encoding="utf-8")
-              )
-              if not isinstance(expired, dict):
-                  raise SystemExit(
-                      "ERROR: data/expired.json must contain an object."
-                  )
-
-              expired_rows = expired.get("opportunities", [])
-              if not isinstance(expired_rows, list):
-                  raise SystemExit(
-                      "ERROR: data/expired.json has no opportunities list."
-                  )
-
-              today = date.today()
-              cutoff = today - timedelta(days=7)
-
-              for opportunity in expired_rows:
-                  deadline = opportunity.get("deadline")
-                  end_date = opportunity.get("end_date")
-
-                  # A deadline controls expiry when present. Otherwise the
-                  # activity end date controls expiry.
-                  expiry = deadline if deadline else end_date
-
-                  if not expiry:
-                      raise SystemExit(
-                          "ERROR: recently expired opportunity has no deadline or activity end date."
-                      )
-
-                  try:
-                      expiry_date = datetime.fromisoformat(str(expiry)[:10]).date()
-                  except ValueError:
-                      raise SystemExit(
-                          f"ERROR: invalid expiry date in recently expired data: {expiry}"
-                      )
-
-                  if expiry_date > today:
-                      raise SystemExit(
-                          f"ERROR: future-dated opportunity is published as recently expired: {opportunity.get('id')}"
-                      )
-
-                  if expiry_date < cutoff:
-                      raise SystemExit(
-                          f"ERROR: expired opportunity older than 7 days remains published: {opportunity.get('id')}"
-                      )
-
-          print(
-              f"PASS: saved {len(opportunities)} current opportunities."
-          )
+          print(f"PASS: saved {len(opportunities['opportunities'])} current opportunities.")
+          print(f"PASS: saved {len(expired['opportunities'])} recently expired opportunities.")
           print("PASS: canonical JSON data is valid.")
           PY
 
