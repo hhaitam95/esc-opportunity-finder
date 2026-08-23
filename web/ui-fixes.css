@@ -161,11 +161,19 @@
   min-width: 0;
 }
 
-.opportunity-image {
+.opportunity-image,
+.title-main::before {
   flex: 0 0 auto;
   width: 48px;
   height: 48px;
   object-fit: contain;
+}
+
+/* Use the official ESC mark whenever the source opportunity has no logo. */
+.title-main:not(:has(.opportunity-image))::before {
+  content: "";
+  display: block;
+  background: url("https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png") center / contain no-repeat;
 }
 
 .title-main > span:last-child {
