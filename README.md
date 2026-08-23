@@ -63,7 +63,7 @@ web/
   style.css               Main stylesheet
   ui-fixes.css            Targeted UI fixes
 
-update.py                 Maintainer/development guardrail script
+update.py                 Read-only local project validator
 AUTOPILOT.md              Six-month maintenance and recovery guide
 ```
 
@@ -125,15 +125,18 @@ Install them with:
 python -m pip install requests beautifulsoup4 pycountry
 ```
 
-### Validate the scraper
+### Validate the project
+
+```bash
+python update.py
+```
+
+This command is read-only: it checks repository structure, Python syntax, the published datasets, and frontend JavaScript syntax. It does not modify data, checkpoints, or Git history.
+
+The individual production checks can also be run directly:
 
 ```bash
 python -m py_compile scraper/run.py scraper/scraper.py scraper/prune_expired.py scraper/validate_published.py
-```
-
-The production validator can be run against the checked-in datasets with:
-
-```bash
 python scraper/validate_published.py
 ```
 
@@ -144,10 +147,6 @@ python scraper/run.py
 ```
 
 The scraper is intentionally resumable. Do not delete or manually edit `data/checkpoint.json` unless you are deliberately performing a recovery operation and understand the checkpoint schema.
-
-## Maintainer tooling
-
-`update.py` is a development/maintenance guardrail for controlled repository changes. It is not required by the GitHub Actions runtime and should not be confused with `.github/workflows/update.yml`, which is the production data-update workflow.
 
 ## Source and disclaimer
 
