@@ -42,6 +42,39 @@ const ACTIVITY_TYPE_ICONS = {
   "Job": "💼",
 };
 
+const ACTIVITY_TYPE_TRANSLATIONS = {
+  "Individual volunteering": {
+    en: "Individual volunteering",
+    fr: "Volontariat individuel",
+    ar: "التطوع الفردي",
+  },
+  "Team volunteering": {
+    en: "Team volunteering",
+    fr: "Volontariat en équipe",
+    ar: "التطوع ضمن فريق",
+  },
+  "Volunteering teams": {
+    en: "Volunteering teams",
+    fr: "Équipes de volontariat",
+    ar: "فرق التطوع",
+  },
+  "Volunteering": {
+    en: "Volunteering",
+    fr: "Volontariat",
+    ar: "التطوع",
+  },
+  "Traineeship": {
+    en: "Traineeship",
+    fr: "Stage",
+    ar: "تدريب",
+  },
+  "Job": {
+    en: "Job",
+    fr: "Emploi",
+    ar: "وظيفة",
+  },
+};
+
 export function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -195,8 +228,6 @@ function formatCity(opportunity) {
   const key = `${country}|${raw.toUpperCase()}`;
   if (CITY_NAME_CORRECTIONS[key]) return CITY_NAME_CORRECTIONS[key];
 
-  // Only normalize values that are entirely uppercase. Mixed-case source values
-  // may intentionally contain official casing or names that should not be altered.
   if (raw === raw.toLocaleUpperCase() && /\p{L}/u.test(raw)) return titleCaseCity(raw);
   return raw;
 }
@@ -204,6 +235,11 @@ function formatCity(opportunity) {
 function topicLabel(topic, locale) {
   const language = locale.startsWith("fr") ? "fr" : locale.startsWith("ar") ? "ar" : "en";
   return TOPIC_TRANSLATIONS[topic]?.[language] || topic;
+}
+
+function activityTypeLabel(type, locale) {
+  const language = locale.startsWith("fr") ? "fr" : locale.startsWith("ar") ? "ar" : "en";
+  return ACTIVITY_TYPE_TRANSLATIONS[type]?.[language] || type;
 }
 
 function renderTopics(topics, locale) {
@@ -313,10 +349,11 @@ function renderDeadline(opportunity, locale, t) {
   return `<span class="${statusClass} live-deadline" data-deadline-timestamp="${deadline.getTime()}" data-deadline-locale="${escapeHtml(locale)}"><span class="deadline-icon" aria-hidden="true">⏰</span><span><span class="deadline-date">${escapeHtml(formatted)}</span><span class="deadline-relative">${escapeHtml(countdown)}</span></span></span>`;
 }
 
-function renderActivityType(opportunity, t) {
+function renderActivityType(opportunity, locale, t) {
   const type = opportunity.activity_type || t("noType");
   const icon = ACTIVITY_TYPE_ICONS[type] || "🤝";
-  return `<span class="type-label"><span class="type-icon" aria-hidden="true">${icon}</span><span>${escapeHtml(type)}</span></span>`;
+  const label = activityTypeLabel(type, locale);
+  return `<span class="type-label"><span class="type-icon" aria-hidden="true">${icon}</span><span>${escapeHtml(label)}</span></span>`;
 }
 
 function renderRow(opportunity, options) {
@@ -343,7 +380,7 @@ function renderRow(opportunity, options) {
     </td>
     <td class="activity-cell">${renderActivityDates(opportunity, locale, t)}</td>
     <td class="deadline-cell">${renderDeadline(opportunity, locale, t)}</td>
-    <td class="type-cell">${renderActivityType(opportunity, t)}</td>
+    <td class="type-cell">${renderActivityType(opportunity, locale, t)}</td>
     <td class="apply-column">${link ? `<a class="apply-button" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("view"))}</a>` : ""}</td>
   </tr>`;
 }
