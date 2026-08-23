@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "web/**"
+      - "data/**"
+      - "scraper/validate_published.py"
       - ".github/workflows/deploy.yml"
   workflow_run:
     workflows:
@@ -32,6 +34,7 @@ jobs:
       )
 
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     environment:
       name: github-pages
@@ -39,12 +42,23 @@ jobs:
 
     steps:
       - name: Checkout current main branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 1
 
-      - name: Validate published data
+      - name: Validate published dataset
+        run: |
+          python scraper/validate_published.py
+
+      - name: Validate web JavaScript syntax
+        run: |
+          find web -maxdepth 2 -type f -name '*.js' -print0 | while IFS= read -r -d '' file; do
+            node --check "$file"
+          done
+          echo "PASS: web JavaScript sources pass syntax validation."
+
+      - name: Validate published JSON metadata
         run: |
           python - <<'PY'
           import json
@@ -53,12 +67,6 @@ jobs:
           opportunities_path = Path("data/opportunities.json")
           expired_path = Path("data/expired.json")
 
-          if not opportunities_path.exists():
-              raise SystemExit("ERROR: data/opportunities.json is missing.")
-
-          if not expired_path.exists():
-              raise SystemExit("ERROR: data/expired.json is missing.")
-
           opportunities = json.loads(
               opportunities_path.read_text(encoding="utf-8")
           )
@@ -66,42 +74,23 @@ jobs:
               expired_path.read_text(encoding="utf-8")
           )
 
-          if not isinstance(opportunities, dict):
-              raise SystemExit("ERROR: data/opportunities.json must be an object.")
-
-          if not isinstance(expired, dict):
-              raise SystemExit("ERROR: data/expired.json must be an object.")
-
           active = opportunities.get("opportunities")
           archived = expired.get("opportunities")
-          generated_at = opportunities.get("generated_at")
 
           if not isinstance(active, list) or not active:
               raise SystemExit("ERROR: active opportunity dataset is empty or invalid.")
-
           if not isinstance(archived, list):
               raise SystemExit("ERROR: expired opportunity dataset is invalid.")
-
-          if not generated_at:
-              raise SystemExit("ERROR: active dataset has no generated_at timestamp.")
-
-          declared_active = opportunities.get("count")
-          declared_expired = expired.get("count")
-
-          if declared_active != len(active):
-              raise SystemExit(
-                  f"ERROR: active count mismatch: metadata={declared_active}, records={len(active)}."
-              )
-
-          if declared_expired != len(archived):
-              raise SystemExit(
-                  f"ERROR: expired count mismatch: metadata={declared_expired}, records={len(archived)}."
-              )
+          if opportunities.get("count") != len(active):
+              raise SystemExit("ERROR: active count mismatch.")
+          if expired.get("count") != len(archived):
+              raise SystemExit("ERROR: expired count mismatch.")
 
           print(f"PASS: active opportunities: {len(active)}")
           print(f"PASS: expired opportunities: {len(archived)}")
-          print(f"PASS: last updated: {generated_at}")
-          print("PASS: published data is valid.")
+          print(f"PASS: last updated: {opportunities.get('generated_at')}")
+          print(f"PASS: NEW badge IDs: {len(opportunities.get('new_opportunity_ids', []))}")
+          print("PASS: published data metadata is valid.")
           PY
 
       - name: Setup GitHub Pages
