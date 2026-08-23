@@ -108,17 +108,28 @@ jobs:
               for opportunity in expired_rows:
                   deadline = opportunity.get("deadline")
                   end_date = opportunity.get("end_date")
-                  expiry = deadline or end_date
+
+                  # A deadline controls expiry when present. Otherwise the
+                  # activity end date controls expiry.
+                  expiry = deadline if deadline else end_date
+
                   if not expiry:
                       raise SystemExit(
                           "ERROR: recently expired opportunity has no deadline or activity end date."
                       )
+
                   try:
                       expiry_date = datetime.fromisoformat(str(expiry)[:10]).date()
                   except ValueError:
                       raise SystemExit(
                           f"ERROR: invalid expiry date in recently expired data: {expiry}"
                       )
+
+                  if expiry_date > today:
+                      raise SystemExit(
+                          f"ERROR: future-dated opportunity is published as recently expired: {opportunity.get('id')}"
+                      )
+
                   if expiry_date < cutoff:
                       raise SystemExit(
                           f"ERROR: expired opportunity older than 7 days remains published: {opportunity.get('id')}"
