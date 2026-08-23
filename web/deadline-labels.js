@@ -45,20 +45,36 @@
       const deadline = new Date(timestamp);
       const days = dayDifference(now, deadline);
       const archived = Boolean(element.closest(".expired-table"));
+      let replacement = null;
 
       if (archived) {
-        if (days === 0) label.textContent = labels.expiredToday;
-        else if (days === -1) label.textContent = labels.yesterday;
+        if (days === 0) replacement = labels.expiredToday;
+        else if (days === -1) replacement = labels.yesterday;
       } else {
-        if (days === 0) label.textContent = labels.today;
-        else if (days === 1) label.textContent = labels.tomorrow;
+        if (days === 0) replacement = labels.today;
+        else if (days === 1) replacement = labels.tomorrow;
+      }
+
+      if (replacement && label.textContent !== replacement) {
+        label.textContent = replacement;
       }
     });
   }
 
   function start() {
     updateDeadlineLabels();
-    const observer = new MutationObserver(() => updateDeadlineLabels());
+
+    let scheduled = false;
+    const scheduleUpdate = () => {
+      if (scheduled) return;
+      scheduled = true;
+      queueMicrotask(() => {
+        scheduled = false;
+        updateDeadlineLabels();
+      });
+    };
+
+    const observer = new MutationObserver(scheduleUpdate);
     observer.observe(document.body, { childList: true, subtree: true });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
     setInterval(updateDeadlineLabels, 60000);
