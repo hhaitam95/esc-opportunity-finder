@@ -5,6 +5,8 @@
     ar: { today: "اليوم", tomorrow: "غدًا", expiredToday: "انتهت اليوم", yesterday: "أمس" },
   };
 
+  const RELATIVE_LABELS = new Set(Object.values(LABELS).flatMap((group) => Object.values(group)));
+
   function language() {
     const value = String(document.documentElement.lang || "en").toLowerCase();
     return value.startsWith("fr") ? "fr" : value.startsWith("ar") ? "ar" : "en";
@@ -28,6 +30,10 @@
       const label = element.querySelector(".deadline-date");
       if (!Number.isFinite(timestamp) || !label) return;
 
+      if (!element.dataset.deadlineOriginalLabel && !RELATIVE_LABELS.has(label.textContent.trim())) {
+        element.dataset.deadlineOriginalLabel = label.textContent;
+      }
+
       const days = dayDifference(now, timestamp);
       const expiredTable = Boolean(element.closest(".expired-table"));
       let replacement = null;
@@ -40,14 +46,9 @@
         else if (days === 1) replacement = labels.tomorrow;
       }
 
-      if (replacement) {
-        if (label.textContent !== replacement) label.textContent = replacement;
-      } else if (element.dataset.deadlineOriginalLabel) {
-        if (label.textContent !== element.dataset.deadlineOriginalLabel) {
-          label.textContent = element.dataset.deadlineOriginalLabel;
-        }
-      } else {
-        element.dataset.deadlineOriginalLabel = label.textContent;
+      const nextText = replacement || element.dataset.deadlineOriginalLabel;
+      if (nextText && label.textContent !== nextText) {
+        label.textContent = nextText;
       }
     });
   }
