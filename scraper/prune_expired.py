@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+
+import json
+from datetime import datetime, timedelta
+from pathlib import Path
+
+RECENTLY_EXPIRED_DAYS = 7
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+EXPIRED_FILE = PROJECT_ROOT / "data" / "expired.json"
+
+
+def parse_date(value):
+    if not value:
+        return None
+    try:
+        return datetime.strptime(str(value)[:10], "%Y-%m-%d").date()
+    except ValueError:
+        return None
+
+
+def main():
+    if not EXPIRED_FILE.exists():
+        print("PASS: no expired.json exists; nothing to prune.")
+        return 0
+
+    data = json.loads(EXPIRED_FILE.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise SystemExit("ERROR: data/expired.json must contain an object.")
+
+    opportunities = data.get("opportunities")
+    if not isinstance(opportunities, list):
+        raise SystemExit("ERROR: data/expired.json has no opportunities list.")
+
+    today = datetime.now().date()
+    cutoff = today - timedelta(days=RECENTLY_EXPIRED_DAYS)
+    kept = []
+    removed = 0
+
+    for opportunity in opportunities:
+        if not isinstance(opportunity, dict):
+            continue
+
+        deadline = parse_date(opportunity.get("deadline"))
+        end_date = parse_date(opportunity.get("end_date"))
+
+        # Deadline-based opportunities are recent while their deadline is
+        # within the configured window. No-deadline opportunities remain
+        # recently expired for one week after their activity ends.
+        expiry_date = deadline or end_date
+
+        if expiry_date is None:
+            removed += 1
+            continue
+
+        age_days = (today - expiry_date).days
+
+        if 0 <= age_days <= RECENTLY_EXPIRED_DAYS:
+            kept.append(opportunity)
+        elif age_days < 0:
+            # Defensive: don't discard a future-dated record if it is present
+            # in the archive due to a delayed backend transition.
+            kept.append(opportunity)
+        else:
+            removed += 1
+
+    kept.sort(
+        key=lambda item: (
+            item.get("deadline") or item.get("end_date") or "",
+            item.get("last_seen") or "",
+        ),
+        reverse=True,
+    )
+
+    output = {
+        "generated_at": datetime.now().isoformat(),
+        "recently_expired_days": RECENTLY_EXPIRED_DAYS,
+        "count": len(kept),
+        "opportunities": kept,
+    }
+
+    temporary = EXPIRED_FILE.with_suffix(".json.tmp")
+    temporary.write_text(
+        json.dumps(output, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    temporary.replace(EXPIRED_FILE)
+
+    print(f"PASS: retained {len(kept)} recently expired opportunities.")
+    print(f"PASS: removed {removed} opportunities older than {RECENTLY_EXPIRED_DAYS} days.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
