@@ -2,6 +2,38 @@
   const sortableColumns = new Set([0, 1, 2, 3, 4]);
   const state = new WeakMap();
 
+  function installStyles() {
+    if (document.getElementById("table-sort-styles")) return;
+    const style = document.createElement("style");
+    style.id = "table-sort-styles";
+    style.textContent = `
+      .opportunity-table th.sortable-header {
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.15s ease, color 0.15s ease;
+      }
+      .opportunity-table th.sortable-header:hover,
+      .opportunity-table th.sortable-header:focus-visible {
+        background: var(--surface-soft, rgba(0,0,0,0.04));
+        color: var(--text, inherit);
+        outline: none;
+      }
+      .table-sort-indicator {
+        display: inline-block;
+        margin-inline-start: 6px;
+        font-size: 0.7em;
+        opacity: 0.45;
+        vertical-align: middle;
+      }
+      .opportunity-table th[aria-sort="ascending"] .table-sort-indicator,
+      .opportunity-table th[aria-sort="descending"] .table-sort-indicator {
+        opacity: 1;
+        font-weight: 800;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   function valueForCell(cell, index) {
     if (!cell) return "";
 
@@ -18,9 +50,12 @@
     if (index === 2) {
       const dates = cell.querySelector(".activity-dates");
       const value = dates?.textContent || cell.textContent || "";
-      const match = value.match(/(\d{1,2}[\s./-][A-Za-zÀ-ÿ]+[\s./-]\d{4}|\d{4}-\d{2}-\d{2})/);
-      const parsed = match ? Date.parse(match[1]) : NaN;
-      return Number.isNaN(parsed) ? value.trim().toLocaleLowerCase() : parsed;
+      const isoMatch = value.match(/(\d{4}-\d{2}-\d{2})/);
+      if (isoMatch) {
+        const parsed = Date.parse(isoMatch[1]);
+        if (!Number.isNaN(parsed)) return parsed;
+      }
+      return value.trim().toLocaleLowerCase();
     }
 
     if (index === 3) {
@@ -38,14 +73,9 @@
   function compareValues(a, b, direction) {
     const aNumber = typeof a === "number";
     const bNumber = typeof b === "number";
-
     let result;
-    if (aNumber && bNumber) {
-      result = a - b;
-    } else {
-      result = String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: "base" });
-    }
-
+    if (aNumber && bNumber) result = a - b;
+    else result = String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: "base" });
     if (result === 0) return 0;
     return direction === "asc" ? result : -result;
   }
@@ -58,8 +88,7 @@
       }
       header.setAttribute("aria-sort", index === activeIndex ? (direction === "asc" ? "ascending" : "descending") : "none");
       const indicator = header.querySelector(".table-sort-indicator");
-      if (!indicator) return;
-      indicator.textContent = index === activeIndex ? (direction === "asc" ? "▲" : "▼") : "↕";
+      if (indicator) indicator.textContent = index === activeIndex ? (direction === "asc" ? "▲" : "▼") : "↕";
     });
   }
 
@@ -73,7 +102,6 @@
     rows.sort((rowA, rowB) => {
       const a = valueForCell(rowA.cells[index], index);
       const b = valueForCell(rowB.cells[index], index);
-
       if (a === "" && b === "") return 0;
       if (a === "") return 1;
       if (b === "") return -1;
@@ -83,7 +111,6 @@
     const fragment = document.createDocumentFragment();
     rows.forEach((row) => fragment.appendChild(row));
     body.appendChild(fragment);
-
     state.set(table, { index, direction });
     updateIndicators(table, index, direction);
   }
@@ -94,7 +121,6 @@
 
     table.querySelectorAll("thead th").forEach((header, index) => {
       if (!sortableColumns.has(index) || header.classList.contains("apply-column")) return;
-
       header.classList.add("sortable-header");
       header.tabIndex = 0;
       header.setAttribute("role", "button");
@@ -121,6 +147,7 @@
   }
 
   function install() {
+    installStyles();
     scan();
     const observer = new MutationObserver(() => scan());
     observer.observe(document.body, { childList: true, subtree: true });
