@@ -54,12 +54,18 @@ The Pages deployment repeats the published-data and JavaScript validation before
 
 If the health workflow fails, inspect the failed `Update ESC Opportunities` run first. Do not edit `data/checkpoint.json` manually.
 
+## Notifications
+
+GitHub can notify the workflow owner when scheduled Actions runs fail. For unattended operation, enable Actions notifications and select **Only notify for failed workflows** for this repository.
+
+The `health.yml` monitor is intentionally separate from the scraper so a scraper that silently stops scheduling is still detected and generates a workflow failure.
+
 ## Six-month maintenance
 
 Approximately every six months:
 
-1. Open the Actions tab and confirm recent `Update ESC Opportunities` and `Deploy ESC Website` runs are green.
-2. Open the website and verify that the opportunity count, last-updated timestamp, filters, language switcher, dark mode, and Recently expired section render correctly.
+1. Open the Actions tab and confirm recent `Update ESC Opportunities`, `Deploy ESC Website`, and `ESC Opportunity Finder Health` runs are green.
+2. Open the website and verify that the opportunity count, last-updated timestamp, filters, language switcher, dark mode, NEW badges, and Recently expired section render correctly.
 3. Check that the European Youth Portal still exposes the same public opportunity pages and API behavior.
 4. Review GitHub Actions warnings for any action-version deprecations.
 
