@@ -10,7 +10,6 @@ DATA_DIR = PROJECT_ROOT / "data"
 OPPORTUNITIES_FILE = DATA_DIR / "opportunities.json"
 EXPIRED_FILE = DATA_DIR / "expired.json"
 
-MAX_DATASET_AGE = timedelta(hours=2)
 RECENTLY_EXPIRED_DAYS = 7
 REQUIRED_FIELDS = (
     "id",
@@ -146,8 +145,6 @@ def validate():
     age = now - generated_at
     if age < timedelta(seconds=0):
         raise RuntimeError("ERROR: dataset generated_at is in the future.")
-    if age > MAX_DATASET_AGE:
-        raise RuntimeError(f"ERROR: published dataset is stale ({age}).")
 
     validate_required_fields(active, "active")
     validate_required_fields(expired, "expired")
@@ -183,7 +180,7 @@ def validate():
 
     print(f"PASS: active opportunities: {len(active)}")
     print(f"PASS: recently expired opportunities: {len(expired)}")
-    print(f"PASS: dataset age: {age}")
+    print(f"PASS: dataset age: {age} (informational; freshness is monitored by the health workflow)")
     print(f"PASS: scan_complete: {active_payload['scan_complete']}")
     print(f"PASS: NEW badge IDs: {len(normalized_new_ids)}")
     print("PASS: active/expired date classification is valid.")
