@@ -7,7 +7,7 @@
     <meta name="description" content="Find European Solidarity Corps volunteering opportunities open to participants from your country." />
     <link rel="stylesheet" href="style.css?v=10" />
     <link rel="stylesheet" href="ui-fixes.css?v=2" />
-    <link rel="stylesheet" href="branding.css?v=1" />
+    <link rel="stylesheet" href="branding.css?v=2" />
     <script>
       (() => {
         const savedTheme = localStorage.getItem("esc_theme");
@@ -19,14 +19,17 @@
   </head>
   <body>
     <main class="container">
-      <section class="eyp-banner" aria-label="European Solidarity Corps">
-        <div class="eyp-banner-inner">
-          <div class="eyp-banner-mark" aria-hidden="true">🇪🇺</div>
-          <div class="eyp-banner-copy">
-            <h2 class="eyp-banner-title">European Solidarity Corps</h2>
-            <p class="eyp-banner-tagline">The power of together</p>
+      <section class="eyp-banner" aria-label="European Solidarity Corps opportunities">
+        <a class="eyp-banner-link" href="https://youth.europa.eu/go-abroad/volunteering/opportunities_en" target="_blank" rel="noopener noreferrer">
+          <div class="eyp-banner-inner">
+            <div class="eyp-banner-logo">
+              <img src="https://youth.europa.eu/sites/default/files/eu-initiatives/logos/european-solidarity-corps.png" alt="European Solidarity Corps" loading="eager" />
+            </div>
+            <div class="eyp-banner-copy">
+              <h2 data-i18n="eypBannerTitle">EU funded volunteering opportunities</h2>
+            </div>
           </div>
-        </div>
+        </a>
       </section>
 
       <header class="header">
@@ -103,7 +106,6 @@
               <span class="footer-brand-subtitle">Information for young people</span>
             </span>
           </a>
-
           <a class="footer-brand" href="https://european-union.europa.eu/" target="_blank" rel="noopener noreferrer">
             <span class="footer-brand-mark" aria-hidden="true">🇪🇺</span>
             <span class="footer-brand-copy">
@@ -111,7 +113,6 @@
               <span class="footer-brand-subtitle">European Union</span>
             </span>
           </a>
-
           <a class="footer-brand footer-brand-esc" href="https://youth.europa.eu/solidarity_en" target="_blank" rel="noopener noreferrer">
             <img src="https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png" alt="European Solidarity Corps" loading="lazy" />
             <span class="footer-brand-copy">
@@ -120,7 +121,6 @@
             </span>
           </a>
         </div>
-
         <p class="footer-project-note">ESC Opportunity Finder</p>
         <p class="footer-made-with">Made with <span class="footer-made-with-heart" aria-hidden="true">♥</span> &amp; ☕</p>
         <p><span data-i18n="source">Data sourced from</span> <a href="https://youth.europa.eu/go-abroad/volunteering/opportunities_en" target="_blank" rel="noopener noreferrer">European Youth Portal</a>.</p>
