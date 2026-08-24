@@ -69,55 +69,48 @@ html[data-theme="dark"] .eyp-banner-copy h2 {
    SIMPLE INSTITUTIONAL FOOTER
    ============================================================ */
 
-.footer-logo-row {
+.footer-branding {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 34px;
-  margin-bottom: 24px;
-  padding: 8px 0;
+  gap: clamp(24px, 6vw, 72px);
+  margin: 0 auto 20px;
+  padding: 0;
 }
 
-.footer-logo-row a {
+.footer-logo-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 56px;
+  width: 180px;
+  height: 72px;
+  color: inherit;
   text-decoration: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
-.footer-logo-row a:hover {
-  opacity: 0.8;
-  transform: translateY(-1px);
-}
-
-.footer-logo-row img {
+.footer-logo {
   display: block;
-  width: auto;
-  height: 52px;
-  max-width: 180px;
+  width: 180px;
+  height: 72px;
   object-fit: contain;
 }
 
-.footer-logo-row a:first-child img {
+.footer-logo-portal {
+  object-fit: contain;
+}
+
+.footer-logo-eu {
   width: 180px;
-  height: 52px;
+  height: 72px;
 }
 
-.footer-logo-row a:nth-child(2) img {
-  width: 165px;
-  height: 58px;
-}
-
-.footer-logo-row a:nth-child(3) img {
-  width: 170px;
-  height: 58px;
+.footer-logo-esc {
+  width: 180px;
+  height: 72px;
 }
 
 .footer-project-note {
-  margin: 12px 0 4px !important;
+  margin: 8px 0 4px !important;
   color: var(--text);
   font-size: 0.78rem;
   font-weight: 600;
@@ -154,17 +147,15 @@ html[data-theme="dark"] .eyp-banner-copy h2 {
     font-size: 1.15rem;
   }
 
-  .footer-logo-row {
-    gap: 22px;
+  .footer-branding {
+    gap: 14px;
+    flex-wrap: wrap;
   }
 
-  .footer-logo-row img,
-  .footer-logo-row a:first-child img,
-  .footer-logo-row a:nth-child(2) img,
-  .footer-logo-row a:nth-child(3) img {
-    width: auto;
-    height: 44px;
-    max-width: 140px;
+  .footer-logo-link,
+  .footer-logo {
+    width: 150px;
+    height: 64px;
   }
 }
 
