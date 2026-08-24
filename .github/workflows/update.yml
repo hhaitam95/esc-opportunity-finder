@@ -3,6 +3,9 @@ name: Update ESC Opportunities
 on:
   schedule:
     - cron: "7,37 * * * *"
+  push:
+    paths:
+      - ".github/workflows/update.yml"
   workflow_dispatch:
 
 permissions:
