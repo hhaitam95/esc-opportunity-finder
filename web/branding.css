@@ -1,71 +1,4 @@
 /* ============================================================
-   OFFICIAL ESC BANNER + SIMPLE INSTITUTIONAL FOOTER
-   ============================================================ */
-
-.eyp-banner {
-  margin-bottom: 26px;
-  overflow: hidden;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  box-shadow: var(--shadow);
-}
-
-.eyp-banner-link {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-}
-
-.eyp-banner-inner {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  min-height: 132px;
-  padding: 24px 30px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.97), rgba(248, 249, 252, 0.98));
-}
-
-.eyp-banner-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  width: 180px;
-  min-height: 78px;
-}
-
-.eyp-banner-logo img {
-  display: block;
-  width: 100%;
-  max-height: 78px;
-  object-fit: contain;
-}
-
-.eyp-banner-copy {
-  min-width: 0;
-  padding-left: 4px;
-  border-left: 3px solid #e41b65;
-}
-
-.eyp-banner-copy h2 {
-  margin: 0 0 0 18px;
-  color: #202b5b;
-  font-size: clamp(1.35rem, 3vw, 2rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
-
-html[data-theme="dark"] .eyp-banner-inner {
-  background: linear-gradient(90deg, #1b2433, #222d3e);
-}
-
-html[data-theme="dark"] .eyp-banner-copy h2 {
-  color: var(--text);
-}
-
-/* ============================================================
    SIMPLE INSTITUTIONAL FOOTER
    ============================================================ */
 
@@ -79,6 +12,7 @@ html[data-theme="dark"] .eyp-banner-copy h2 {
 }
 
 .footer-logo-link {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,18 +29,26 @@ html[data-theme="dark"] .eyp-banner-copy h2 {
   object-fit: contain;
 }
 
-.footer-logo-portal {
-  object-fit: contain;
-}
-
-.footer-logo-eu {
+.footer-logo-portal-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   width: 180px;
   height: 72px;
+  color: var(--text);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 1.05;
 }
 
-.footer-logo-esc {
-  width: 180px;
-  height: 72px;
+.footer-logo-portal-fallback em {
+  display: block;
+}
+
+.footer-logo-portal-wrap:hover .footer-logo-portal-fallback {
+  color: var(--primary);
 }
 
 .footer-project-note {
@@ -127,46 +69,19 @@ html[data-theme="dark"] .eyp-banner-copy h2 {
 }
 
 @media (max-width: 720px) {
-  .eyp-banner-inner {
-    min-height: 104px;
-    padding: 18px;
-    gap: 16px;
-  }
-
-  .eyp-banner-logo {
-    width: 130px;
-    min-height: 60px;
-  }
-
-  .eyp-banner-logo img {
-    max-height: 60px;
-  }
-
-  .eyp-banner-copy h2 {
-    margin-left: 14px;
-    font-size: 1.15rem;
-  }
-
   .footer-branding {
     gap: 14px;
     flex-wrap: wrap;
   }
 
   .footer-logo-link,
-  .footer-logo {
+  .footer-logo,
+  .footer-logo-portal-fallback {
     width: 150px;
     height: 64px;
   }
-}
 
-html[dir="rtl"] .eyp-banner-copy {
-  border-left: 0;
-  border-right: 3px solid #e41b65;
-  padding-left: 0;
-  padding-right: 4px;
-}
-
-html[dir="rtl"] .eyp-banner-copy h2 {
-  margin-left: 0;
-  margin-right: 18px;
+  .footer-logo-portal-fallback {
+    font-size: 0.95rem;
+  }
 }
