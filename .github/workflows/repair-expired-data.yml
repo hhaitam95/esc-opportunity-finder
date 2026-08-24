@@ -1,0 +1,51 @@
+name: One-time expired data repair
+
+on:
+  push:
+    paths:
+      - ".github/workflows/repair-expired-data.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: esc-opportunity-update
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    name: Repair active and recently expired datasets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Prune expired active records
+        run: python scraper/prune_expired.py
+
+      - name: Validate repaired datasets
+        run: python scraper/validate_published.py
+
+      - name: Commit repaired data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- data/opportunities.json data/expired.json
+          if git diff --cached --quiet; then
+            echo "No dataset changes were required."
+            exit 0
+          fi
+          git diff --cached --check
+          git commit -m "chore: repair expired opportunity dataset"
+          git push origin main
