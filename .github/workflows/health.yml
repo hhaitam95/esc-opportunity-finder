@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: read
+  actions: write
   contents: read
 
 jobs:
@@ -17,25 +17,27 @@ jobs:
 
     steps:
       - name: Check last successful update workflow
+        id: check
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
           endpoint="/repos/${GITHUB_REPOSITORY}/actions/workflows/update.yml/runs?per_page=20"
-          response=$(gh api "$endpoint")
+          response="$(gh api "$endpoint")"
 
-          latest=$(printf '%s' "$response" | jq -r '[.workflow_runs[] | select(.status == "completed" and .conclusion == "success")] | sort_by(.updated_at) | last | [.id, .updated_at, .html_url] | @tsv')
+          latest="$(printf '%s' "$response" | jq -r '[.workflow_runs[] | select(.status == "completed" and .conclusion == "success")] | sort_by(.updated_at) | last | [.id, .updated_at, .html_url] | @tsv')"
 
           if [[ -z "$latest" || "$latest" == $'null\tnull\tnull' ]]; then
             echo "ERROR: no successful Update ESC Opportunities workflow run was found."
+            echo "stale=true" >> "$GITHUB_OUTPUT"
             exit 1
           fi
 
           IFS=$'\t' read -r run_id updated_at run_url <<< "$latest"
 
-          updated_epoch=$(date -u -d "$updated_at" +%s)
-          now_epoch=$(date -u +%s)
+          updated_epoch="$(date -u -d "$updated_at" +%s)"
+          now_epoch="$(date -u +%s)"
           age_seconds=$((now_epoch - updated_epoch))
 
           echo "Last successful update run: $run_id"
@@ -50,7 +52,26 @@ jobs:
 
           if (( age_seconds > 7200 )); then
             echo "ERROR: no successful scraper update in the last 2 hours."
+            echo "stale=true" >> "$GITHUB_OUTPUT"
             exit 1
           fi
 
+          echo "stale=false" >> "$GITHUB_OUTPUT"
           echo "PASS: scraper workflow is updating within the expected window."
+
+      - name: Attempt automatic scraper recovery
+        if: steps.check.outputs.stale == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          echo "Dispatching Update ESC Opportunities for automatic recovery..."
+          gh workflow run update.yml --ref main
+          echo "PASS: automatic recovery dispatch accepted."
+
+      - name: Fail health check when stale
+        if: steps.check.outputs.stale == 'true'
+        run: |
+          echo "ERROR: scraper freshness is outside the 2-hour window."
+          echo "An automatic recovery run was dispatched; inspect Update ESC Opportunities for the root cause."
+          exit 1
