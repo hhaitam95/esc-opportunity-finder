@@ -6,7 +6,9 @@ from pathlib import Path
 
 RECENTLY_EXPIRED_DAYS = 7
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-EXPIRED_FILE = PROJECT_ROOT / "data" / "expired.json"
+DATA_DIR = PROJECT_ROOT / "data"
+OPPORTUNITIES_FILE = DATA_DIR / "opportunities.json"
+EXPIRED_FILE = DATA_DIR / "expired.json"
 
 
 def parse_date(value):
@@ -18,72 +20,154 @@ def parse_date(value):
         return None
 
 
-def main():
-    if not EXPIRED_FILE.exists():
-        print("PASS: no expired.json exists; nothing to prune.")
-        return 0
+def expiry_date_for(opportunity):
+    deadline = parse_date(opportunity.get("deadline"))
+    if deadline is not None:
+        return deadline
+    return parse_date(opportunity.get("end_date"))
 
-    data = json.loads(EXPIRED_FILE.read_text(encoding="utf-8"))
+
+def load_object(path, label):
+    if not path.exists():
+        return {
+            "generated_at": datetime.now().isoformat(),
+            "count": 0,
+            "opportunities": [],
+        }
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"ERROR: {label} is invalid JSON: {exc}") from exc
+
     if not isinstance(data, dict):
-        raise SystemExit("ERROR: data/expired.json must contain an object.")
+        raise SystemExit(f"ERROR: {label} must contain an object.")
 
     opportunities = data.get("opportunities")
     if not isinstance(opportunities, list):
-        raise SystemExit("ERROR: data/expired.json has no opportunities list.")
+        raise SystemExit(f"ERROR: {label} has no opportunities list.")
+
+    return data
+
+
+def main():
+    active_data = load_object(OPPORTUNITIES_FILE, "data/opportunities.json")
+    expired_data = load_object(EXPIRED_FILE, "data/expired.json")
+
+    active = active_data["opportunities"]
+    existing_expired = expired_data["opportunities"]
 
     today = datetime.now().date()
     cutoff = today - timedelta(days=RECENTLY_EXPIRED_DAYS)
-    kept = []
-    removed = 0
 
-    for opportunity in opportunities:
+    kept_active = []
+    newly_expired = []
+
+    for opportunity in active:
         if not isinstance(opportunity, dict):
             continue
 
-        deadline = parse_date(opportunity.get("deadline"))
-        end_date = parse_date(opportunity.get("end_date"))
+        expiry = expiry_date_for(opportunity)
 
-        # A deadline is the expiry date when one exists. For opportunities
-        # without a deadline, the activity itself must have ended before the
-        # opportunity can be considered recently expired.
-        expiry_date = deadline if deadline is not None else end_date
+        if expiry is not None and expiry < today:
+            newly_expired.append(opportunity)
+        else:
+            kept_active.append(opportunity)
 
-        if expiry_date is None:
-            removed += 1
+    existing_by_id = {}
+    for opportunity in existing_expired:
+        if not isinstance(opportunity, dict):
+            continue
+        opid = str(opportunity.get("id", "")).strip()
+        if opid:
+            existing_by_id[opid] = opportunity
+
+    moved = 0
+    for opportunity in newly_expired:
+        opid = str(opportunity.get("id", "")).strip()
+        if not opid:
+            continue
+        existing_by_id[opid] = {
+            **opportunity,
+            "last_seen": opportunity.get("last_seen") or datetime.now().isoformat(),
+            "reason": (
+                "Application deadline has expired."
+                if parse_date(opportunity.get("deadline")) is not None
+                else "Activity has finished."
+            ),
+        }
+        moved += 1
+
+    active_ids = {
+        str(item.get("id", "")).strip()
+        for item in kept_active
+        if isinstance(item, dict)
+    }
+
+    kept_expired = []
+    for opportunity in existing_by_id.values():
+        if not isinstance(opportunity, dict):
             continue
 
-        age_days = (today - expiry_date).days
+        opid = str(opportunity.get("id", "")).strip()
+        if not opid or opid in active_ids:
+            continue
 
-        # Never publish future-dated records in the recently expired table.
+        expiry = expiry_date_for(opportunity)
+        if expiry is None:
+            continue
+
+        age_days = (today - expiry).days
         if 0 <= age_days <= RECENTLY_EXPIRED_DAYS:
-            kept.append(opportunity)
-        else:
-            removed += 1
+            kept_expired.append(opportunity)
 
-    kept.sort(
+    kept_expired.sort(
         key=lambda item: (
-            item.get("deadline") or item.get("end_date") or "",
+            expiry_date_for(item) or datetime.min.date(),
             item.get("last_seen") or "",
         ),
         reverse=True,
     )
 
-    output = {
+    active_data["count"] = len(kept_active)
+    active_data["opportunities"] = kept_active
+
+    new_ids = active_data.get("new_opportunity_ids", [])
+    if isinstance(new_ids, list):
+        active_data["new_opportunity_ids"] = [
+            str(opid)
+            for opid in new_ids
+            if str(opid) in active_ids
+        ]
+
+    active_data["expired_pruned_at"] = datetime.now().isoformat()
+
+    expired_output = {
         "generated_at": datetime.now().isoformat(),
         "recently_expired_days": RECENTLY_EXPIRED_DAYS,
-        "count": len(kept),
-        "opportunities": kept,
+        "count": len(kept_expired),
+        "opportunities": kept_expired,
     }
 
-    temporary = EXPIRED_FILE.with_suffix(".json.tmp")
-    temporary.write_text(
-        json.dumps(output, ensure_ascii=False, indent=2) + "\n",
+    active_tmp = OPPORTUNITIES_FILE.with_suffix(".json.tmp")
+    active_tmp.write_text(
+        json.dumps(active_data, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    temporary.replace(EXPIRED_FILE)
+    active_tmp.replace(OPPORTUNITIES_FILE)
 
-    print(f"PASS: retained {len(kept)} recently expired opportunities.")
-    print(f"PASS: removed {removed} invalid or older-than-{RECENTLY_EXPIRED_DAYS}-day opportunities.")
+    expired_tmp = EXPIRED_FILE.with_suffix(".json.tmp")
+    expired_tmp.write_text(
+        json.dumps(expired_output, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    expired_tmp.replace(EXPIRED_FILE)
+
+    print(f"PASS: active opportunities retained: {len(kept_active)}")
+    print(f"PASS: moved newly expired active opportunities: {moved}")
+    print(f"PASS: recently expired opportunities retained: {len(kept_expired)}")
+    print(f"PASS: recently expired cutoff: {cutoff}")
+    print("PASS: active and recently expired datasets are disjoint.")
     return 0
 
 
