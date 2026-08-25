@@ -75,6 +75,37 @@ const ACTIVITY_TYPE_TRANSLATIONS = {
   },
 };
 
+const dateFormatterCache = new Map();
+const displayNamesCache = new Map();
+
+function getDateFormatter(locale) {
+  const key = String(locale || "en-GB");
+  let formatter = dateFormatterCache.get(key);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(key, {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+    dateFormatterCache.set(key, formatter);
+  }
+  return formatter;
+}
+
+function getRegionDisplayNames(locale) {
+  const key = String(locale || "en-GB");
+  let displayNames = displayNamesCache.get(key);
+  if (!displayNames && typeof Intl !== "undefined" && typeof Intl.DisplayNames === "function") {
+    try {
+      displayNames = new Intl.DisplayNames([key], { type: "region" });
+      displayNamesCache.set(key, displayNames);
+    } catch {
+      return null;
+    }
+  }
+  return displayNames || null;
+}
+
 export function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -96,11 +127,11 @@ function parseDate(value) {
 export function formatDate(value, locale, fallback = "—") {
   const date = parseDate(value);
   if (!date) return fallback;
-  return new Intl.DateTimeFormat(locale, {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(date);
+  try {
+    return getDateFormatter(locale).format(date);
+  } catch {
+    return fallback;
+  }
 }
 
 export function filterRows(opportunities, filters) {
@@ -161,8 +192,9 @@ function renderCountry(opportunity, locale) {
   let name = code;
   let flag = "🌍";
   try {
-    if (typeof Intl !== "undefined" && typeof Intl.DisplayNames === "function") {
-      name = new Intl.DisplayNames([locale], { type: "region" }).of(code) || code;
+    const displayNames = getRegionDisplayNames(locale);
+    if (displayNames) {
+      name = displayNames.of(code) || code;
     }
     if (/^[A-Z]{2}$/.test(code)) {
       flag = String.fromCodePoint(...code.split("").map((letter) => 127397 + letter.charCodeAt(0)));
@@ -311,7 +343,6 @@ function formatLiveRemaining(deadlineValue, locale, t) {
   const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor((totalSeconds % 86400) / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
 
   if (days > 0) {
     return locale.startsWith("fr")
@@ -322,10 +353,10 @@ function formatLiveRemaining(deadlineValue, locale, t) {
   }
 
   return locale.startsWith("fr")
-    ? `${hours} h ${minutes} min ${seconds} s restantes`
+    ? `${hours} h ${minutes} min restantes`
     : locale.startsWith("ar")
-      ? `${hours} ساعة ${minutes} دقيقة ${seconds} ثانية متبقية`
-      : `${hours}h ${minutes}m ${seconds}s remaining`;
+      ? `${hours} ساعة ${minutes} دقيقة متبقية`
+      : `${hours}h ${minutes}m remaining`;
 }
 
 function renderDeadline(opportunity, locale, t) {
@@ -399,7 +430,6 @@ function updateLiveDeadlines() {
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor((seconds % 86400) / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
     const countdown = element.querySelector(".deadline-relative");
 
     if (countdown) {
@@ -408,7 +438,7 @@ function updateLiveDeadlines() {
       } else if (days > 0) {
         countdown.textContent = locale.startsWith("fr") ? `${days} j ${hours} h ${minutes} min restantes` : locale.startsWith("ar") ? `${days} يوم ${hours} ساعة ${minutes} دقيقة متبقية` : `${days}d ${hours}h ${minutes}m remaining`;
       } else {
-        countdown.textContent = locale.startsWith("fr") ? `${hours} h ${minutes} min ${secs} s restantes` : locale.startsWith("ar") ? `${hours} ساعة ${minutes} دقيقة ${secs} ثانية متبقية` : `${hours}h ${minutes}m ${secs}s remaining`;
+        countdown.textContent = locale.startsWith("fr") ? `${hours} h ${minutes} min restantes` : locale.startsWith("ar") ? `${hours} ساعة ${minutes} دقيقة متبقية` : `${hours}h ${minutes}m remaining`;
       }
     }
 
@@ -420,7 +450,7 @@ function updateLiveDeadlines() {
 }
 
 if (typeof window !== "undefined") {
-  window.setInterval(updateLiveDeadlines, 1000);
+  window.setInterval(updateLiveDeadlines, 60000);
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", updateLiveDeadlines, { once: true });
   } else {
