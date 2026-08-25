@@ -45,6 +45,7 @@
   width: 200px;
   max-width: none;
   margin-inline: -10px;
+  transform: translateX(-18px);
 }
 
 .footer-logo-portal-fallback {
@@ -109,6 +110,7 @@
   .footer-logo-portal {
     width: 168px;
     margin-inline: -9px;
+    transform: translateX(-15px);
   }
 
   .footer-logo-portal-fallback {
