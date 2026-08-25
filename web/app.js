@@ -195,6 +195,8 @@ function populateTableFilters() {
 
     dom.typeFilter.value = state.filters.type;
   }
+
+  window.translateTypeFilter?.();
 }
 
 function filteredActive() {
@@ -228,6 +230,9 @@ function renderActive() {
     locale: locale(),
     t,
   });
+
+  window.normalizeCountryDisplay?.(dom.opportunitiesBody);
+  window.updateRelativeDeadlineLabels?.();
 }
 
 function renderArchived() {
@@ -251,6 +256,9 @@ function renderArchived() {
     locale: locale(),
     t,
   });
+
+  window.normalizeCountryDisplay?.(dom.expiredBody);
+  window.updateRelativeDeadlineLabels?.();
 }
 
 function renderAll(force = false) {
@@ -270,6 +278,7 @@ function renderAll(force = false) {
   updateLastUpdated();
   renderActive();
   renderArchived();
+  window.refreshTableSort?.();
 }
 
 function applyParticipantCountry() {
@@ -366,6 +375,10 @@ initLanguage(() => {
   populateTableFilters();
   renderAll(true);
   updateThemeControl(t);
+  window.translateTypeFilter?.();
+  window.refreshTableSort?.();
+  window.normalizeCountryDisplay?.();
+  window.updateRelativeDeadlineLabels?.();
 });
 
 initTheme(t);
