@@ -106,10 +106,14 @@
         header.appendChild(indicator);
       }
 
-      indicator.textContent =
+      const nextText =
         index === activeIndex
           ? direction === "asc" ? "▲" : "▼"
           : "↕";
+
+      if (indicator.textContent !== nextText) {
+        indicator.textContent = nextText;
+      }
     });
   }
 
@@ -187,8 +191,7 @@
   function install() {
     installStyles();
     scan();
-    const observer = new MutationObserver(() => scan());
-    observer.observe(document.body, { childList: true, subtree: true });
+    window.refreshTableSort = () => scan();
   }
 
   if (document.readyState === "loading") {
