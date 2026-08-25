@@ -8,6 +8,7 @@
       content="Find European Solidarity Corps volunteering opportunities open to participants from your country."
     />
     <title>ESC Opportunity Finder</title>
+    <link rel="stylesheet" href="branding.css" />
   </head>
 
   <body>
@@ -59,49 +60,25 @@
               role="menu"
               hidden
             >
-              <button
-                class="language-option"
-                data-language="en"
-                type="button"
-                role="menuitem"
-              >
+              <button class="language-option" data-language="en" type="button" role="menuitem">
                 <span class="language-flag" aria-hidden="true"> 🇬🇧 </span>
-
                 <span>English</span>
               </button>
 
-              <button
-                class="language-option"
-                data-language="fr"
-                type="button"
-                role="menuitem"
-              >
+              <button class="language-option" data-language="fr" type="button" role="menuitem">
                 <span class="language-flag" aria-hidden="true"> 🇫🇷 </span>
-
                 <span>Français</span>
               </button>
 
-              <button
-                class="language-option"
-                data-language="ar"
-                type="button"
-                role="menuitem"
-              >
+              <button class="language-option" data-language="ar" type="button" role="menuitem">
                 <span class="language-flag" aria-hidden="true"> 🇸🇦 </span>
-
                 <span>العربية</span>
               </button>
             </div>
           </div>
 
           <!-- Theme -->
-          <button
-            id="theme-toggle"
-            class="theme-toggle"
-            type="button"
-            aria-label="Toggle dark mode"
-            title="Dark mode"
-          >
+          <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Dark mode">
             <span id="theme-icon" aria-hidden="true">🌙</span>
           </button>
         </div>
@@ -122,17 +99,12 @@
         <div class="participant-selector">
           <div class="participant-selector-field">
             <label for="participant-country"> Participant Country </label>
-
             <select id="participant-country" autocomplete="country-name">
               <option value="">Select Participant Country</option>
             </select>
           </div>
 
-          <button
-            id="apply-participant-country"
-            class="clear-button"
-            type="button"
-          >
+          <button id="apply-participant-country" class="clear-button" type="button">
             Apply
           </button>
         </div>
@@ -142,15 +114,11 @@
       <section class="status-card">
         <div class="status-item">
           <span class="status-label"> Active opportunities </span>
-
-          <strong id="opportunity-count" class="status-value">
-            0 results
-          </strong>
+          <strong id="opportunity-count" class="status-value">0 results</strong>
         </div>
 
         <div class="status-item">
           <span class="status-label"> Last updated </span>
-
           <strong id="last-updated" class="status-value"> — </strong>
         </div>
       </section>
@@ -159,17 +127,11 @@
       <section class="controls">
         <div class="search-box">
           <label for="search-input"> Search </label>
-
-          <input
-            id="search-input"
-            type="search"
-            placeholder="Search opportunities..."
-          />
+          <input id="search-input" type="search" placeholder="Search opportunities..." />
         </div>
 
         <div class="filter-box">
           <label for="country-filter"> Country </label>
-
           <select id="country-filter">
             <option value="">All countries</option>
           </select>
@@ -177,7 +139,6 @@
 
         <div class="filter-box">
           <label for="type-filter"> Type </label>
-
           <select id="type-filter">
             <option value="">All types</option>
           </select>
@@ -185,19 +146,14 @@
 
         <div class="sort-box">
           <label for="sort-select"> Sort by </label>
-
           <select id="sort-select">
             <option value="deadline">Application deadline</option>
-
             <option value="start">Activity start date</option>
-
             <option value="created">Recently added</option>
           </select>
         </div>
 
-        <button id="clear-filters" class="clear-button" type="button">
-          Clear
-        </button>
+        <button id="clear-filters" class="clear-button" type="button">Clear</button>
       </section>
 
       <!-- Loading -->
@@ -208,7 +164,6 @@
       <!-- Error -->
       <section id="error-message" class="message error-message hidden">
         <strong> We couldn't load the opportunities. </strong>
-
         <p>Please try again later.</p>
       </section>
 
@@ -217,7 +172,6 @@
         <div class="section-header">
           <div>
             <h2>Available now</h2>
-
             <p id="active-result-count" class="section-count">—</p>
           </div>
         </div>
@@ -234,7 +188,6 @@
                 <th class="apply-column"></th>
               </tr>
             </thead>
-
             <tbody id="opportunities-body"></tbody>
           </table>
         </div>
@@ -243,27 +196,17 @@
       <!-- No Results -->
       <section id="empty-message" class="message hidden">
         <strong> No opportunities found. </strong>
-
         <p>Try changing your search or filters.</p>
       </section>
 
       <!-- Recently Expired -->
       <section id="expired-section" class="expired-section hidden">
-        <button
-          id="expired-toggle"
-          class="expired-toggle"
-          type="button"
-          aria-expanded="false"
-        >
+        <button id="expired-toggle" class="expired-toggle" type="button" aria-expanded="false">
           <span>
             <span> Recently expired </span>
-
             <span id="expired-count" class="expired-count"> 0 </span>
           </span>
-
-          <span id="expired-arrow" class="expired-arrow" aria-hidden="true">
-            ▾
-          </span>
+          <span id="expired-arrow" class="expired-arrow" aria-hidden="true">▾</span>
         </button>
 
         <div id="expired-content" class="table-wrapper expired-content hidden">
@@ -279,7 +222,6 @@
                 <th class="apply-column"></th>
               </tr>
             </thead>
-
             <tbody id="expired-body"></tbody>
           </table>
         </div>
@@ -287,15 +229,34 @@
 
       <!-- Footer -->
       <footer class="footer">
-        <p>
+        <div class="footer-branding" aria-label="Project and institutional partners">
+          <a class="footer-logo-link" href="https://european-union.europa.eu/index_en" target="_blank" rel="noopener noreferrer" aria-label="European Union">
+            <img class="footer-logo" src="assets/logo-eu-en.svg" alt="European Union" loading="lazy" />
+          </a>
+
+          <a class="footer-logo-link" href="https://youth.europa.eu/solidarity_en" target="_blank" rel="noopener noreferrer" aria-label="European Solidarity Corps">
+            <img class="footer-logo" src="assets/european-solidarity-corps.png" alt="European Solidarity Corps" loading="lazy" />
+          </a>
+
+          <a class="footer-logo-link footer-logo-portal-wrap" href="https://youth.europa.eu/" target="_blank" rel="noopener noreferrer" aria-label="European Youth Portal">
+            <img class="footer-logo" src="https://eurodesk.eu/wp-content/uploads/2025/04/EYP-Logo.png" alt="European Youth Portal" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.hidden=false;" />
+            <span class="footer-logo-portal-fallback" hidden aria-hidden="true">
+              <em>European</em>
+              <em>Youth</em>
+              <em>Portal</em>
+            </span>
+          </a>
+        </div>
+
+        <p class="footer-project-note">
           Data sourced from
-          <a
-            href="https://youth.europa.eu/go-abroad/volunteering/opportunities_en"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            European Youth Portal </a
-          >.
+          <a href="https://youth.europa.eu/go-abroad/volunteering/opportunities_en" target="_blank" rel="noopener noreferrer">
+            European Youth Portal
+          </a>.
+        </p>
+
+        <p class="footer-made-with">
+          Made with <span class="footer-made-with-heart" aria-hidden="true">♥</span> and coffee.
         </p>
 
         <p>Always check the official opportunity page before applying.</p>
