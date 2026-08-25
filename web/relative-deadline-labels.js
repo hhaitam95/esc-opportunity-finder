@@ -55,7 +55,8 @@
 
   function start() {
     updateLabels();
-    window.setInterval(updateLabels, 1000);
+    window.updateRelativeDeadlineLabels = updateLabels;
+    window.setInterval(updateLabels, 60000);
   }
 
   if (document.readyState === "loading") {
