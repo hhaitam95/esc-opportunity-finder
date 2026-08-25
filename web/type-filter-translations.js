@@ -19,7 +19,7 @@
     return "en";
   };
 
-  const translate = () => {
+  function translate() {
     const select = document.getElementById("type-filter");
     if (!select) return;
 
@@ -30,26 +30,18 @@
       const key = option.dataset.typeKey || option.value;
       const label = translations[key]?.[language];
       if (!label) return;
+
       option.dataset.typeKey = key;
-      option.textContent = label;
+      if (option.textContent !== label) {
+        option.textContent = label;
+      }
     });
-  };
+  }
 
-  const start = () => {
-    const select = document.getElementById("type-filter");
-    if (!select) return;
-
+  function start() {
     translate();
-
-    const observer = new MutationObserver(translate);
-    observer.observe(select, { childList: true });
-
-    const languageObserver = new MutationObserver(translate);
-    languageObserver.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["lang"],
-    });
-  };
+    window.translateTypeFilter = translate;
+  }
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", start, { once: true });
