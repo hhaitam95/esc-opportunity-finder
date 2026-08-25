@@ -4,9 +4,11 @@
 
 .footer-branding {
   display: flex;
+  flex-direction: row;
+  direction: ltr;
   align-items: center;
   justify-content: center;
-  gap: 0;
+  gap: 12px;
   margin: 0 auto 20px;
   padding: 0;
   background: transparent;
@@ -14,6 +16,7 @@
 
 .footer-logo-link {
   position: relative;
+  flex: 0 0 180px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,7 +48,7 @@
   width: 200px;
   max-width: none;
   margin-inline: -10px;
-  transform: translateX(-55px);
+  transform: translateX(-30px);
 }
 
 .footer-logo-portal-fallback {
@@ -96,21 +99,29 @@
 
 @media (max-width: 720px) {
   .footer-branding {
-    gap: 0;
+    flex-direction: row;
+    direction: ltr;
+    gap: 8px;
     flex-wrap: nowrap;
+    width: max-content;
+    max-width: 100%;
   }
 
   .footer-logo-link,
   .footer-logo,
   .footer-logo-portal-fallback {
-    width: 150px;
-    height: 64px;
+    width: 120px;
+    height: 56px;
+  }
+
+  .footer-logo-link {
+    flex-basis: 120px;
   }
 
   .footer-logo-portal {
-    width: 168px;
-    margin-inline: -9px;
-    transform: translateX(-46px);
+    width: 134px;
+    margin-inline: -7px;
+    transform: translateX(-20px);
   }
 
   .footer-logo-portal-fallback {
