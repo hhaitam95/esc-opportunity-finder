@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 0;
   margin: 0 auto 20px;
   padding: 0;
   background: transparent;
@@ -23,8 +23,10 @@
   padding: 0;
   background: transparent;
   border: 0;
+  box-shadow: none;
   color: inherit;
   text-decoration: none;
+  overflow: hidden;
 }
 
 .footer-logo {
@@ -33,10 +35,16 @@
   height: 72px;
   margin: 0;
   padding: 0;
-  object-fit: contain;
   background: transparent;
   border: 0;
   box-shadow: none;
+  object-fit: contain;
+}
+
+.footer-logo-portal {
+  width: 200px;
+  max-width: none;
+  margin-inline: -10px;
 }
 
 .footer-logo-portal-fallback {
@@ -49,6 +57,8 @@
   margin: 0;
   padding: 0;
   background: transparent;
+  border: 0;
+  box-shadow: none;
   color: var(--text);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.1rem;
@@ -58,6 +68,8 @@
 
 .footer-logo-portal-fallback em {
   display: block;
+  margin: 0;
+  padding: 0;
 }
 
 .footer-logo-portal-wrap:hover .footer-logo-portal-fallback {
@@ -84,7 +96,7 @@
 @media (max-width: 720px) {
   .footer-branding {
     gap: 0;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 
   .footer-logo-link,
@@ -92,6 +104,11 @@
   .footer-logo-portal-fallback {
     width: 150px;
     height: 64px;
+  }
+
+  .footer-logo-portal {
+    width: 168px;
+    margin-inline: -9px;
   }
 
   .footer-logo-portal-fallback {
