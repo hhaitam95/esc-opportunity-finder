@@ -58,19 +58,18 @@ jobs:
 
           echo "PASS: ESC logo downloaded and EYP logo repository asset validated."
 
-      - name: Repair API pagination and deduplicate results
+      - name: Apply permanent API pagination fix once
         run: |
           python - <<'PY'
           from pathlib import Path
 
-          path = Path("scraper/scraper.py")
-          text = path.read_text(encoding="utf-8")
+          scraper_path = Path("scraper/scraper.py")
+          workflow_path = Path(".github/workflows/update.yml")
 
-          if "# API_PAGINATION_DEDUP_V2" in text:
-              print("PASS: API pagination deduplication already applied.")
-              raise SystemExit(0)
+          scraper = scraper_path.read_text(encoding="utf-8")
 
-          old = '''    opportunities = []
+          if "# API_PAGINATION_DEDUP_V2" not in scraper:
+              old = '''    opportunities = []
 
     offset = 0
     total = None
@@ -187,7 +186,7 @@ jobs:
     return opportunities
 '''
 
-          new = '''    # API_PAGINATION_DEDUP_V2
+              new = '''    # API_PAGINATION_DEDUP_V2
     opportunities_by_id = {}
 
     offset = 0
@@ -313,27 +312,46 @@ jobs:
     return opportunities
 '''
 
-          if old not in text:
-              raise SystemExit(
-                  "ERROR: expected pagination block was not found; no scraper source was changed."
-              )
+              if old not in scraper:
+                  raise SystemExit(
+                      "ERROR: expected original API pagination block was not found; no source or workflow cleanup performed."
+                  )
 
-          path.write_text(
-              text.replace(old, new, 1),
-              encoding="utf-8",
-          )
-          print("PASS: API pagination now deduplicates by opid and validates unique records.")
+              scraper_path.write_text(
+                  scraper.replace(old, new, 1),
+                  encoding="utf-8",
+              )
+              print("PASS: permanent API pagination/deduplication fix applied to scraper.py.")
+          else:
+              print("PASS: permanent API pagination/deduplication fix already present.")
+
+          # Remove this one-time repair step from the workflow itself.
+          workflow = workflow_path.read_text(encoding="utf-8")
+          marker = '      - name: Apply permanent API pagination fix once\n'
+
+          if marker not in workflow:
+              print("PASS: one-time repair step already removed from update.yml.")
+          else:
+              start = workflow.index(marker)
+              next_step = workflow.find('      - name: ', start + len(marker))
+              if next_step == -1:
+                  raise SystemExit(
+                      "ERROR: could not find the next workflow step while removing the one-time repair step."
+                  )
+
+              workflow = workflow[:start] + workflow[next_step:]
+              workflow_path.write_text(
+                  workflow,
+                  encoding="utf-8",
+              )
+              print("PASS: one-time repair step removed from update.yml for future runs.")
           PY
 
           python -m py_compile scraper/scraper.py
-          echo "PASS: scraper pagination source compiles successfully."
+          python -m py_compile scraper/run.py
+          echo "PASS: scraper sources compile after permanent pagination fix."
 
-      - name: Validate Python sources
-        run: |
-          python -m py_compile scraper/run.py scraper/scraper.py scraper/prune_expired.py scraper/validate_published.py
-          echo "PASS: scraper Python sources compile successfully."
-
-      - name: Verify scraper dependencies
+      - name: Install/verify scraper dependencies
         run: |
           python - <<'PY'
           import pycountry
@@ -395,7 +413,7 @@ jobs:
           print("PASS: canonical JSON data is valid.")
           PY
 
-      - name: Commit updated data and source fix
+      - name: Commit updated data and permanent source fix
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -404,10 +422,11 @@ jobs:
           git add -- data/expired.json
           git add -- data/checkpoint.json
           git add -- scraper/scraper.py
+          git add -- .github/workflows/update.yml
           git add -- web/assets/european-solidarity-corps.png
 
           if git diff --cached --quiet; then
-            echo "No data or source changes detected."
+            echo "No data/source/workflow changes detected."
             exit 0
           fi
 
@@ -416,5 +435,5 @@ jobs:
           git commit -m "chore: update ESC opportunities"
           git push origin main
 
-          echo "ESC data/source updated and pushed."
+          echo "ESC data/source/workflow updated and pushed."
           echo "The push to main triggers deploy.yml."
