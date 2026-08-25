@@ -37,6 +37,36 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pycountry requests beautifulsoup4
 
+      - name: Download official footer logos
+        run: |
+          set -euo pipefail
+          mkdir -p web/assets
+
+          curl --fail --location --silent --show-error --retry 3 \
+            -A "Mozilla/5.0" \
+            "https://youth.europa.eu/sites/default/files/eu-logo/logo-eu-en.svg" \
+            -o web/assets/logo-eu-en.svg
+
+          curl --fail --location --silent --show-error --retry 3 \
+            -A "Mozilla/5.0" \
+            "https://youth.europa.eu/sites/default/files/eu-initiatives/logos/european-solidarity-corps.png" \
+            -o web/assets/european-solidarity-corps.png
+
+          curl --fail --location --silent --show-error --retry 3 \
+            -A "Mozilla/5.0" \
+            "https://eurodesk.eu/wp-content/uploads/2025/04/EYP-Logo.png" \
+            -o web/assets/eyp-logo.png
+
+          test -s web/assets/logo-eu-en.svg
+          test -s web/assets/european-solidarity-corps.png
+          test -s web/assets/eyp-logo.png
+
+          grep -q "<svg" web/assets/logo-eu-en.svg
+          file web/assets/european-solidarity-corps.png | grep -Eq 'PNG image data'
+          file web/assets/eyp-logo.png | grep -Eq 'PNG image data'
+
+          echo "PASS: all three official footer logos downloaded locally."
+
       - name: Validate Python sources
         run: |
           python -m py_compile scraper/run.py scraper/scraper.py scraper/prune_expired.py scraper/validate_published.py
@@ -104,7 +134,7 @@ jobs:
           print("PASS: canonical JSON data is valid.")
           PY
 
-      - name: Commit updated data
+      - name: Commit updated data and local assets
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -112,9 +142,12 @@ jobs:
           git add -- data/opportunities.json
           git add -- data/expired.json
           git add -- data/checkpoint.json
+          git add -- web/assets/logo-eu-en.svg
+          git add -- web/assets/european-solidarity-corps.png
+          git add -- web/assets/eyp-logo.png
 
           if git diff --cached --quiet; then
-            echo "No data changes detected."
+            echo "No data or asset changes detected."
             exit 0
           fi
 
@@ -123,5 +156,5 @@ jobs:
           git commit -m "chore: update ESC opportunities"
           git push origin main
 
-          echo "ESC data updated and pushed."
+          echo "ESC data/assets updated and pushed."
           echo "The push to main triggers deploy.yml."
