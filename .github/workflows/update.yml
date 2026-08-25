@@ -58,7 +58,7 @@ jobs:
 
           echo "PASS: ESC logo downloaded and EYP logo repository asset validated."
 
-      - name: Repair API pagination guard
+      - name: Repair API pagination and deduplicate results
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -66,16 +66,263 @@ jobs:
           path = Path("scraper/scraper.py")
           text = path.read_text(encoding="utf-8")
 
-          old = """            if len(page_hits) < API_PAGE_SIZE:\n                break\n"""
+          if "# API_PAGINATION_DEDUP_V2" in text:
+              print("PASS: API pagination deduplication already applied.")
+              raise SystemExit(0)
 
-          if old in text:
-              path.write_text(
-                  text.replace(old, "", 1),
-                  encoding="utf-8",
+          old = '''    opportunities = []
+
+    offset = 0
+    total = None
+
+    try:
+        while True:
+            data = fetch_api_page(
+                session,
+                offset,
+            )
+
+            if data is None:
+                raise RuntimeError(
+                    "Could not retrieve the current "
+                    "opportunity list."
+                )
+
+            hits = data.get(
+                "hits",
+                {},
+            )
+
+            total_info = hits.get(
+                "total",
+                {},
+            )
+
+            if total is None:
+                if isinstance(
+                    total_info,
+                    dict,
+                ):
+                    total = int(
+                        total_info.get(
+                            "value",
+                            0,
+                        )
+                        or 0
+                    )
+                else:
+                    total = int(
+                        total_info or 0
+                    )
+
+                print(
+                    f"API reports {total} opportunities.",
+                    flush=True,
+                )
+
+            page_hits = hits.get(
+                "hits",
+                [],
+            )
+
+            if not page_hits:
+                break
+
+            for hit in page_hits:
+                source = hit.get(
+                    "_source",
+                    {},
+                )
+
+                opid = source.get(
+                    "opid"
+                )
+
+                if opid is None:
+                    opid = hit.get(
+                        "_id"
+                    )
+
+                if opid is None:
+                    continue
+
+                try:
+                    source["opid"] = int(opid)
+                except (
+                    TypeError,
+                    ValueError,
+                ):
+                    continue
+
+                opportunities.append(
+                    source
+                )
+
+            offset += len(page_hits)
+
+            print(
+                f"Retrieved "
+                f"{len(opportunities)}/{total}",
+                flush=True,
+            )
+
+            if (
+                total is not None
+                and offset >= total
+            ):
+                break
+
+    finally:
+        session.close()
+
+    if (
+        total is not None
+        and len(opportunities) != total
+    ):
+        raise RuntimeError(
+            "Incomplete API retrieval: "
+            f"{len(opportunities)}/{total}"
+        )
+
+    return opportunities
+'''
+
+          new = '''    # API_PAGINATION_DEDUP_V2
+    opportunities_by_id = {}
+
+    offset = 0
+    total = None
+
+    try:
+        while True:
+            data = fetch_api_page(
+                session,
+                offset,
+            )
+
+            if data is None:
+                raise RuntimeError(
+                    "Could not retrieve the current "
+                    "opportunity list."
+                )
+
+            hits = data.get(
+                "hits",
+                {},
+            )
+
+            total_info = hits.get(
+                "total",
+                {},
+            )
+
+            if total is None:
+                if isinstance(
+                    total_info,
+                    dict,
+                ):
+                    total = int(
+                        total_info.get(
+                            "value",
+                            0,
+                        )
+                        or 0
+                    )
+                else:
+                    total = int(
+                        total_info or 0
+                    )
+
+                print(
+                    f"API reports {total} opportunities.",
+                    flush=True,
+                )
+
+            page_hits = hits.get(
+                "hits",
+                [],
+            )
+
+            if not page_hits:
+                break
+
+            for hit in page_hits:
+                source = hit.get(
+                    "_source",
+                    {},
+                )
+
+                opid = source.get(
+                    "opid"
+                )
+
+                if opid is None:
+                    opid = hit.get(
+                        "_id"
+                    )
+
+                if opid is None:
+                    continue
+
+                try:
+                    source["opid"] = int(opid)
+                except (
+                    TypeError,
+                    ValueError,
+                ):
+                    continue
+
+                opid_key = str(source["opid"])
+                opportunities_by_id.setdefault(
+                    opid_key,
+                    source,
+                )
+
+            offset += len(page_hits)
+            unique_count = len(opportunities_by_id)
+
+            print(
+                f"Retrieved "
+                f"{unique_count}/{total} unique opportunities "
+                f"(raw page hits: {len(page_hits)})",
+                flush=True,
+            )
+
+            if (
+                total is not None
+                and unique_count >= total
+            ):
+                break
+
+    finally:
+        session.close()
+
+    opportunities = list(
+        opportunities_by_id.values()
+    )
+
+    if (
+        total is not None
+        and len(opportunities) != total
+    ):
+        raise RuntimeError(
+            "Incomplete API retrieval: "
+            f"{len(opportunities)}/{total} unique opportunities"
+        )
+
+    return opportunities
+'''
+
+          if old not in text:
+              raise SystemExit(
+                  "ERROR: expected pagination block was not found; no scraper source was changed."
               )
-              print("PASS: removed obsolete short-page pagination stop condition.")
-          else:
-              print("PASS: short-page pagination stop condition is already fixed.")
+
+          path.write_text(
+              text.replace(old, new, 1),
+              encoding="utf-8",
+          )
+          print("PASS: API pagination now deduplicates by opid and validates unique records.")
           PY
 
           python -m py_compile scraper/scraper.py
