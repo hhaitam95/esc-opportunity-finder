@@ -58,6 +58,29 @@ jobs:
 
           echo "PASS: ESC logo downloaded and EYP logo repository asset validated."
 
+      - name: Repair API pagination guard
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("scraper/scraper.py")
+          text = path.read_text(encoding="utf-8")
+
+          old = """            if len(page_hits) < API_PAGE_SIZE:\n                break\n"""
+
+          if old in text:
+              path.write_text(
+                  text.replace(old, "", 1),
+                  encoding="utf-8",
+              )
+              print("PASS: removed obsolete short-page pagination stop condition.")
+          else:
+              print("PASS: short-page pagination stop condition is already fixed.")
+          PY
+
+          python -m py_compile scraper/scraper.py
+          echo "PASS: scraper pagination source compiles successfully."
+
       - name: Validate Python sources
         run: |
           python -m py_compile scraper/run.py scraper/scraper.py scraper/prune_expired.py scraper/validate_published.py
@@ -125,7 +148,7 @@ jobs:
           print("PASS: canonical JSON data is valid.")
           PY
 
-      - name: Commit updated data and local assets
+      - name: Commit updated data and source fix
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -133,10 +156,11 @@ jobs:
           git add -- data/opportunities.json
           git add -- data/expired.json
           git add -- data/checkpoint.json
+          git add -- scraper/scraper.py
           git add -- web/assets/european-solidarity-corps.png
 
           if git diff --cached --quiet; then
-            echo "No data or asset changes detected."
+            echo "No data or source changes detected."
             exit 0
           fi
 
@@ -145,5 +169,5 @@ jobs:
           git commit -m "chore: update ESC opportunities"
           git push origin main
 
-          echo "ESC data/assets updated and pushed."
+          echo "ESC data/source updated and pushed."
           echo "The push to main triggers deploy.yml."
