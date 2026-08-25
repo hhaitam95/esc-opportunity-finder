@@ -37,35 +37,26 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pycountry requests beautifulsoup4
 
-      - name: Download official footer logos
+      - name: Download and validate footer logos
         run: |
           set -euo pipefail
           mkdir -p web/assets
 
-          curl --fail --location --silent --show-error --retry 3 \
-            -A "Mozilla/5.0" \
-            "https://youth.europa.eu/sites/default/files/eu-logo/logo-eu-en.svg" \
-            -o web/assets/logo-eu-en.svg
-
+          # The ESC asset is refreshed from the official European Youth Portal.
           curl --fail --location --silent --show-error --retry 3 \
             -A "Mozilla/5.0" \
             "https://youth.europa.eu/sites/default/files/eu-initiatives/logos/european-solidarity-corps.png" \
             -o web/assets/european-solidarity-corps.png
 
-          curl --fail --location --silent --show-error --retry 3 \
-            -A "Mozilla/5.0" \
-            "https://eurodesk.eu/wp-content/uploads/2025/04/EYP-Logo.png" \
-            -o web/assets/eyp-logo.png
-
-          test -s web/assets/logo-eu-en.svg
+          # The EYP asset is kept in the repository because Eurodesk blocks
+          # unattended GitHub Actions downloads with HTTP 403.
           test -s web/assets/european-solidarity-corps.png
-          test -s web/assets/eyp-logo.png
+          test -s web/assets/EYP-Logo.png
 
-          grep -q "<svg" web/assets/logo-eu-en.svg
           file web/assets/european-solidarity-corps.png | grep -Eq 'PNG image data'
-          file web/assets/eyp-logo.png | grep -Eq 'PNG image data'
+          file web/assets/EYP-Logo.png | grep -Eq 'PNG image data'
 
-          echo "PASS: all three official footer logos downloaded locally."
+          echo "PASS: ESC logo downloaded and EYP logo repository asset validated."
 
       - name: Validate Python sources
         run: |
@@ -142,9 +133,7 @@ jobs:
           git add -- data/opportunities.json
           git add -- data/expired.json
           git add -- data/checkpoint.json
-          git add -- web/assets/logo-eu-en.svg
           git add -- web/assets/european-solidarity-corps.png
-          git add -- web/assets/eyp-logo.png
 
           if git diff --cached --quiet; then
             echo "No data or asset changes detected."
