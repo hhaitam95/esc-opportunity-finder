@@ -17,28 +17,39 @@
       const normalized = COUNTRY_CODE_ALIASES[raw];
       if (!normalized) return;
 
+      const fallbackName = normalized === "GR" ? "Greece" : "United Kingdom";
+      let translatedName = fallbackName;
+
       try {
         const displayNames = new Intl.DisplayNames([locale], { type: "region" });
-        nameNode.textContent = displayNames.of(normalized) || "Greece";
+        translatedName = displayNames.of(normalized) || fallbackName;
       } catch {
-        nameNode.textContent = normalized === "GR" ? "Greece" : "United Kingdom";
+        // Keep fallback.
+      }
+
+      if (nameNode.textContent !== translatedName) {
+        nameNode.textContent = translatedName;
       }
 
       if (/^[A-Z]{2}$/.test(normalized)) {
-        flagNode.textContent = String.fromCodePoint(
+        const flag = String.fromCodePoint(
           ...normalized.split("").map((letter) => 127397 + letter.charCodeAt(0)),
         );
+        if (flagNode.textContent !== flag) {
+          flagNode.textContent = flag;
+        }
       }
     });
   }
 
-  const observer = new MutationObserver(() => normalizeCountryDisplay());
-
   function start() {
     normalizeCountryDisplay();
-    observer.observe(document.body, { childList: true, subtree: true });
+    window.normalizeCountryDisplay = normalizeCountryDisplay;
   }
 
-  if (document.body) start();
-  else document.addEventListener("DOMContentLoaded", start, { once: true });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true });
+  } else {
+    start();
+  }
 })();
