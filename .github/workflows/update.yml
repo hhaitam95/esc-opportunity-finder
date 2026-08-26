@@ -69,18 +69,27 @@ jobs:
         run: |
           python - <<'PY'
           import json
-          from datetime import datetime
+          from datetime import datetime, timezone
           from pathlib import Path
 
           path = Path("data/opportunities.json")
           data = json.loads(path.read_text(encoding="utf-8"))
-          generated_at = datetime.now().isoformat()
+          generated_at = datetime.now(timezone.utc).isoformat()
           data["generated_at"] = generated_at
           path.write_text(
               json.dumps(data, ensure_ascii=False, indent=2) + "\n",
               encoding="utf-8",
           )
-          print(f"PASS: refreshed generated_at: {generated_at}")
+          Path("data/last_successful_run.json").write_text(
+              json.dumps(
+                  {"last_successful_run_at": generated_at},
+                  ensure_ascii=False,
+                  indent=2,
+              )
+              + "\n",
+              encoding="utf-8",
+          )
+          print(f"PASS: refreshed successful-run timestamp: {generated_at}")
           PY
 
       - name: Validate published dataset
@@ -106,17 +115,23 @@ jobs:
 
           opportunities_path = Path("data/opportunities.json")
           expired_path = Path("data/expired.json")
+          heartbeat_path = Path("data/last_successful_run.json")
           if not opportunities_path.exists():
               raise SystemExit("ERROR: data/opportunities.json was not created.")
           if not expired_path.exists():
               raise SystemExit("ERROR: data/expired.json was not created.")
+          if not heartbeat_path.exists():
+              raise SystemExit("ERROR: data/last_successful_run.json was not created.")
 
           opportunities = json.loads(opportunities_path.read_text(encoding="utf-8"))
           expired = json.loads(expired_path.read_text(encoding="utf-8"))
+          heartbeat = json.loads(heartbeat_path.read_text(encoding="utf-8"))
           if not isinstance(opportunities, dict):
               raise SystemExit("ERROR: opportunities data must be an object.")
           if not isinstance(expired, dict):
               raise SystemExit("ERROR: expired data must be an object.")
+          if not isinstance(heartbeat, dict) or not heartbeat.get("last_successful_run_at"):
+              raise SystemExit("ERROR: successful-run heartbeat is invalid.")
           if not isinstance(opportunities.get("opportunities"), list) or not opportunities["opportunities"]:
               raise SystemExit("ERROR: scraper produced an empty opportunities list.")
           if not isinstance(expired.get("opportunities"), list):
@@ -124,17 +139,18 @@ jobs:
 
           print(f"PASS: saved {len(opportunities['opportunities'])} current opportunities.")
           print(f"PASS: saved {len(expired['opportunities'])} recently expired opportunities.")
+          print(f"PASS: heartbeat: {heartbeat['last_successful_run_at']}")
           print("PASS: canonical JSON data is valid.")
           PY
 
-      - name: Commit updated data, source fix, and helper
+      - name: Commit updated data, source fix, assets, and heartbeat
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- data/opportunities.json data/expired.json data/checkpoint.json scraper/scraper.py .github/scripts/bootstrap_pagination.py web/assets/european-solidarity-corps.png
+          git add -- data/opportunities.json data/expired.json data/checkpoint.json data/last_successful_run.json scraper/scraper.py .github/scripts/bootstrap_pagination.py web/assets/european-solidarity-corps.png
 
           if git diff --cached --quiet; then
-            echo "No data/source/asset changes detected."
+            echo "No data/source/asset/heartbeat changes detected."
             exit 0
           fi
 
@@ -143,5 +159,5 @@ jobs:
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
-          echo "ESC data/source/assets updated and pushed."
+          echo "ESC data/source/assets/heartbeat updated and pushed."
           echo "The push to main triggers deploy.yml."
