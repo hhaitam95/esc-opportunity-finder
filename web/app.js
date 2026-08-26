@@ -34,6 +34,8 @@ import {
   renderRows,
 } from "./table.js";
 
+import { localizeNewCity } from "./city-localizations.js";
+
 const state = createState();
 
 const dom = {
@@ -206,6 +208,19 @@ function filteredActive() {
   return results;
 }
 
+function prepareRowsForDisplay(opportunities) {
+  return opportunities.map((opportunity) => {
+    const town = String(opportunity.town || "").trim();
+    if (!town) return opportunity;
+
+    const country = String(opportunity.country || "").trim().toUpperCase();
+    const localizedTown = localizeNewCity(country, town, locale());
+    if (!localizedTown || localizedTown === town) return opportunity;
+
+    return { ...opportunity, town: localizedTown };
+  });
+}
+
 function renderActive() {
   if (!state.participantSearchApplied) {
     dom.opportunitiesBody.innerHTML = "";
@@ -224,7 +239,7 @@ function renderActive() {
   }
 
   show(dom.emptyMessage, false);
-  dom.opportunitiesBody.innerHTML = renderRows(results, {
+  dom.opportunitiesBody.innerHTML = renderRows(prepareRowsForDisplay(results), {
     archived: false,
     newIds: enabled("newBadges") ? (state.data?.newIds || new Set()) : new Set(),
     locale: locale(),
@@ -250,7 +265,7 @@ function renderArchived() {
   show(dom.expiredSection, true);
   if (dom.expiredCount) dom.expiredCount.textContent = String(results.length);
 
-  dom.expiredBody.innerHTML = renderRows(results, {
+  dom.expiredBody.innerHTML = renderRows(prepareRowsForDisplay(results), {
     archived: true,
     newIds: new Set(),
     locale: locale(),
