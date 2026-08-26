@@ -12,6 +12,7 @@ function clean(value) {
 function extractPrimaryLocation(value) {
   let text = clean(value);
   if (!text) return "";
+
   text = text.replace(/^\d{4,6}\s*[-–]\s*/u, "");
   text = text.replace(/,?\s+(?:Italy|Italia|France|Germany|Deutschland|Spain|España|Portugal|Poland|Polska|Czechia|Türkiye|Turkey|Bolivia|Senegal|Romania|Nederland|Netherlands|Armenia|Georgia)$/iu, "");
   text = clean(text);
@@ -36,9 +37,14 @@ function extractPrimaryLocation(value) {
 }
 
 export function localizeNewCity(country, city, locale) {
-  const primary = extractPrimaryLocation(city);
-  if (!primary) return "";
-  return localizeCityName(country, primary, locale) || primary;
+  const source = String(city || "").trim();
+  if (!source) return "";
+
+  // First let the established curated map translate the original EYP value.
+  // Then extract exactly one locality from that localized result.
+  const localized = localizeCityName(country, source, locale);
+  const primary = extractPrimaryLocation(localized || source);
+  return primary || extractPrimaryLocation(source);
 }
 
 export function normalizedCityKey(country, city) {
