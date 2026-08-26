@@ -1,6 +1,6 @@
 # Canonical ESC opportunity update workflow.
 # Keep this filename unchanged: .github/workflows/update.yml
-name: ESC Opportunity Finder Update Workflow
+name: Update ESC Opportunities
 
 on:
   schedule:
@@ -39,6 +39,12 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pycountry requests beautifulsoup4
 
+      - name: Apply permanent API pagination fix
+        run: |
+          python .github/scripts/bootstrap_pagination.py
+          python -m py_compile scraper/scraper.py
+          echo "PASS: scraper pagination source compiles."
+
       - name: Download and validate footer logos
         run: |
           set -euo pipefail
@@ -52,128 +58,6 @@ jobs:
           file web/assets/european-solidarity-corps.png | grep -Eq 'PNG image data'
           file web/assets/EYP-Logo.png | grep -Eq 'PNG image data'
           echo "PASS: footer assets validated."
-
-      - name: Bootstrap permanent API pagination fix
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          scraper_path = Path("scraper/scraper.py")
-          workflow_path = Path(".github/workflows/update.yml")
-          text = scraper_path.read_text(encoding="utf-8")
-
-          marker = "# API_PAGINATION_DEDUP_V2"
-          if marker not in text:
-              start = text.find("def fetch_current_opportunities():")
-              end = text.find("\n\n# ============================================================================\n# DETAIL PAGE PARSING", start)
-              if start < 0 or end < 0:
-                  raise SystemExit("ERROR: could not locate fetch_current_opportunities boundaries; no source change made.")
-
-              new_function = '''def fetch_current_opportunities():
-    # API_PAGINATION_DEDUP_V2
-    print("=" * 70)
-    print("FETCHING CURRENT ESC OPPORTUNITIES")
-    print("=" * 70)
-
-    session = requests.Session()
-    opportunities_by_id = {}
-    offset = 0
-    total = None
-
-    try:
-        while True:
-            data = fetch_api_page(session, offset)
-
-            if data is None:
-                raise RuntimeError(
-                    "Could not retrieve the current opportunity list."
-                )
-
-            hits = data.get("hits", {})
-            total_info = hits.get("total", {})
-
-            if total is None:
-                if isinstance(total_info, dict):
-                    total = int(total_info.get("value", 0) or 0)
-                else:
-                    total = int(total_info or 0)
-
-                print(
-                    f"API reports {total} opportunities.",
-                    flush=True,
-                )
-
-            page_hits = hits.get("hits", [])
-            if not page_hits:
-                break
-
-            for hit in page_hits:
-                source = hit.get("_source", {})
-                opid = source.get("opid")
-                if opid is None:
-                    opid = hit.get("_id")
-                if opid is None:
-                    continue
-
-                try:
-                    source["opid"] = int(opid)
-                except (TypeError, ValueError):
-                    continue
-
-                opportunities_by_id.setdefault(
-                    str(source["opid"]),
-                    source,
-                )
-
-            offset += len(page_hits)
-            unique_count = len(opportunities_by_id)
-
-            print(
-                f"Retrieved {unique_count}/{total} unique opportunities "
-                f"(raw page hits: {len(page_hits)})",
-                flush=True,
-            )
-
-            if total is not None and unique_count >= total:
-                break
-
-    finally:
-        session.close()
-
-    opportunities = list(opportunities_by_id.values())
-
-    if total is not None and len(opportunities) != total:
-        raise RuntimeError(
-            "Incomplete API retrieval: "
-            f"{len(opportunities)}/{total} unique opportunities"
-        )
-
-    return opportunities
-
-'''
-
-              text = text[:start] + new_function + text[end:]
-              scraper_path.write_text(text, encoding="utf-8")
-              print("PASS: permanent API pagination/deduplication fix applied by function boundaries.")
-          else:
-              print("PASS: permanent API pagination/deduplication fix already present.")
-
-          workflow = workflow_path.read_text(encoding="utf-8")
-          step_marker = "      - name: Bootstrap permanent API pagination fix\n"
-          if step_marker in workflow:
-              start = workflow.index(step_marker)
-              next_step = workflow.find("      - name: ", start + len(step_marker))
-              if next_step < 0:
-                  raise SystemExit("ERROR: could not locate next workflow step while removing bootstrap.")
-              workflow = workflow[:start] + workflow[next_step:]
-              workflow_path.write_text(workflow, encoding="utf-8")
-              print("PASS: bootstrap step removed from update.yml for future runs.")
-          else:
-              print("PASS: bootstrap step already absent from update.yml.")
-          PY
-
-          python -m py_compile scraper/scraper.py
-          echo "PASS: scraper pagination source compiles."
 
       - name: Run ESC scraper
         run: python scraper/run.py
@@ -204,30 +88,35 @@ jobs:
 
           opportunities_path = Path("data/opportunities.json")
           expired_path = Path("data/expired.json")
-          if not opportunities_path.exists(): raise SystemExit("ERROR: data/opportunities.json was not created.")
-          if not expired_path.exists(): raise SystemExit("ERROR: data/expired.json was not created.")
+          if not opportunities_path.exists():
+              raise SystemExit("ERROR: data/opportunities.json was not created.")
+          if not expired_path.exists():
+              raise SystemExit("ERROR: data/expired.json was not created.")
 
           opportunities = json.loads(opportunities_path.read_text(encoding="utf-8"))
           expired = json.loads(expired_path.read_text(encoding="utf-8"))
-          if not isinstance(opportunities, dict): raise SystemExit("ERROR: opportunities data must be an object.")
-          if not isinstance(expired, dict): raise SystemExit("ERROR: expired data must be an object.")
+          if not isinstance(opportunities, dict):
+              raise SystemExit("ERROR: opportunities data must be an object.")
+          if not isinstance(expired, dict):
+              raise SystemExit("ERROR: expired data must be an object.")
           if not isinstance(opportunities.get("opportunities"), list) or not opportunities["opportunities"]:
               raise SystemExit("ERROR: scraper produced an empty opportunities list.")
-          if not isinstance(expired.get("opportunities"), list): raise SystemExit("ERROR: expired data has no opportunities list.")
+          if not isinstance(expired.get("opportunities"), list):
+              raise SystemExit("ERROR: expired data has no opportunities list.")
 
           print(f"PASS: saved {len(opportunities['opportunities'])} current opportunities.")
           print(f"PASS: saved {len(expired['opportunities'])} recently expired opportunities.")
           print("PASS: canonical JSON data is valid.")
           PY
 
-      - name: Commit updated data, source fix, and workflow cleanup
+      - name: Commit updated data, source fix, and helper
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- data/opportunities.json data/expired.json data/checkpoint.json scraper/scraper.py .github/workflows/update.yml web/assets/european-solidarity-corps.png
+          git add -- data/opportunities.json data/expired.json data/checkpoint.json scraper/scraper.py .github/scripts/bootstrap_pagination.py web/assets/european-solidarity-corps.png
 
           if git diff --cached --quiet; then
-            echo "No data/source/workflow/asset changes detected."
+            echo "No data/source/asset changes detected."
             exit 0
           fi
 
@@ -236,5 +125,5 @@ jobs:
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
-          echo "ESC data/source/workflow/assets updated and pushed."
+          echo "ESC data/source/assets updated and pushed."
           echo "The push to main triggers deploy.yml."
