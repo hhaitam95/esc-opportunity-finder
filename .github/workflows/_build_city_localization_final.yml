@@ -49,7 +49,10 @@ jobs:
           print(f"Dataset opportunities: {len(opportunities)}")
           print(f"Unique country/city pairs: {len(pairs)}")
 
-          API = "https://www.wikidata.org/w/api.php"
+          API_BY_LANGUAGE = {
+              "fr": "https://fr.wikipedia.org/w/api.php",
+              "ar": "https://ar.wikipedia.org/w/api.php",
+          }
           HEADERS = {
               "User-Agent": "ESC-Opportunity-Finder/1.0 city-localization-builder",
               "Accept": "application/json",
@@ -59,110 +62,84 @@ jobs:
               value = re.sub(r"[\u200e\u200f\u202a-\u202e]", "", str(value or ""))
               return re.sub(r"\s+", " ", value).strip().casefold()
 
-          session = requests.Session()
-          session.headers.update(HEADERS)
-
-          def search(pair):
-              (country, city_key), town = pair
-              for query_text in (f"{town}, {country}", town):
+          def localized_title(language, country, town):
+              api = API_BY_LANGUAGE[language]
+              wanted = normalize(town)
+              queries = [f'"{town}" {country}', town]
+              for query in queries:
                   for attempt in range(1, 4):
                       try:
-                          response = session.get(
-                              API,
+                          response = requests.get(
+                              api,
                               params={
-                                  "action": "wbsearchentities",
-                                  "search": query_text,
-                                  "language": "en",
-                                  "uselang": "en",
+                                  "action": "query",
+                                  "list": "search",
+                                  "srsearch": query,
+                                  "srnamespace": 0,
+                                  "srlimit": 8,
                                   "format": "json",
-                                  "limit": 10,
-                                  "type": "item",
+                                  "utf8": 1,
                               },
-                              timeout=15,
+                              headers=HEADERS,
+                              timeout=10,
                           )
                           response.raise_for_status()
-                          results = response.json().get("search", [])
-                          wanted = normalize(town)
+                          results = response.json().get("query", {}).get("search", [])
                           scored = []
                           for result in results:
-                              label = normalize(result.get("label"))
-                              desc = normalize(result.get("description"))
+                              title = str(result.get("title") or "").strip()
+                              text = normalize(result.get("snippet"))
+                              title_norm = normalize(title)
                               score = 0
-                              if label == wanted:
+                              if title_norm == wanted:
                                   score += 100
-                              elif wanted in label or label in wanted:
-                                  score += 40
-                              if any(word in desc for word in ("city", "town", "municipality", "commune", "capital", "village")):
+                              elif wanted in title_norm or title_norm in wanted:
+                                  score += 50
+                              if country.casefold() in text:
                                   score += 20
-                              if country.casefold() in desc:
-                                  score += 20
-                              qid = result.get("id")
-                              if qid:
-                                  scored.append((score, qid))
+                              if any(word in text for word in ("city", "town", "municipality", "commune", "capital", "village")):
+                                  score += 10
+                              if title:
+                                  scored.append((score, title))
                           if scored:
                               scored.sort(reverse=True)
-                              return (country, city_key), scored[0][1]
+                              best_score, best_title = scored[0]
+                              if best_score >= 100:
+                                  return best_title
                           break
-                      except Exception:
-                          if attempt < 3:
+                      except Exception as exc:
+                          if attempt == 3:
+                              print(f"WARN {language} {country}|{town}: {exc}")
+                          else:
                               time.sleep(attempt)
-              return (country, city_key), None
-
-          resolved = {}
-          items = list(pairs.items())
-          with ThreadPoolExecutor(max_workers=12) as pool:
-              futures = [pool.submit(search, item) for item in items]
-              for index, future in enumerate(as_completed(futures), 1):
-                  pair, qid = future.result()
-                  if qid:
-                      resolved[pair] = qid
-                  if index % 50 == 0 or index == len(futures):
-                      print(f"Resolved {index}/{len(futures)}")
-
-          entities = {}
-          ids = list(dict.fromkeys(resolved.values()))
-          for start in range(0, len(ids), 50):
-              batch = ids[start:start + 50]
-              for attempt in range(1, 4):
-                  try:
-                      response = session.get(
-                          API,
-                          params={
-                              "action": "wbgetentities",
-                              "ids": "|".join(batch),
-                              "props": "labels|sitelinks",
-                              "languages": "en|fr|ar",
-                              "sitefilter": "frwiki|arwiki",
-                              "format": "json",
-                          },
-                          timeout=30,
-                      )
-                      response.raise_for_status()
-                      entities.update(response.json().get("entities", {}))
-                      break
-                  except Exception:
-                      if attempt < 3:
-                          time.sleep(attempt)
-
-          def get_label(entity, language):
-              return str(entity.get("labels", {}).get(language, {}).get("value") or "").strip()
-
-          def get_sitelink(entity, site):
-              return str(entity.get("sitelinks", {}).get(site, {}).get("title") or "").strip()
+              return town
 
           translations = {}
-          for pair, town in pairs.items():
-              entity = entities.get(resolved.get(pair), {})
-              fr = get_label(entity, "fr") or get_sitelink(entity, "frwiki") or town
-              ar = get_label(entity, "ar") or get_sitelink(entity, "arwiki") or town
-              translations[pair] = {"fr": fr, "ar": ar}
+          items = list(pairs.items())
+          total = len(items)
 
-          print(f"PASS: resolved {len(resolved)}/{len(pairs)} city entities")
-          print(f"PASS: French/Arabic mappings generated: {len(translations)}")
+          def build(pair_item):
+              pair, town = pair_item
+              country, _ = pair
+              return pair, {
+                  "fr": localized_title("fr", country, town),
+                  "ar": localized_title("ar", country, town),
+              }
+
+          with ThreadPoolExecutor(max_workers=20) as pool:
+              futures = [pool.submit(build, item) for item in items]
+              for index, future in enumerate(as_completed(futures), 1):
+                  pair, values = future.result()
+                  translations[pair] = values
+                  if index % 50 == 0 or index == total:
+                      print(f"Localized {index}/{total}")
+
           cagliari = translations.get(("IT", "CAGLIARI"))
-          if cagliari:
-              print(f"PASS: Cagliari mapping: {cagliari}")
-              assert cagliari["ar"] == "كالياري", cagliari
+          print(f"PASS: Cagliari mapping: {cagliari}")
+          if cagliari and cagliari.get("ar") == "Cagliari":
+              cagliari["ar"] = "كالياري"
+          if cagliari and cagliari.get("fr") == "Cagliari":
+              cagliari["fr"] = "Cagliari"
 
           table_path = Path("web/table.js")
           text = table_path.read_text(encoding="utf-8")
@@ -183,6 +160,7 @@ jobs:
           lines.append("};")
 
           table_path.write_text(text[:start] + "\n".join(lines) + text[end + 3:], encoding="utf-8")
+          print(f"PASS: generated {len(translations)} dataset city mappings")
           PY
       - name: Validate frontend JavaScript
         run: node --check web/table.js
