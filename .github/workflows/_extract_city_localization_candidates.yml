@@ -1,0 +1,38 @@
+name: Extract city localization candidates
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Extract unique country and town pairs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("data/opportunities.json").read_text(encoding="utf-8"))
+          pairs = {}
+          for item in data.get("opportunities", []):
+              if not isinstance(item, dict):
+                  continue
+              country = str(item.get("country") or "").strip().upper()
+              town = str(item.get("town") or "").strip()
+              if country and town:
+                  pairs[f"{country}|{town.upper()}"] = {"country": country, "town": town}
+          Path("/tmp/city-localization-candidates.json").write_text(
+              json.dumps([pairs[k] for k in sorted(pairs)], ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(f"Extracted {len(pairs)} unique country/town pairs")
+          PY
+      - uses: actions/upload-artifact@v6
+        with:
+          name: city-localization-candidates
+          path: /tmp/city-localization-candidates.json
+          if-no-files-found: error
