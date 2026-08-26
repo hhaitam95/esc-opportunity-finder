@@ -23,6 +23,8 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "IT|VICENZA": { fr: "Vicence", ar: "فيتشنزا" },
   "IT|COMO": { fr: "Côme", ar: "كومو" },
   "IT|FRATTAMAGGIORE": { fr: "Frattamaggiore", ar: "فراتاماجيوري" },
+  "IT|REGGIO NELL'EMILIA": { fr: "Reggio d'Émilie", ar: "ريجيو إميليا" },
+  "IT|TORRE DEL GRECO": { fr: "Torre del Greco", ar: "توري دل غريكو" },
 
   "FR|PARIS": { fr: "Paris", ar: "باريس" },
   "FR|LYON": { fr: "Lyon", ar: "ليون" },
@@ -35,7 +37,7 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "FR|MONTPELLIER": { fr: "Montpellier", ar: "مونبلييه" },
   "FR|GRENOBLE": { fr: "Grenoble", ar: "غرونوبل" },
   "FR|REIMS": { fr: "Reims", ar: "ريمس" },
-  "FR|RENNES": { fr: "Rennes", ar: "رِن" },
+  "FR|RENNES": { fr: "Rennes", ar: "رين" },
   "FR|CAEN": { fr: "Caen", ar: "كان" },
   "FR|TOURS": { fr: "Tours", ar: "تور" },
   "FR|PAU": { fr: "Pau", ar: "بو" },
@@ -58,6 +60,7 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "DE|WUERZBURG": { fr: "Würzburg", ar: "فورتسبورغ" },
   "DE|SAARBRÜCKEN": { fr: "Sarrebruck", ar: "ساربروكن" },
   "DE|GÖTTINGEN": { fr: "Göttingen", ar: "غوتينغن" },
+  "DE|FREIBURG IM BREISGAU": { fr: "Fribourg-en-Brisgau", ar: "فرايبورغ إم برايسغاو" },
 
   "ES|MADRID": { fr: "Madrid", ar: "مدريد" },
   "ES|BARCELONA": { fr: "Barcelone", ar: "برشلونة" },
@@ -74,6 +77,9 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "ES|SANTIAGO DE COMPOSTELA": { fr: "Saint-Jacques-de-Compostelle", ar: "سانتياغو دي كومبوستيلا" },
   "ES|PALMA DE MALLORCA": { fr: "Palma de Majorque", ar: "بالما دي مايوركا" },
   "ES|JEREZ DE LA FRONTERA": { fr: "Jerez de la Frontera", ar: "خيريز دي لا فرونتيرا" },
+  "ES|SANTA CRUZ DE TENERIFE": { fr: "Santa Cruz de Tenerife", ar: "سانتا كروز دي تينيريفي" },
+  "ES|VALLADOLID": { fr: "Valladolid", ar: "بلد الوليد" },
+  "ES|TORTOSA": { fr: "Tortosa", ar: "طرطوشة" },
 
   "PT|LISBON": { fr: "Lisbonne", ar: "لشبونة" },
   "PT|LISBOA": { fr: "Lisbonne", ar: "لشبونة" },
@@ -100,6 +106,7 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "CY|NICOSIA": { fr: "Nicosie", ar: "نيقوسيا" },
   "CY|PAPHOS": { fr: "Paphos", ar: "بافوس" },
   "CY|PAFOS": { fr: "Paphos", ar: "بافوس" },
+
   "TR|ISTANBUL": { fr: "Istanbul", ar: "إسطنبول" },
   "TR|ANKARA": { fr: "Ankara", ar: "أنقرة" },
   "TR|NİĞDE": { fr: "Niğde", ar: "نيغدة" },
@@ -121,7 +128,6 @@ const CITY_LOCALIZATION_OVERRIDES = {
 
   "PL|WARSAW": { fr: "Varsovie", ar: "وارسو" },
   "PL|WARSZAWA": { fr: "Varsovie", ar: "وارسو" },
-  "PL|WARSAW / WARSZAWA": { fr: "Varsovie", ar: "وارسو" },
   "PL|KRAKOW": { fr: "Cracovie", ar: "كراكوف" },
   "PL|KRAKÓW": { fr: "Cracovie", ar: "كراكوف" },
   "PL|CRACOVIA": { fr: "Cracovie", ar: "كراكوف" },
@@ -151,84 +157,6 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "CZ|SPÁLENÉ POŘÍČÍ": { fr: "Spálené Poříčí", ar: "سباليني بوريتشي" },
   "CZ|VELKÁ BÍTEŠ": { fr: "Velká Bíteš", ar: "فيلكا بيتش" },
   "CZ|VSETÍN": { fr: "Vsetín", ar: "فيستين" },
-
-  "AT|VIENNA": { fr: "Vienne", ar: "فيينا" },
-  "AT|WIEN": { fr: "Vienne", ar: "فيينا" },
-  "CH|GENEVA": { fr: "Genève", ar: "جنيف" },
-  "CH|GENÈVE": { fr: "Genève", ar: "جنيف" },
-  "CH|ZURICH": { fr: "Zurich", ar: "زيورخ" },
-  "CH|ZÜRICH": { fr: "Zurich", ar: "زيورخ" },
-  "RO|BUCHAREST": { fr: "Bucarest", ar: "بوخارست" },
-  "RO|BUCURESTI": { fr: "Bucarest", ar: "بوخارست" },
-  "RO|BUCUREȘTI": { fr: "Bucarest", ar: "بوخارست" },
-  "RO|TIMISOARA": { fr: "Timișoara", ar: "تيميشوارا" },
-  "RO|TIMIȘOARA": { fr: "Timișoara", ar: "تيميشوارا" },
-  "RO|IASI": { fr: "Iași", ar: "ياش" },
-  "RO|IAȘI": { fr: "Iași", ar: "ياش" },
-  "RO|CLUJ-NAPOCA": { fr: "Cluj-Napoca", ar: "كلوج نابوكا" },
-
-  "HU|BUDAPEST": { fr: "Budapest", ar: "بودابست" },
-  "HU|DEBRECEN": { fr: "Debrecen", ar: "ديبريتسين" },
-  "HU|PÉCS": { fr: "Pécs", ar: "بيتش" },
-  "HR|ZAGREB": { fr: "Zagreb", ar: "زغرب" },
-  "HR|SPLIT": { fr: "Split", ar: "سبليت" },
-  "SI|LJUBLJANA": { fr: "Ljubljana", ar: "ليوبليانا" },
-  "SK|BRATISLAVA": { fr: "Bratislava", ar: "براتيسلافا" },
-  "SK|BANSKA BYSTRICA": { fr: "Banská Bystrica", ar: "بانسكا بيستريتسا" },
-  "SK|BANSKÁ BYSTRICA": { fr: "Banská Bystrica", ar: "بانسكا بيستريتسا" },
-  "SK|KOŠICE": { fr: "Košice", ar: "كوشيتسه" },
-  "BG|SOFIA": { fr: "Sofia", ar: "صوفيا" },
-  "BG|BURGAS": { fr: "Bourgas", ar: "بورغاس" },
-  "BG|VARNA": { fr: "Varna", ar: "فارنا" },
-  "RS|BELGRADE": { fr: "Belgrade", ar: "بلغراد" },
-  "BA|SARAJEVO": { fr: "Sarajevo", ar: "سراييفو" },
-  "AL|TIRANA": { fr: "Tirana", ar: "تيرانا" },
-  "MK|SKOPJE": { fr: "Skopje", ar: "سكوبيه" },
-  "LT|VILNIUS": { fr: "Vilnius", ar: "فيلنيوس" },
-  "LV|RIGA": { fr: "Riga", ar: "ريغا" },
-  "EE|TALLINN": { fr: "Tallinn", ar: "تالين" },
-  "EE|TALLIN": { fr: "Tallinn", ar: "تالين" },
-  "MT|VALLETTA": { fr: "La Valette", ar: "فاليتا" },
-  "IE|DUBLIN": { fr: "Dublin", ar: "دبلن" },
-  "GB|LONDON": { fr: "Londres", ar: "لندن" },
-  "GB|EDINBURGH": { fr: "Édimbourg", ar: "إدنبرة" },
-  "SE|STOCKHOLM": { fr: "Stockholm", ar: "ستوكهولم" },
-  "DK|COPENHAGEN": { fr: "Copenhague", ar: "كوبنهاغن" },
-  "DK|KOBENHAVN": { fr: "Copenhague", ar: "كوبنهاغن" },
-  "NO|OSLO": { fr: "Oslo", ar: "أوسلو" },
-  "FI|HELSINKI": { fr: "Helsinki", ar: "هلسنكي" },
-  "IS|REYKJAVIK": { fr: "Reykjavík", ar: "ريكيافيك" },
-  "IS|REYKJAVÍK": { fr: "Reykjavík", ar: "ريكيافيك" },
-  "LU|LUXEMBOURG": { fr: "Luxembourg", ar: "لوكسمبورغ" },
-  "MA|GUELMIN": { fr: "Guelmim", ar: "كلميم" },
-  "MA|JERADA": { fr: "Jerada", ar: "جرادة" },
-  "MA|LARACHE": { fr: "Larache", ar: "العرائش" },
-  "MA|MEKNES": { fr: "Meknès", ar: "مكناس" },
-  "TN|MEDENINE": { fr: "Médenine", ar: "مدنين" },
-  "TN|MÉDENINE": { fr: "Médenine", ar: "مدنين" },
-  "TN|NABEUL": { fr: "Nabeul", ar: "نابل" },
-  "TN|SFAX": { fr: "Sfax", ar: "صفاقس" },
-  "TN|SOUSSE": { fr: "Sousse", ar: "سوسة" },
-  "SN|DAKAR": { fr: "Dakar", ar: "داكار" },
-  "SN|THIES": { fr: "Thiès", ar: "تييس" },
-  "TG|LOMÉ": { fr: "Lomé", ar: "لومي" },
-  "EG|CAIRO": { fr: "Le Caire", ar: "القاهرة" },
-  "EG|ALEXANDRIE": { fr: "Alexandrie", ar: "الإسكندرية" },
-  "EG|SIWA": { fr: "Siwa", ar: "سيوة" },
-  "JO|AMMAN": { fr: "Amman", ar: "عمّان" },
-  "NP|KATHMANDU": { fr: "Katmandou", ar: "كاتماندو" },
-  "PE|LIMA": { fr: "Lima", ar: "ليما" },
-  "EC|QUITO": { fr: "Quito", ar: "كيتو" },
-  "CO|AGUACHICA": { fr: "Aguachica", ar: "أغواتشيكا" },
-  "CG|BRAZZAVILLE": { fr: "Brazzaville", ar: "برازافيل" },
-  "CM|YAOUNDÉ": { fr: "Yaoundé", ar: "ياوندي" },
-  "GH|TAMALE": { fr: "Tamale", ar: "تامالي" },
-  "GT|CIUDAD DE GUATEMALA": { fr: "Guatemala", ar: "مدينة غواتيمالا" },
-  "HN|TEGUCIGALPA": { fr: "Tegucigalpa", ar: "تيغوسيغالبا" },
-  "KE|NAIROBI": { fr: "Nairobi", ar: "نيروبي" },
-  "UG|KAMPALA": { fr: "Kampala", ar: "كمبالا" },
-  "VN|HANOI": { fr: "Hanoï", ar: "هانوي" },
-  "UA|VINNYTSIA": { fr: "Vinnytsia", ar: "فينيتسا" },
 };
 
 function normalizeCityKey(country, city) {
@@ -237,6 +165,8 @@ function normalizeCityKey(country, city) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[\u200e\u200f\u202a-\u202e]/g, "")
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
     .replace(/\s+/g, " ")
     .trim()
     .toUpperCase();
@@ -245,8 +175,10 @@ function normalizeCityKey(country, city) {
 
 const NORMALIZED_CITY_OVERRIDES = Object.fromEntries(
   Object.entries(CITY_LOCALIZATION_OVERRIDES).map(([key, value]) => {
-    const [country, ...cityParts] = key.split("|");
-    return [normalizeCityKey(country, cityParts.join("|")), value];
+    const separator = key.indexOf("|");
+    const country = key.slice(0, separator);
+    const city = key.slice(separator + 1);
+    return [normalizeCityKey(country, city), value];
   }),
 );
 
@@ -261,30 +193,68 @@ function titleCaseLocation(value) {
   return String(value || "")
     .trim()
     .toLocaleLowerCase()
-    .replace(/(^|[\s\-/'’(])([\p{L}])/gu, (_, prefix, letter) => `${prefix}${letter.toLocaleUpperCase()}`)
+    .replace(/(^|[\s\-/'’(])([\p{L}\p{N}])/gu, (_, prefix, letter) => `${prefix}${letter.toLocaleUpperCase()}`)
     .replace(/\s+/g, " ")
     .trim();
 }
 
+function cleanLocationValue(value) {
+  let text = String(value || "")
+    .replace(/[\u200e\u200f\u202a-\u202e]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  text = text.replace(/^\d{4,6}\s*[-–]\s*/u, "");
+  text = text.replace(/,?\s+(?:Italia|Italy|France|Deutschland|Germany|España|Spain|Portugal|Poland|Polska|Czechia|Türkiye|Turkey|Bolivia|Senegal|Romania|Nederland|Netherlands)$/iu, "");
+  text = text.replace(/\s*\(\s*[A-Z]{2,5}\s*\)\s*$/u, "");
+  text = text.replace(/[.;,]+$/u, "").trim();
+  return text;
+}
+
+function looksLikeAddress(value) {
+  return /\b(?:via|viale|rue|avenue|av\.?|boulevard|blvd\.?|street|st\.?|road|rd\.?|lane|ln\.?|straße|strasse|strada|c\/|nº|no\.?|number)\b/iu.test(value)
+    || /\b\d{1,5}\s*[A-Za-zÀ-ÿ]/u.test(value);
+}
+
+function extractDisplayParts(value) {
+  let text = cleanLocationValue(value);
+  if (!text) return [];
+
+  if (looksLikeAddress(text)) return [text];
+
+  const sentenceLike = text.length > 70 || /\b(?:the volunteer|volunteer will|will be living|will live|living in|based in|located in|work in|working in)\b/iu.test(text);
+  if (sentenceLike) {
+    const livingAndWork = text.match(/\b(?:living in|will be living in|based in|located in)\s+(.+?)(?:\s+\([^)]*\))?\s+and\s+(?:work|working)\s+in\s+([^.;]+)[.;]?$/iu);
+    if (livingAndWork) text = `${livingAndWork[1]} / ${livingAndWork[2]}`;
+    else {
+      const inMatch = text.match(/\b(?:in|at)\s+([^.;]+)[.;]?/iu);
+      if (inMatch) text = inMatch[1];
+      else {
+        const parenthetical = text.match(/\(([^)]+)\)/u);
+        if (parenthetical) text = parenthetical[1];
+      }
+    }
+  }
+
+  const parts = text
+    .split(/\s*\/\s*|\s*;\s*/u)
+    .flatMap((part) => part.split(/\s+and\s+/iu))
+    .map(cleanLocationValue)
+    .filter(Boolean);
+
+  if (parts.length === 1 && /,/.test(text)) {
+    const commaParts = text.split(/\s*,\s*/u).map(cleanLocationValue).filter(Boolean);
+    if (commaParts.length > 1 && (text.length > 35 || /\b(?:region|municipality|village|province)\b/iu.test(text))) return commaParts;
+  }
+
+  return parts.length ? parts : [text];
+}
+
 const ARABIC_DIGRAPHS = [
-  ["sch", "ش"],
-  ["tch", "تش"],
-  ["shr", "شر"],
-  ["ch", "تش"],
-  ["sh", "ش"],
-  ["th", "ث"],
-  ["dh", "ذ"],
-  ["kh", "خ"],
-  ["gh", "غ"],
-  ["ph", "ف"],
-  ["ck", "ك"],
-  ["qu", "ك"],
-  ["ou", "و"],
-  ["oo", "و"],
-  ["ee", "ي"],
-  ["ie", "ي"],
-  ["ei", "ي"],
-  ["tion", "تيون"],
+  ["tsch", "تش"], ["sch", "ش"], ["tch", "تش"], ["ch", "تش"], ["sh", "ش"],
+  ["th", "ث"], ["dh", "ذ"], ["kh", "خ"], ["gh", "غ"], ["ph", "ف"],
+  ["ck", "ك"], ["qu", "ك"], ["ou", "و"], ["oo", "و"], ["ee", "ي"],
+  ["ie", "ي"], ["ei", "ي"], ["au", "او"], ["eu", "يو"], ["tion", "تيون"],
 ];
 
 const ARABIC_LETTERS = {
@@ -295,7 +265,7 @@ const ARABIC_LETTERS = {
 };
 
 function arabicTransliteration(value) {
-  let source = String(value || "").trim().toLocaleLowerCase();
+  let source = cleanLocationValue(value).toLocaleLowerCase();
   if (!source) return "";
 
   source = source
@@ -317,23 +287,25 @@ function arabicTransliteration(value) {
     else output += char;
   }
 
-  return output
-    .replace(/\s+/g, " ")
-    .trim();
+  return output.replace(/\s+/g, " ").trim();
 }
 
 export function localizeNewCity(country, city, locale) {
   const language = languageFor(locale);
-  const original = String(city || "").trim();
-  if (!original) return "";
+  const parts = extractDisplayParts(city).slice(0, 3);
+  if (!parts.length) return "";
 
-  const key = normalizeCityKey(country, original);
-  const override = NORMALIZED_CITY_OVERRIDES[key];
+  const localized = parts.map((part) => {
+    if (language === "en") return titleCaseLocation(part);
 
-  if (language === "en") return titleCaseLocation(original);
-  if (override?.[language]) return override[language];
-  if (language === "fr") return titleCaseLocation(original);
-  return arabicTransliteration(original) || original;
+    const override = NORMALIZED_CITY_OVERRIDES[normalizeCityKey(country, part)];
+    if (override?.[language]) return override[language];
+
+    if (language === "fr") return titleCaseLocation(part);
+    return arabicTransliteration(part) || titleCaseLocation(part);
+  });
+
+  return [...new Set(localized.filter(Boolean))].join(" / ");
 }
 
 export function normalizedCityKey(country, city) {
