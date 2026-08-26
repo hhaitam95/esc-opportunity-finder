@@ -25,6 +25,8 @@ export const translations = {
     errorTitle: "We couldn't load the opportunities.",
     errorText: "Please try again later.",
     availableNow: "Available now",
+    newOpportunities: "New opportunities",
+    newOpportunitiesNote: "Added in the latest update",
     opportunity: "Opportunity",
     location: "Location",
     activity: "Activity",
@@ -80,6 +82,8 @@ export const translations = {
     errorTitle: "Impossible de charger les opportunités.",
     errorText: "Veuillez réessayer plus tard.",
     availableNow: "Disponibles actuellement",
+    newOpportunities: "Nouvelles opportunités",
+    newOpportunitiesNote: "Ajoutées lors de la dernière mise à jour",
     opportunity: "Opportunité",
     location: "Lieu",
     activity: "Activité",
@@ -135,6 +139,8 @@ export const translations = {
     errorTitle: "تعذر تحميل الفرص.",
     errorText: "يرجى المحاولة مرة أخرى لاحقاً.",
     availableNow: "الفرص المتاحة الآن",
+    newOpportunities: "فرص جديدة",
+    newOpportunitiesNote: "أضيفت في آخر تحديث",
     opportunity: "الفرصة",
     location: "الموقع",
     activity: "النشاط",
@@ -258,175 +264,3 @@ export const TOPIC_TRANSLATIONS = {
     ar: "دعم المؤسسات الصغيرة والمتوسطة المحلية",
   },
 };
-
-const TOPIC_KEY_ALIASES = {
-  "support to local small and medium enterprise": "Support to local Small and Medium Enterprise",
-  "support to local small and medium enterprises": "Support to local Small and Medium Enterprises",
-};
-
-function normalizeTopicKey(value) {
-  return String(value || "")
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLowerCase();
-}
-
-const NORMALIZED_TOPIC_TRANSLATIONS = Object.fromEntries(
-  Object.entries(TOPIC_TRANSLATIONS).map(([key, value]) => [
-    normalizeTopicKey(key),
-    value,
-  ]),
-);
-
-const LANGUAGE_STORAGE_KEY = "esc_language";
-const LANGUAGE_META = Object.freeze({
-  en: { flag: "🇬🇧", short: "EN" },
-  fr: { flag: "🇫🇷", short: "FR" },
-  ar: { flag: "🇸🇦", short: "AR" },
-});
-
-let activeLanguage = "en";
-let changeHandler = () => {};
-
-function readLanguage() {
-  try {
-    const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY) || "en";
-    return translations[stored] ? stored : "en";
-  } catch {
-    return "en";
-  }
-}
-
-export function locale() {
-  if (activeLanguage === "fr") return "fr-FR";
-  if (activeLanguage === "ar") return "ar-MA";
-  return "en-GB";
-}
-
-export function t(key) {
-  return translations[activeLanguage]?.[key] ?? translations.en?.[key] ?? key;
-}
-
-export function translateTopic(topic) {
-  const normalized = normalizeTopicKey(topic);
-  const alias = TOPIC_KEY_ALIASES[normalized] || topic;
-  const direct = TOPIC_TRANSLATIONS[alias];
-  if (direct) return direct[activeLanguage] || direct.en || topic;
-
-  const normalizedEntry = NORMALIZED_TOPIC_TRANSLATIONS[normalizeTopicKey(alias)];
-  return normalizedEntry?.[activeLanguage] || normalizedEntry?.en || topic;
-}
-
-export function currentLanguage() {
-  return activeLanguage;
-}
-
-function updateLanguageControl() {
-  const meta = LANGUAGE_META[activeLanguage] || LANGUAGE_META.en;
-  const flag = document.getElementById("language-dropdown-flag");
-  const label = document.getElementById("language-dropdown-label");
-  if (flag) flag.textContent = meta.flag;
-  if (label) label.textContent = meta.short;
-}
-
-function translateRenderedTopics() {
-  document.querySelectorAll(".topic-tag").forEach((tag) => {
-    const labelElement = tag.querySelector(":scope > span:last-child");
-    if (!labelElement) return;
-
-    const current = labelElement.textContent.trim();
-    const matchingKey = Object.keys(TOPIC_TRANSLATIONS).find((topic) => {
-      const values = TOPIC_TRANSLATIONS[topic];
-      return Object.values(values).some((value) => normalizeTopicKey(value) === normalizeTopicKey(current));
-    });
-
-    if (!matchingKey) return;
-
-    const translated = TOPIC_TRANSLATIONS[matchingKey][activeLanguage] || TOPIC_TRANSLATIONS[matchingKey].en || current;
-    labelElement.textContent = translated;
-    tag.title = translated;
-  });
-}
-
-function applyTranslations() {
-  const participantCountry = document.getElementById("participant-country");
-  const participantCountryValue = participantCountry?.value || "";
-
-  document.documentElement.lang = activeLanguage;
-  document.documentElement.dir = activeLanguage === "ar" ? "rtl" : "ltr";
-
-  document.querySelectorAll("[data-i18n]").forEach((element) => {
-    element.textContent = t(element.dataset.i18n);
-  });
-
-  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
-    element.placeholder = t(element.dataset.i18nPlaceholder);
-  });
-
-  updateLanguageControl();
-  changeHandler();
-  translateRenderedTopics();
-
-  if (participantCountry && participantCountryValue) {
-    const normalized = participantCountryValue.toUpperCase();
-    if ([...participantCountry.options].some((option) => option.value === normalized)) {
-      participantCountry.value = normalized;
-    }
-  }
-}
-
-function setLanguage(next) {
-  if (!translations[next]) return;
-  activeLanguage = next;
-
-  try {
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, activeLanguage);
-  } catch {}
-
-  const menu = document.getElementById("language-dropdown-menu");
-  const toggle = document.getElementById("language-dropdown-toggle");
-  if (menu) menu.hidden = true;
-  if (toggle) toggle.setAttribute("aria-expanded", "false");
-
-  applyTranslations();
-}
-
-function bindControls() {
-  const toggle = document.getElementById("language-dropdown-toggle");
-  const menu = document.getElementById("language-dropdown-menu");
-
-  if (toggle && menu && toggle.dataset.languageBound !== "true") {
-    toggle.dataset.languageBound = "true";
-
-    toggle.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      menu.hidden = !menu.hidden;
-      toggle.setAttribute("aria-expanded", menu.hidden ? "false" : "true");
-    });
-
-    document.addEventListener("click", (event) => {
-      if (!event.target.closest(".language-dropdown")) {
-        menu.hidden = true;
-        toggle.setAttribute("aria-expanded", "false");
-      }
-    });
-  }
-
-  document.querySelectorAll(".language-option").forEach((button) => {
-    if (button.dataset.languageBound === "true") return;
-    button.dataset.languageBound = "true";
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      setLanguage(button.dataset.language);
-    });
-  });
-}
-
-export function initLanguage(onChange = () => {}) {
-  changeHandler = onChange;
-  activeLanguage = readLanguage();
-  bindControls();
-  applyTranslations();
-}
