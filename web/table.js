@@ -1,3 +1,5 @@
+import { localizeNewCity } from "./city-localizations.js";
+
 const TOPIC_ICONS = {
   "Education and training": "📚",
   "Creativity and culture": "🎨",
@@ -7,7 +9,7 @@ const TOPIC_ICONS = {
   "Health and wellbeing": "❤️",
   "Employment and entrepreneurship": "💼",
   "Physical education and sport": "⚽",
-  "Working against discrimination (including gender discrimination)": "🫱🏻‍🫲🏽",
+  "Working against discrimination (including gender discrimination)": "🫱🏻&zwj;🫲🏽",
   "Reception and integration of refugees and migrants": "🏠",
   "Support to local Small and Medium Enterprises": "🏢",
   "Nutrition and subsistence agriculture": "🌾",
@@ -58,17 +60,17 @@ const ACTIVITY_TYPE_TRANSLATIONS = {
     fr: "Équipes de volontariat",
     ar: "فرق التطوع",
   },
-  "Volunteering": {
+  Volunteering: {
     en: "Volunteering",
     fr: "Volontariat",
     ar: "التطوع",
   },
-  "Traineeship": {
+  Traineeship: {
     en: "Traineeship",
     fr: "Stage",
     ar: "تدريب",
   },
-  "Job": {
+  Job: {
     en: "Job",
     fr: "Emploi",
     ar: "وظيفة",
@@ -193,9 +195,7 @@ function renderCountry(opportunity, locale) {
   let flag = "🌍";
   try {
     const displayNames = getRegionDisplayNames(locale);
-    if (displayNames) {
-      name = displayNames.of(code) || code;
-    }
+    if (displayNames) name = displayNames.of(code) || code;
     if (/^[A-Z]{2}$/.test(code)) {
       flag = String.fromCodePoint(...code.split("").map((letter) => 127397 + letter.charCodeAt(0)));
     }
@@ -206,351 +206,14 @@ function renderCountry(opportunity, locale) {
   return `<span class="country-display"><span class="country-flag" aria-hidden="true">${flag}</span><span>${escapeHtml(name)}</span></span>`;
 }
 
-const CITY_NAME_CORRECTIONS = {
-  "SK|BANSKA BYSTRICA": "Banská Bystrica",
-  "SK|BRATISLAVA": "Bratislava",
-  "SK|KOSICE": "Košice",
-  "SK|NITRA": "Nitra",
-  "SK|PRESOV": "Prešov",
-  "SK|ZILINA": "Žilina",
-  "PL|BIALYSTOK": "Białystok",
-  "PL|JELENIA GORA": "Jelenia Góra",
-  "PL|LODZ": "Łódź",
-  "PL|POZNAN": "Poznań",
-  "PL|WROCLAW": "Wrocław",
-  "PL|KRAKOW": "Kraków",
-  "PL|GDANSK": "Gdańsk",
-  "PL|WARSAW": "Warsaw",
-  "RO|TIMISOARA": "Timișoara",
-  "RO|BUCHAREST": "Bucharest",
-  "RO|CLUJ-NAPOCA": "Cluj-Napoca",
-  "CZ|PRAGUE": "Prague",
-  "CZ|PRAHA": "Praha",
-  "HU|BUDAPEST": "Budapest",
-  "HR|ZAGREB": "Zagreb",
-  "SI|LJUBLJANA": "Ljubljana",
-  "LT|VILNIUS": "Vilnius",
-  "LV|RIGA": "Riga",
-  "EE|TALLINN": "Tallinn",
-  "PT|LISBON": "Lisbon",
-  "PT|PORTO": "Porto",
-  "ES|MADRID": "Madrid",
-  "ES|BARCELONA": "Barcelona",
-  "IT|ROME": "Rome",
-  "IT|GENOA": "Genoa",
-  "IT|GENOVA": "Genova",
-  "FR|PARIS": "Paris",
-  "DE|BERLIN": "Berlin",
-  "BE|BRUSSELS": "Brussels",
-  "NL|AMSTERDAM": "Amsterdam",
-};
-
-const CITY_TRANSLATIONS = {
-  "IT|PALERMO": {
-    fr: "Palerme",
-    ar: "باليرمو",
-  },
-  "IT|ROME": {
-    fr: "Rome",
-    ar: "روما",
-  },
-  "IT|GENOA": {
-    fr: "Gênes",
-    ar: "جنوة",
-  },
-  "IT|GENOVA": {
-    fr: "Gênes",
-    ar: "جنوة",
-  },
-  "IT|MILAN": {
-    fr: "Milan",
-    ar: "ميلانو",
-  },
-  "IT|MILANO": {
-    fr: "Milan",
-    ar: "ميلانو",
-  },
-  "IT|NAPLES": {
-    fr: "Naples",
-    ar: "نابولي",
-  },
-  "IT|NAPOLI": {
-    fr: "Naples",
-    ar: "نابولي",
-  },
-  "IT|FLORENCE": {
-    fr: "Florence",
-    ar: "فلورنسا",
-  },
-  "IT|FIRENZE": {
-    fr: "Florence",
-    ar: "فلورنسا",
-  },
-  "FR|PARIS": {
-    fr: "Paris",
-    ar: "باريس",
-  },
-  "DE|BERLIN": {
-    fr: "Berlin",
-    ar: "برلين",
-  },
-  "DE|MUNICH": {
-    fr: "Munich",
-    ar: "ميونخ",
-  },
-  "DE|MÜNCHEN": {
-    fr: "Munich",
-    ar: "ميونخ",
-  },
-  "DE|COLOGNE": {
-    fr: "Cologne",
-    ar: "كولونيا",
-  },
-  "DE|KOLN": {
-    fr: "Cologne",
-    ar: "كولونيا",
-  },
-  "DE|KÖLN": {
-    fr: "Cologne",
-    ar: "كولونيا",
-  },
-  "ES|MADRID": {
-    fr: "Madrid",
-    ar: "مدريد",
-  },
-  "ES|BARCELONA": {
-    fr: "Barcelone",
-    ar: "برشلونة",
-  },
-  "ES|SEVILLE": {
-    fr: "Séville",
-    ar: "إشبيلية",
-  },
-  "ES|SEVILLA": {
-    fr: "Séville",
-    ar: "إشبيلية",
-  },
-  "PT|LISBON": {
-    fr: "Lisbonne",
-    ar: "لشبونة",
-  },
-  "PT|LISBOA": {
-    fr: "Lisbonne",
-    ar: "لشبونة",
-  },
-  "PT|PORTO": {
-    fr: "Porto",
-    ar: "بورتو",
-  },
-  "NL|AMSTERDAM": {
-    fr: "Amsterdam",
-    ar: "أمستردام",
-  },
-  "BE|BRUSSELS": {
-    fr: "Bruxelles",
-    ar: "بروكسل",
-  },
-  "BE|BRUXELLES": {
-    fr: "Bruxelles",
-    ar: "بروكسل",
-  },
-  "GR|ATHENS": {
-    fr: "Athènes",
-    ar: "أثينا",
-  },
-  "GR|ATHINA": {
-    fr: "Athènes",
-    ar: "أثينا",
-  },
-  "TR|ISTANBUL": {
-    fr: "Istanbul",
-    ar: "إسطنبول",
-  },
-  "TR|ANKARA": {
-    fr: "Ankara",
-    ar: "أنقرة",
-  },
-  "PL|WARSAW": {
-    fr: "Varsovie",
-    ar: "وارسو",
-  },
-  "PL|WARSZAWA": {
-    fr: "Varsovie",
-    ar: "وارسو",
-  },
-  "PL|KRAKOW": {
-    fr: "Cracovie",
-    ar: "كراكوف",
-  },
-  "PL|KRAKÓW": {
-    fr: "Cracovie",
-    ar: "كراكوف",
-  },
-  "PL|GDANSK": {
-    fr: "Gdańsk",
-    ar: "غدانسك",
-  },
-  "PL|WROCLAW": {
-    fr: "Wrocław",
-    ar: "فروتسواف",
-  },
-  "CZ|PRAGUE": {
-    fr: "Prague",
-    ar: "براغ",
-  },
-  "CZ|PRAHA": {
-    fr: "Prague",
-    ar: "براغ",
-  },
-  "AT|VIENNA": {
-    fr: "Vienne",
-    ar: "فيينا",
-  },
-  "AT|WIEN": {
-    fr: "Vienne",
-    ar: "فيينا",
-  },
-  "CH|GENEVA": {
-    fr: "Genève",
-    ar: "جنيف",
-  },
-  "CH|GENÈVE": {
-    fr: "Genève",
-    ar: "جنيف",
-  },
-  "CH|ZURICH": {
-    fr: "Zurich",
-    ar: "زيورخ",
-  },
-  "CH|ZÜRICH": {
-    fr: "Zurich",
-    ar: "زيورخ",
-  },
-  "RO|BUCHAREST": {
-    fr: "Bucarest",
-    ar: "بوخارست",
-  },
-  "RO|BUCURESTI": {
-    fr: "Bucarest",
-    ar: "بوخارست",
-  },
-  "HU|BUDAPEST": {
-    fr: "Budapest",
-    ar: "بودابست",
-  },
-  "SE|STOCKHOLM": {
-    fr: "Stockholm",
-    ar: "ستوكهولم",
-  },
-  "DK|COPENHAGEN": {
-    fr: "Copenhague",
-    ar: "كوبنهاغن",
-  },
-  "DK|KOBENHAVN": {
-    fr: "Copenhague",
-    ar: "كوبنهاغن",
-  },
-  "NO|OSLO": {
-    fr: "Oslo",
-    ar: "أوسلو",
-  },
-  "FI|HELSINKI": {
-    fr: "Helsinki",
-    ar: "هلسنكي",
-  },
-  "IE|DUBLIN": {
-    fr: "Dublin",
-    ar: "دبلن",
-  },
-  "GB|LONDON": {
-    fr: "Londres",
-    ar: "لندن",
-  },
-  "GB|EDINBURGH": {
-    fr: "Édimbourg",
-    ar: "إدنبرة",
-  },
-  "HR|ZAGREB": {
-    fr: "Zagreb",
-    ar: "زغرب",
-  },
-  "SI|LJUBLJANA": {
-    fr: "Ljubljana",
-    ar: "ليوبليانا",
-  },
-  "SK|BRATISLAVA": {
-    fr: "Bratislava",
-    ar: "براتيسلافا",
-  },
-  "BG|SOFIA": {
-    fr: "Sofia",
-    ar: "صوفيا",
-  },
-  "RS|BELGRADE": {
-    fr: "Belgrade",
-    ar: "بلغراد",
-  },
-  "BA|SARAJEVO": {
-    fr: "Sarajevo",
-    ar: "سراييفو",
-  },
-  "AL|TIRANA": {
-    fr: "Tirana",
-    ar: "تيرانا",
-  },
-  "MK|SKOPJE": {
-    fr: "Skopje",
-    ar: "سكوبيه",
-  },
-  "LT|VILNIUS": {
-    fr: "Vilnius",
-    ar: "فيلنيوس",
-  },
-  "LV|RIGA": {
-    fr: "Riga",
-    ar: "ريغا",
-  },
-  "EE|TALLINN": {
-    fr: "Tallinn",
-    ar: "تالين",
-  },
-  "CY|NICOSIA": {
-    fr: "Nicosie",
-    ar: "نيقوسيا",
-  },
-  "MT|VALLETTA": {
-    fr: "La Valette",
-    ar: "فاليتا",
-  },
-};
-
-function titleCaseCity(value) {
-  return String(value || "")
-    .trim()
-    .toLocaleLowerCase()
-    .replace(/(^|[\s'’\-])([\p{L}])/gu, (_, prefix, letter) => `${prefix}${letter.toLocaleUpperCase()}`);
-}
-
 function formatCity(opportunity, locale) {
-  const raw = String(opportunity.town || opportunity.location || "").trim();
-  if (!raw) return "";
-
-  const country = String(opportunity.country || "").trim().toUpperCase();
-  const key = `${country}|${raw.toUpperCase()}`;
-  const language = locale.startsWith("fr")
-    ? "fr"
-    : locale.startsWith("ar")
-      ? "ar"
-      : "en";
-
-  if (CITY_TRANSLATIONS[key]?.[language]) {
-    return CITY_TRANSLATIONS[key][language];
+  const town = String(opportunity.town || "").trim();
+  if (!town) {
+    return String(opportunity.location || "").trim();
   }
 
-  if (CITY_NAME_CORRECTIONS[key]) return CITY_NAME_CORRECTIONS[key];
-
-  if (raw === raw.toLocaleUpperCase() && /\p{L}/u.test(raw)) return titleCaseCity(raw);
-  return raw;
+  const country = String(opportunity.country || "").trim().toUpperCase();
+  return localizeNewCity(country, town, locale);
 }
 
 function topicLabel(topic, locale) {
