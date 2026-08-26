@@ -30,7 +30,7 @@ OUTPUT_SCHEMA_VERSION = 4
 DETAIL_RECHECK_INTERVAL = 24 * 60 * 60
 
 # API.
-API_PAGE_SIZE = 100
+API_PAGE_SIZE = 1000
 
 # Detail scanning.
 BATCH_SIZE = 40
@@ -705,131 +705,88 @@ def fetch_api_page(session, offset):
 
 
 def fetch_current_opportunities():
+    # API_PAGINATION_DEDUP_V3
     print("=" * 70)
     print("FETCHING CURRENT ESC OPPORTUNITIES")
     print("=" * 70)
 
     session = requests.Session()
-
-    opportunities = []
-
+    opportunities_by_id = {}
     offset = 0
     total = None
 
     try:
         while True:
-            data = fetch_api_page(
-                session,
-                offset,
-            )
+            data = fetch_api_page(session, offset)
 
             if data is None:
                 raise RuntimeError(
-                    "Could not retrieve the current "
-                    "opportunity list."
+                    "Could not retrieve the current opportunity list."
                 )
 
-            hits = data.get(
-                "hits",
-                {},
-            )
-
-            total_info = hits.get(
-                "total",
-                {},
-            )
+            hits = data.get("hits", {})
+            total_info = hits.get("total", {})
 
             if total is None:
-                if isinstance(
-                    total_info,
-                    dict,
-                ):
-                    total = int(
-                        total_info.get(
-                            "value",
-                            0,
-                        )
-                        or 0
-                    )
+                if isinstance(total_info, dict):
+                    total = int(total_info.get("value", 0) or 0)
                 else:
-                    total = int(
-                        total_info or 0
-                    )
+                    total = int(total_info or 0)
 
                 print(
                     f"API reports {total} opportunities.",
                     flush=True,
                 )
 
-            page_hits = hits.get(
-                "hits",
-                [],
-            )
+            page_hits = hits.get("hits", [])
 
             if not page_hits:
                 break
 
             for hit in page_hits:
-                source = hit.get(
-                    "_source",
-                    {},
-                )
-
-                opid = source.get(
-                    "opid"
-                )
+                source = hit.get("_source", {})
+                opid = source.get("opid")
 
                 if opid is None:
-                    opid = hit.get(
-                        "_id"
-                    )
+                    opid = hit.get("_id")
 
                 if opid is None:
                     continue
 
                 try:
                     source["opid"] = int(opid)
-                except (
-                    TypeError,
-                    ValueError,
-                ):
+                except (TypeError, ValueError):
                     continue
 
-                opportunities.append(
-                    source
+                opportunities_by_id.setdefault(
+                    str(source["opid"]),
+                    source,
                 )
 
-            offset += len(page_hits)
+            offset += API_PAGE_SIZE
+            unique_count = len(opportunities_by_id)
 
             print(
-                f"Retrieved "
-                f"{len(opportunities)}/{total}",
+                f"Retrieved {unique_count}/{total} unique opportunities "
+                f"(raw page hits: {len(page_hits)})",
                 flush=True,
             )
 
-            if (
-                total is not None
-                and offset >= total
-            ):
-                break
-
-            if len(page_hits) < API_PAGE_SIZE:
+            if total is not None and unique_count >= total:
                 break
 
     finally:
         session.close()
 
-    if (
-        total is not None
-        and len(opportunities) != total
-    ):
+    opportunities = list(opportunities_by_id.values())
+
+    if total is not None and len(opportunities) != total:
         raise RuntimeError(
             "Incomplete API retrieval: "
-            f"{len(opportunities)}/{total}"
+            f"{len(opportunities)}/{total} unique opportunities"
         )
 
     return opportunities
-
 
 # ============================================================================
 # DETAIL PAGE PARSING
