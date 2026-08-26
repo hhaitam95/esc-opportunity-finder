@@ -1,4 +1,5 @@
 const CITY_LOCALIZATION_OVERRIDES = {
+  "GE|MTSKHETA, TSEROVANI IDP SETTLEMENT": { fr: "Mtskheta / Tserovani", ar: "متسخيتا / تسيروفاني" },
   "IT|CAGLIARI": { fr: "Cagliari", ar: "كالياري" },
   "IT|PALERMO": { fr: "Palerme", ar: "باليرمو" },
   "IT|ROME": { fr: "Rome", ar: "روما" },
@@ -208,9 +209,18 @@ function cleanLocationValue(value) {
   text = text.replace(/,?\s+(?:Italia|Italy|France|Deutschland|Germany|España|Spain|Portugal|Poland|Polska|Czechia|Türkiye|Turkey|Bolivia|Senegal|Romania|Nederland|Netherlands)$/iu, "");
   text = text.replace(/\s*\(\s*[A-Z]{2,5}\s*\)\s*$/u, "");
   text = text.replace(/[.;,]+$/u, "").trim();
+
+  // Remove generic descriptive labels from the feed while keeping the actual place name.
+  text = text
+    .replace(/\s+(?:IDP|internally displaced people|internally displaced persons)\s+settlement$/iu, "")
+    .replace(/\s+(?:settlement|village|municipality|municipality area|parish|province|district)$/iu, "")
+    .replace(/\s+municipality$/iu, "")
+    .replace(/\s+county$/iu, "")
+    .replace(/\s+region$/iu, "")
+    .trim();
+
   return text;
 }
-
 function looksLikeAddress(value) {
   return /\b(?:via|viale|rue|avenue|av\.?|boulevard|blvd\.?|street|st\.?|road|rd\.?|lane|ln\.?|straße|strasse|strada|c\/|nº|no\.?|number)\b/iu.test(value)
     || /\b\d{1,5}\s*[A-Za-zÀ-ÿ]/u.test(value);
@@ -296,18 +306,21 @@ export function localizeNewCity(country, city, locale) {
   if (!parts.length) return "";
 
   const localized = parts.map((part) => {
-    if (language === "en") return titleCaseLocation(part);
+    const cleanedPart = cleanLocationValue(part);
+    if (!cleanedPart) return "";
 
-    const override = NORMALIZED_CITY_OVERRIDES[normalizeCityKey(country, part)];
+    const key = normalizeCityKey(country, cleanedPart);
+    const override = NORMALIZED_CITY_OVERRIDES[key];
     if (override?.[language]) return override[language];
 
-    if (language === "fr") return titleCaseLocation(part);
-    return arabicTransliteration(part) || titleCaseLocation(part);
+    // Known local spellings/exonyms are handled by the curated map.
+    if (language === "fr") return titleCaseLocation(cleanedPart);
+    if (language === "en") return titleCaseLocation(cleanedPart);
+    return arabicTransliteration(cleanedPart) || titleCaseLocation(cleanedPart);
   });
 
   return [...new Set(localized.filter(Boolean))].join(" / ");
 }
-
 export function normalizedCityKey(country, city) {
   return normalizeCityKey(country, city);
 }
