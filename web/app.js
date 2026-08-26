@@ -44,6 +44,9 @@ const dom = {
   countryFilter: document.getElementById("country-filter"),
   typeFilter: document.getElementById("type-filter"),
   sortSelect: document.getElementById("sort-select"),
+  newOpportunitiesSection: document.getElementById("new-opportunities-section"),
+  newOpportunitiesBody: document.getElementById("new-opportunities-body"),
+  newOpportunityCount: document.getElementById("new-opportunity-count"),
   opportunitiesBody: document.getElementById("opportunities-body"),
   opportunityCount: document.getElementById("opportunity-count"),
   activeResultCount: document.getElementById("active-result-count"),
@@ -206,6 +209,48 @@ function filteredActive() {
   return results;
 }
 
+function isNewOpportunity(opportunity) {
+  const id = String(opportunity.id ?? opportunity.opid ?? "").trim();
+  return Boolean(id && state.data?.newIds?.has(id));
+}
+
+function newOpportunitiesFrom(results) {
+  const newest = results.filter(isNewOpportunity);
+  return sortRows(newest, "created");
+}
+
+function renderNewOpportunities(results) {
+  if (!dom.newOpportunitiesSection || !dom.newOpportunitiesBody) return;
+
+  if (!state.participantSearchApplied || !enabled("newBadges")) {
+    dom.newOpportunitiesBody.innerHTML = "";
+    if (dom.newOpportunityCount) dom.newOpportunityCount.textContent = "0";
+    show(dom.newOpportunitiesSection, false);
+    return;
+  }
+
+  const newest = newOpportunitiesFrom(results);
+  if (!newest.length) {
+    dom.newOpportunitiesBody.innerHTML = "";
+    if (dom.newOpportunityCount) dom.newOpportunityCount.textContent = "0";
+    show(dom.newOpportunitiesSection, false);
+    return;
+  }
+
+  if (dom.newOpportunityCount) dom.newOpportunityCount.textContent = String(newest.length);
+  show(dom.newOpportunitiesSection, true);
+
+  dom.newOpportunitiesBody.innerHTML = renderRows(newest, {
+    archived: false,
+    newIds: state.data?.newIds || new Set(),
+    locale: locale(),
+    t,
+  });
+
+  window.normalizeCountryDisplay?.(dom.newOpportunitiesBody);
+  window.updateRelativeDeadlineLabels?.();
+}
+
 function renderActive() {
   if (!state.participantSearchApplied) {
     dom.opportunitiesBody.innerHTML = "";
@@ -215,6 +260,7 @@ function renderActive() {
   }
 
   const results = filteredActive();
+  renderNewOpportunities(results);
   renderCounts(results.length);
 
   if (!results.length) {
@@ -270,6 +316,7 @@ function renderAll(force = false) {
     type: state.filters.type,
     sort: state.filters.sort,
     language: locale(),
+    newIds: state.data?.newIds ? [...state.data.newIds].sort() : [],
   });
 
   if (!force && signature === lastRenderedState) return;
@@ -365,6 +412,8 @@ async function initialize() {
     show(dom.errorMessage, true);
     if (dom.lastUpdated) dom.lastUpdated.textContent = "—";
     if (dom.opportunitiesBody) dom.opportunitiesBody.innerHTML = "";
+    if (dom.newOpportunitiesBody) dom.newOpportunitiesBody.innerHTML = "";
+    show(dom.newOpportunitiesSection, false);
   } finally {
     show(dom.loadingMessage, false);
   }
