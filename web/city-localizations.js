@@ -1,5 +1,10 @@
 import { localizeNewCity as localizeCityName } from "./city-localizations-original.js";
 
+const ARABIC_LOCALITY_OVERRIDES = {
+  "IS|HAFNARFJÖRÐUR": "هافنارفيوردور",
+  "IS|HAFNARFJORDUR": "هافنارفيوردور",
+};
+
 function clean(value) {
   return String(value || "")
     .replace(/[\u200e\u200f\u202a-\u202e]/g, "")
@@ -9,12 +14,19 @@ function clean(value) {
     .trim();
 }
 
+function languageFor(locale) {
+  const value = String(locale || "en-GB");
+  if (value.startsWith("fr")) return "fr";
+  if (value.startsWith("ar")) return "ar";
+  return "en";
+}
+
 function extractPrimaryLocation(value) {
   let text = clean(value);
   if (!text) return "";
 
   text = text.replace(/^\d{4,6}\s*[-–]\s*/u, "");
-  text = text.replace(/,?\s+(?:Italy|Italia|France|Germany|Deutschland|Spain|España|Portugal|Poland|Polska|Czechia|Türkiye|Turkey|Bolivia|Senegal|Romania|Nederland|Netherlands|Armenia|Georgia)$/iu, "");
+  text = text.replace(/,?\s+(?:Italy|Italia|France|Germany|Deutschland|Spain|España|Portugal|Poland|Polska|Czechia|Türkiye|Turkey|Bolivia|Senegal|Romania|Nederland|Netherlands|Armenia|Georgia|Iceland|Ísland)$/iu, "");
   text = clean(text);
 
   const sentence = text.match(/\b(?:living in|will be living in|based in|located in)\s+(.+?)(?:\s+\([^)]*\))?(?:\s+and\s+(?:work|working)\s+in\s+[^.;]+)?[.;]?$/iu);
@@ -36,19 +48,58 @@ function extractPrimaryLocation(value) {
   return clean(text);
 }
 
+function asciiLocality(value) {
+  return clean(value)
+    .replace(/ð/gi, "d")
+    .replace(/þ/gi, "th")
+    .replace(/æ/gi, "ae")
+    .replace(/œ/gi, "oe")
+    .replace(/ø/gi, "o")
+    .replace(/ł/gi, "l")
+    .replace(/đ/gi, "d")
+    .replace(/ħ/gi, "h")
+    .replace(/[áàâäãåā]/gi, "a")
+    .replace(/[éèêëēėę]/gi, "e")
+    .replace(/[íìîïīį]/gi, "i")
+    .replace(/[óòôöõøō]/gi, "o")
+    .replace(/[úùûüūů]/gi, "u")
+    .replace(/[ýÿŷ]/gi, "y")
+    .replace(/ñ/gi, "n")
+    .replace(/ç/gi, "c")
+    .replace(/š/gi, "s")
+    .replace(/ž/gi, "z")
+    .replace(/ß/gi, "ss");
+}
+
 export function localizeNewCity(country, city, locale) {
+  const language = languageFor(locale);
   const source = String(city || "").trim();
   if (!source) return "";
 
-  // First let the established curated map translate the original EYP value.
-  // Then extract exactly one locality from that localized result.
-  const localized = localizeCityName(country, source, locale);
-  const primary = extractPrimaryLocation(localized || source);
-  return primary || extractPrimaryLocation(source);
+  const primary = extractPrimaryLocation(source);
+  if (!primary) return "";
+
+  const countryCode = String(country || "").trim().toUpperCase();
+  if (language === "ar") {
+    const normalizedKey = `${countryCode}|${primary.normalize("NFC").toUpperCase()}`;
+    const explicit = ARABIC_LOCALITY_OVERRIDES[normalizedKey];
+    if (explicit) return explicit;
+
+    const ascii = asciiLocality(primary);
+    const localized = localizeCityName(countryCode, ascii, language);
+    if (localized && !/[A-Za-zÀ-ÿÐ-ðÞ-þØ-øŁłĐđ]/u.test(localized)) {
+      return localized;
+    }
+
+    return localizeCityName(countryCode, ascii, language) || ascii;
+  }
+
+  const localized = localizeCityName(countryCode, primary, language);
+  return extractPrimaryLocation(localized || primary) || primary;
 }
 
 export function normalizedCityKey(country, city) {
-  return `${String(country || "").trim().toUpperCase()}|${extractPrimaryLocation(city).toUpperCase()}`;
+  return `${String(country || "").trim().toUpperCase()}|${extractPrimaryLocation(city).normalize("NFC").toUpperCase()}`;
 }
 
 export { extractPrimaryLocation };
