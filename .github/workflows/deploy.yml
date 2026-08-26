@@ -32,10 +32,6 @@ jobs:
         github.event.workflow_run.conclusion == 'success' &&
         github.event.workflow_run.name == 'Update ESC Opportunities'
       )
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
 
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -50,95 +46,6 @@ jobs:
         with:
           ref: main
           fetch-depth: 1
-
-      # BEGIN ONE-LOCALITY-MIGRATION
-      - name: One-time locality migration
-        if: github.event_name == 'push' && github.event.head_commit.message == 'chore: enable one-time locality migration'
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          table = Path('web/table.js')
-          text = table.read_text(encoding='utf-8')
-
-          text = text.replace(
-              'import { localizeNewCity } from "./city-localizations.js";',
-              'import { formatPrimaryLocation } from "./location-display.js";',
-              1,
-          )
-
-          old = '''function formatCity(opportunity, locale) {
-            const town = String(opportunity.town || "").trim();
-            if (!town) {
-              return String(opportunity.location || "").trim();
-            }
-
-            const country = String(opportunity.country || "").trim().toUpperCase();
-            return localizeNewCity(country, town, locale);
-          }'''
-          new = '''function formatCity(opportunity, locale) {
-            const country = String(opportunity.country || "").trim().toUpperCase();
-            return formatPrimaryLocation(
-              country,
-              opportunity.town,
-              opportunity.location,
-              locale,
-            );
-          }'''
-
-          if old not in text:
-              raise SystemExit('ERROR: formatCity block not found')
-          table.write_text(text.replace(old, new, 1), encoding='utf-8')
-
-          workflow = Path('.github/workflows/deploy.yml')
-          w = workflow.read_text(encoding='utf-8')
-          start = w.index('      # BEGIN ONE-LOCALITY-MIGRATION')
-          end_marker = '      # END ONE-LOCALITY-MIGRATION\n'
-          end = w.index(end_marker, start) + len(end_marker)
-          w = w[:start] + w[end:]
-          workflow.write_text(w, encoding='utf-8')
-          PY
-
-      - name: Validate one-locality behavior
-        if: github.event_name == 'push' && github.event.head_commit.message == 'chore: enable one-time locality migration'
-        run: |
-          node --check web/location-display.js
-          node --check web/city-localizations.js
-          node --check web/table.js
-          node --input-type=module <<'JS'
-          import { formatPrimaryLocation } from './web/location-display.js';
-
-          const tests = [
-            ['GE', 'Mtskheta, Tserovani IDP Settlement', '', 'fr', 'Mtskheta'],
-            ['GE', 'Mtskheta, Tserovani IDP Settlement', '', 'ar', 'متسخيتا'],
-            ['CZ', 'Praha 5 - Stodůlky', '', 'fr', 'Prague'],
-            ['IT', 'Genova', '', 'fr', 'Gênes'],
-            ['IT', 'Genova', '', 'ar', 'جنوة'],
-            ['IT', 'CAGLIARI', '', 'ar', 'كالياري'],
-            ['BO', 'La Paz, Bolivia', '', 'fr', 'La Paz'],
-            ['PT', 'Braga, Sanguedo, Cucujães and Guimarães', '', 'fr', 'Braga'],
-          ];
-
-          for (const [country, town, location, locale, expected] of tests) {
-            const actual = formatPrimaryLocation(country, town, location, locale);
-            if (actual !== expected) {
-              throw new Error(`${country}: ${town} (${locale}) => ${actual}; expected ${expected}`);
-            }
-          }
-          console.log(`PASS: ${tests.length} locality cases.`);
-          JS
-
-      - name: Commit one-locality migration
-        if: github.event_name == 'push' && github.event.head_commit.message == 'chore: enable one-time locality migration'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add web/table.js web/location-display.js .github/workflows/deploy.yml
-          git commit -m "fix: use one localized primary location" \
-            -m "Extract one primary locality from EYP location values before French or Arabic localization." \
-            || exit 0
-          git push origin main
-      # END ONE-LOCALITY-MIGRATION
 
       - name: Validate published dataset
         run: |
