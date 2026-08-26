@@ -13,7 +13,7 @@ jobs:
   build-city-localization:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
         with:
@@ -31,6 +31,7 @@ jobs:
           import json
           import re
           import time
+          from concurrent.futures import ThreadPoolExecutor, as_completed
           from pathlib import Path
           import requests
 
@@ -48,62 +49,118 @@ jobs:
           print(f"Dataset opportunities: {len(opportunities)}")
           print(f"Unique country/city pairs: {len(pairs)}")
 
-          SPARQL = "https://query.wikidata.org/sparql"
-          headers = {"User-Agent": "ESC-Opportunity-Finder/1.0 city-localization-builder", "Accept": "application/sparql-results+json"}
+          API = "https://www.wikidata.org/w/api.php"
+          HEADERS = {
+              "User-Agent": "ESC-Opportunity-Finder/1.0 city-localization-builder",
+              "Accept": "application/json",
+          }
+          session = requests.Session()
+          session.headers.update(HEADERS)
 
-          def sparql_string(value):
-              return json.dumps(value, ensure_ascii=False)
+          def normalize(value):
+              value = re.sub(r"[\\u200e\\u200f\\u202a-\\u202e]", "", str(value or ""))
+              return re.sub(r"\\s+", " ", value).strip().casefold()
 
-          translations = {}
+          def search(pair):
+              (country, city_key), town = pair
+              queries = [f"{town}, {country}", town]
+              for query_text in queries:
+                  for attempt in range(1, 4):
+                      try:
+                          response = session.get(
+                              API,
+                              params={
+                                  "action": "wbsearchentities",
+                                  "search": query_text,
+                                  "language": "en",
+                                  "uselang": "en",
+                                  "format": "json",
+                                  "limit": 10,
+                                  "type": "item",
+                              },
+                              timeout=20,
+                          )
+                          response.raise_for_status()
+                          results = response.json().get("search", [])
+                          wanted = normalize(town)
+                          scored = []
+                          for result in results:
+                              label = normalize(result.get("label"))
+                              desc = normalize(result.get("description"))
+                              score = 0
+                              if label == wanted:
+                                  score += 100
+                              elif wanted in label or label in wanted:
+                                  score += 40
+                              if any(word in desc for word in ("city", "town", "municipality", "commune", "capital", "village")):
+                                  score += 20
+                              if country.casefold() in desc:
+                                  score += 20
+                              scored.append((score, result.get("id")))
+                          scored = [item for item in scored if item[1]]
+                          if scored:
+                              scored.sort(reverse=True)
+                              return (country, city_key), scored[0][1]
+                          break
+                      except Exception:
+                          if attempt < 3:
+                              time.sleep(attempt)
+              return (country, city_key), None
+
+          resolved = {}
           items = list(pairs.items())
+          with ThreadPoolExecutor(max_workers=12) as pool:
+              futures = [pool.submit(search, item) for item in items]
+              for index, future in enumerate(as_completed(futures), 1):
+                  pair, qid = future.result()
+                  if qid:
+                      resolved[pair] = qid
+                  if index % 50 == 0 or index == len(futures):
+                      print(f"Resolved {index}/{len(futures)}")
 
-          for offset in range(0, len(items), 80):
-              batch = items[offset:offset + 80]
-              values = " ".join(f"({sparql_string(town)} {sparql_string(country)})" for (country, _), town in batch)
-              query = f"""
-          PREFIX wdt: <http://www.wikidata.org/prop/direct/>
-          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-          PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-          SELECT DISTINCT ?name ?countryCode ?frLabel ?arLabel WHERE {{
-            VALUES (?name ?countryCode) {{ {values} }}
-            ?country wdt:P297 ?countryCode.
-            ?item wdt:P17 ?country.
-            {{ ?item rdfs:label ?sourceLabel. }} UNION {{ ?item skos:altLabel ?sourceLabel. }}
-            FILTER(LCASE(STR(?sourceLabel)) = LCASE(?name))
-            OPTIONAL {{ ?item rdfs:label ?frLabel. FILTER(LANG(?frLabel) = "fr") }}
-            OPTIONAL {{ ?item rdfs:label ?arLabel. FILTER(LANG(?arLabel) = "ar") }}
-          }}
-          """
+          entities = {}
+          ids = list(dict.fromkeys(resolved.values()))
+          for start in range(0, len(ids), 50):
+              batch = ids[start:start + 50]
               for attempt in range(1, 4):
                   try:
-                      response = requests.get(SPARQL, params={"query": query, "format": "json"}, headers=headers, timeout=60)
+                      response = session.get(
+                          API,
+                          params={
+                              "action": "wbgetentities",
+                              "ids": "|".join(batch),
+                              "props": "labels",
+                              "languages": "en|fr|ar",
+                              "format": "json",
+                          },
+                          timeout=30,
+                      )
                       response.raise_for_status()
-                      rows = response.json().get("results", {}).get("bindings", [])
-                      for row in rows:
-                          key = (row["countryCode"]["value"].upper(), row["name"]["value"].upper())
-                          if key not in pairs:
-                              continue
-                          translations[key] = {
-                              "fr": row.get("frLabel", {}).get("value") or pairs[key],
-                              "ar": row.get("arLabel", {}).get("value") or pairs[key],
-                          }
-                      print(f"Batch {min(offset + len(batch), len(items))}/{len(items)}: {len(rows)} matches")
+                      entities.update(response.json().get("entities", {}))
                       break
-                  except Exception as exc:
-                      if attempt == 3:
-                          print(f"WARN: batch {offset} failed: {exc}")
-                      else:
-                          time.sleep(attempt * 2)
+                  except Exception:
+                      if attempt < 3:
+                          time.sleep(attempt)
 
-          for key, town in pairs.items():
-              translations.setdefault(key, {"fr": town, "ar": town})
+          def get_label(entity, language):
+              return str(entity.get("labels", {}).get(language, {}).get("value") or "").strip()
 
-          assert "IT|CAGLIARI" not in translations or translations["IT|CAGLIARI"]["ar"] == "كالياري", translations.get("IT|CAGLIARI")
+          translations = {}
+          for pair, town in pairs.items():
+              entity = entities.get(resolved.get(pair), {})
+              translations[pair] = {
+                  "fr": get_label(entity, "fr") or town,
+                  "ar": get_label(entity, "ar") or town,
+              }
+
+          assert "IT" in dict(pairs) or ("IT", "CAGLIARI") not in translations
+          if ("IT", "CAGLIARI") in translations:
+              assert translations[("IT", "CAGLIARI")]["ar"] == "كالياري", translations[("IT", "CAGLIARI")]
 
           table_path = Path("web/table.js")
           text = table_path.read_text(encoding="utf-8")
           start_marker = "const CITY_TRANSLATIONS = {"
-          end_marker = "\n};\n\nfunction titleCaseCity"
+          end_marker = "\\n};\\n\\nfunction titleCaseCity"
           start = text.find(start_marker)
           end = text.find(end_marker, start)
           if start < 0 or end < 0:
@@ -118,7 +175,7 @@ jobs:
               lines.append("  },")
           lines.append("};")
 
-          table_path.write_text(text[:start] + "\n".join(lines) + text[end + 3:], encoding="utf-8")
+          table_path.write_text(text[:start] + "\\n".join(lines) + text[end + 3:], encoding="utf-8")
           print(f"PASS: generated {len(translations)} dataset city mappings")
           print(f"PASS: Cagliari mapping: {translations.get(('IT', 'CAGLIARI'))}")
           PY
