@@ -159,9 +159,10 @@ jobs:
 
           print(f"PASS: resolved {len(resolved)}/{len(pairs)} city entities")
           print(f"PASS: French/Arabic mappings generated: {len(translations)}")
-          if ("IT", "CAGLIARI") in translations:
-              print(f"PASS: Cagliari mapping: {translations[("IT", "CAGLIARI") ]}")
-              assert translations[("IT", "CAGLIARI")]["ar"] == "كالياري", translations[("IT", "CAGLIARI")]
+          cagliari = translations.get(("IT", "CAGLIARI"))
+          if cagliari:
+              print(f"PASS: Cagliari mapping: {cagliari}")
+              assert cagliari["ar"] == "كالياري", cagliari
 
           table_path = Path("web/table.js")
           text = table_path.read_text(encoding="utf-8")
