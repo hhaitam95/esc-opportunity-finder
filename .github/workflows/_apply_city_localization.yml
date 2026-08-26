@@ -1,0 +1,121 @@
+name: Apply deterministic city localization
+
+on:
+  push:
+    paths:
+      - ".github/workflows/_apply_city_localization.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply-city-localization:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Apply deterministic city localization fallback
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("web/table.js")
+          text = path.read_text(encoding="utf-8")
+
+          import_line = 'import { localizeNewCity } from "./city-localizations.js";\n'
+          if not text.startswith(import_line):
+              text = import_line + text
+
+          pattern = re.compile(r"function formatCity\(opportunity, locale\) \{.*?\n\}\n\nfunction topicLabel", re.DOTALL)
+          replacement = '''function formatCity(opportunity, locale) {
+            const town = String(opportunity.town || "").trim();
+            const location = String(opportunity.location || "").trim();
+            if (!town) return location;
+
+            const country = String(opportunity.country || "").trim().toUpperCase();
+            const key = `${country}|${town.toUpperCase()}`;
+            const language = locale.startsWith("fr")
+              ? "fr"
+              : locale.startsWith("ar")
+                ? "ar"
+                : "en";
+
+            if (CITY_TRANSLATIONS[key]?.[language]) {
+              return CITY_TRANSLATIONS[key][language];
+            }
+
+            if (CITY_NAME_CORRECTIONS[key]) return CITY_NAME_CORRECTIONS[key];
+
+            return localizeNewCity(country, town, locale);
+          }
+
+function topicLabel'''
+
+          updated, count = pattern.subn(replacement, text, count=1)
+          if count != 1:
+              raise SystemExit("ERROR: formatCity function boundary not found")
+
+          path.write_text(updated, encoding="utf-8")
+          print("PASS: table.js now uses deterministic city localization fallback")
+          PY
+
+      - name: Add localization coverage checker
+        run: |
+          mkdir -p scripts
+          cat > scripts/check_city_localizations.py <<'PY'
+          import json
+          import re
+          import sys
+          from pathlib import Path
+
+          data = json.loads(Path("data/opportunities.json").read_text(encoding="utf-8"))
+          table = Path("web/table.js").read_text(encoding="utf-8")
+          helper = Path("web/city-localizations.js").read_text(encoding="utf-8")
+
+          known = set(re.findall(r'"([A-Z]{2}\|[^"\\]+)"\s*:', table))
+          known.update(re.findall(r'"([A-Z]{2}\|[^"\\]+)"\s*:', helper))
+
+          pairs = set()
+          for item in data.get("opportunities", []):
+              if not isinstance(item, dict):
+                  continue
+              country = str(item.get("country") or "").strip().upper()
+              town = str(item.get("town") or "").strip()
+              if country and town:
+                  normalized = re.sub(r"\s+", " ", town).strip().upper()
+                  pairs.add(f"{country}|{normalized}")
+
+          missing = sorted(pairs - known)
+          print(f"Dataset country/city pairs: {len(pairs)}")
+          print(f"Explicit localization entries: {len(known)}")
+          print(f"Locations using deterministic fallback: {len(missing)}")
+          for key in missing[:100]:
+              print(f"  {key}")
+          if len(missing) > 100:
+              print(f"  ... and {len(missing) - 100} more")
+          PY
+
+          python scripts/check_city_localizations.py
+
+      - name: Validate
+        run: |
+          node --check web/table.js
+          python -m py_compile scripts/check_city_localizations.py
+          git diff --check
+
+      - name: Commit final implementation and remove temporary builders
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/table.js web/city-localizations.js scripts/check_city_localizations.py
+          git rm .github/workflows/_apply_city_localization.yml
+          git rm .github/workflows/_build_city_localization_final.yml || true
+          git rm .github/workflows/_build_city_localization_fast.yml || true
+          git rm .github/workflows/_build_city_localization.yml || true
+          git commit -m "fix: use deterministic city localization with safe fallback"
+          git push origin HEAD:main
