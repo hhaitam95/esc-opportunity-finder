@@ -4,7 +4,7 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "IT|ROME": { fr: "Rome", ar: "روما" },
   "IT|GENOA": { fr: "Gênes", ar: "جنوة" },
   "IT|GENOVA": { fr: "Gênes", ar: "جنوة" },
-  "IT|MILAN": { fr: "Milan", ar: "ميلanو" },
+  "IT|MILAN": { fr: "Milan", ar: "ميلانو" },
   "IT|MILANO": { fr: "Milan", ar: "ميلانو" },
   "IT|NAPLES": { fr: "Naples", ar: "نابولي" },
   "IT|NAPOLI": { fr: "Naples", ar: "نابولي" },
@@ -35,7 +35,7 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "FR|MONTPELLIER": { fr: "Montpellier", ar: "مونبلييه" },
   "FR|GRENOBLE": { fr: "Grenoble", ar: "غرونوبل" },
   "FR|REIMS": { fr: "Reims", ar: "ريمس" },
-  "FR|RENNES": { fr: "Rennes", ar: "رون" },
+  "FR|RENNES": { fr: "Rennes", ar: "رِن" },
   "FR|CAEN": { fr: "Caen", ar: "كان" },
   "FR|TOURS": { fr: "Tours", ar: "تور" },
   "FR|PAU": { fr: "Pau", ar: "بو" },
@@ -57,7 +57,6 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "DE|FRANKFURT ODER": { fr: "Francfort-sur-l'Oder", ar: "فرانكفورت أودر" },
   "DE|WUERZBURG": { fr: "Würzburg", ar: "فورتسبورغ" },
   "DE|SAARBRÜCKEN": { fr: "Sarrebruck", ar: "ساربروكن" },
-  "DE|Saarbrücken": { fr: "Sarrebruck", ar: "ساربروكن" },
   "DE|GÖTTINGEN": { fr: "Göttingen", ar: "غوتينغن" },
 
   "ES|MADRID": { fr: "Madrid", ar: "مدريد" },
@@ -70,9 +69,8 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "ES|ALICANTE": { fr: "Alicante", ar: "أليكانتي" },
   "ES|MALAGA": { fr: "Malaga", ar: "مالقة" },
   "ES|MALAGÓN": { fr: "Malagón", ar: "مالاغون" },
-  "ES|GIJON": { fr: "Gijón", ar: "خيخون" },
+  "ES|GIJON": { fr: "Gijón", ar: "خِيخون" },
   "ES|A CORUÑA": { fr: "La Corogne", ar: "لا كورونيا" },
-  "ES|OURANSE": { fr: "Ourense", ar: "أورينسي" },
   "ES|SANTIAGO DE COMPOSTELA": { fr: "Saint-Jacques-de-Compostelle", ar: "سانتياغو دي كومبوستيلا" },
   "ES|PALMA DE MALLORCA": { fr: "Palma de Majorque", ar: "بالما دي مايوركا" },
   "ES|JEREZ DE LA FRONTERA": { fr: "Jerez de la Frontera", ar: "خيريز دي لا فرونتيرا" },
@@ -94,12 +92,11 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "BE|BRUSSEL": { fr: "Bruxelles", ar: "بروكسل" },
   "BE|ANTWERPEN": { fr: "Anvers", ar: "أنتويرب" },
   "BE|TOURNAI": { fr: "Tournai", ar: "تورن" },
-  "GR|ATHENS": { fr: "Athènes", ar: "أثينا" },
-  "GR|ATHINA": { fr: "Athènes", ar: "أثينا" },
   "EL|ATHENS": { fr: "Athènes", ar: "أثينا" },
   "EL|ATHINA": { fr: "Athènes", ar: "أثينا" },
   "EL|THESSALONIKI": { fr: "Thessalonique", ar: "سالونيك" },
   "EL|HERAKLION, KRETA": { fr: "Héraklion, Crète", ar: "هيراكليون، كريت" },
+  "EL|LEFKADA": { fr: "Leucade", ar: "ليفكادا" },
   "CY|NICOSIA": { fr: "Nicosie", ar: "نيقوسيا" },
   "CY|PAPHOS": { fr: "Paphos", ar: "بافوس" },
   "CY|PAFOS": { fr: "Paphos", ar: "بافوس" },
@@ -147,11 +144,10 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "CZ|BRNO": { fr: "Brno", ar: "برنو" },
   "CZ|PLZEŇ": { fr: "Plzeň", ar: "بلزن" },
   "CZ|USTI NAD LABEM": { fr: "Ústí nad Labem", ar: "أوستي ناد لابم" },
-  "CZ|Usti nad Labem": { fr: "Ústí nad Labem", ar: "أوستي ناد لابم" },
   "CZ|OSTRAVA - NOVÁ VES": { fr: "Ostrava - Nová Ves", ar: "أوسترافا - نوفا فيس" },
   "CZ|ČESKÝ TĚŠÍN": { fr: "Český Těšín", ar: "تشييسكي تيشين" },
   "CZ|HUSTOPEČE": { fr: "Hustopeče", ar: "هوستوبتشه" },
-  "CZ|KROMĚŘÍŽ": { fr: "Kroměříž", ar: "كروميريژ" },
+  "CZ|KROMĚŘÍŽ": { fr: "Kroměříž", ar: "كروميريش" },
   "CZ|SPÁLENÉ POŘÍČÍ": { fr: "Spálené Poříčí", ar: "سباليني بوريتشي" },
   "CZ|VELKÁ BÍTEŠ": { fr: "Velká Bíteš", ar: "فيلكا بيتش" },
   "CZ|VSETÍN": { fr: "Vsetín", ar: "فيستين" },
@@ -247,6 +243,13 @@ function normalizeCityKey(country, city) {
   return `${normalizedCountry}|${normalizedCity}`;
 }
 
+const NORMALIZED_CITY_OVERRIDES = Object.fromEntries(
+  Object.entries(CITY_LOCALIZATION_OVERRIDES).map(([key, value]) => {
+    const [country, ...cityParts] = key.split("|");
+    return [normalizeCityKey(country, cityParts.join("|")), value];
+  }),
+);
+
 function languageFor(locale) {
   const value = String(locale || "en-GB");
   if (value.startsWith("fr")) return "fr";
@@ -285,32 +288,10 @@ const ARABIC_DIGRAPHS = [
 ];
 
 const ARABIC_LETTERS = {
-  a: "ا",
-  b: "ب",
-  c: "ك",
-  d: "د",
-  e: "ي",
-  f: "ف",
-  g: "غ",
-  h: "ه",
-  i: "ي",
-  j: "ج",
-  k: "ك",
-  l: "ل",
-  m: "م",
-  n: "ن",
-  o: "و",
-  p: "ب",
-  q: "ق",
-  r: "ر",
-  s: "س",
-  t: "ت",
-  u: "و",
-  v: "ف",
-  w: "و",
-  x: "كس",
-  y: "ي",
-  z: "ز",
+  a: "ا", b: "ب", c: "ك", d: "د", e: "ي", f: "ف", g: "غ", h: "ه",
+  i: "ي", j: "ج", k: "ك", l: "ل", m: "م", n: "ن", o: "و", p: "ب",
+  q: "ق", r: "ر", s: "س", t: "ت", u: "و", v: "ف", w: "و", x: "كس",
+  y: "ي", z: "ز",
 };
 
 function arabicTransliteration(value) {
@@ -327,23 +308,16 @@ function arabicTransliteration(value) {
     .replace(/æ/g, "ae")
     .replace(/œ/g, "oe");
 
-  for (const [from, to] of ARABIC_DIGRAPHS) {
-    source = source.replaceAll(from, to);
-  }
+  for (const [from, to] of ARABIC_DIGRAPHS) source = source.replaceAll(from, to);
 
   let output = "";
   for (const char of source) {
-    if (/\p{Script=Arabic}/u.test(char)) {
-      output += char;
-    } else if (/[a-z]/.test(char)) {
-      output += ARABIC_LETTERS[char];
-    } else {
-      output += char;
-    }
+    if (/\p{Script=Arabic}/u.test(char)) output += char;
+    else if (/[a-z]/.test(char)) output += ARABIC_LETTERS[char];
+    else output += char;
   }
 
   return output
-    .replace(/[\s-]+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -351,12 +325,13 @@ function arabicTransliteration(value) {
 export function localizeNewCity(country, city, locale) {
   const language = languageFor(locale);
   const original = String(city || "").trim();
-  if (!original || language === "en") return titleCaseLocation(original);
+  if (!original) return "";
 
   const key = normalizeCityKey(country, original);
-  const override = CITY_LOCALIZATION_OVERRIDES[key];
-  if (override?.[language]) return override[language];
+  const override = NORMALIZED_CITY_OVERRIDES[key];
 
+  if (language === "en") return titleCaseLocation(original);
+  if (override?.[language]) return override[language];
   if (language === "fr") return titleCaseLocation(original);
   return arabicTransliteration(original) || original;
 }
