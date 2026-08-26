@@ -1,0 +1,85 @@
+name: ESC Opportunity Update Watchdog
+
+on:
+  schedule:
+    - cron: "15,45 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: esc-opportunity-watchdog
+  cancel-in-progress: true
+
+jobs:
+  watchdog:
+    name: Check scraper heartbeat
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Check heartbeat and recover stale scraper
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          path = Path("data/last_successful_run.json")
+          if not path.exists():
+              print("WARN: heartbeat file is missing; recovery is required.")
+              raise SystemExit(2)
+
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          raw = payload.get("last_successful_run_at")
+          if not raw:
+              print("WARN: heartbeat timestamp is missing; recovery is required.")
+              raise SystemExit(2)
+
+          timestamp = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+          age_minutes = (datetime.now(timezone.utc) - timestamp).total_seconds() / 60
+          print(f"Last successful scraper run: {raw}")
+          print(f"Heartbeat age: {age_minutes:.1f} minutes")
+
+          if age_minutes <= 60:
+              print("PASS: scraper heartbeat is healthy.")
+              raise SystemExit(0)
+
+          print("WARN: scraper heartbeat is stale; recovery required.")
+          raise SystemExit(2)
+          PY
+        continue-on-error: true
+
+      - name: Check for active scraper run
+        id: active
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          active_runs="$(gh run list --workflow update.yml --status in_progress --status queued --limit 20 --json status --jq 'length')"
+          echo "active_or_queued_runs=${active_runs}"
+          if [ "$active_runs" -gt 0 ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "PASS: scraper already has an active or queued run; no duplicate dispatch."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "No active or queued scraper run found."
+          fi
+
+      - name: Dispatch scraper recovery
+        if: steps.active.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run update.yml --ref main
+          echo "PASS: stale scraper detected and recovery run dispatched."
