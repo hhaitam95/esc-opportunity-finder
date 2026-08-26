@@ -56,8 +56,8 @@ jobs:
           }
 
           def normalize(value):
-              value = re.sub(r"[\\u200e\\u200f\\u202a-\\u202e]", "", str(value or ""))
-              return re.sub(r"\\s+", " ", value).strip().casefold()
+              value = re.sub(r"[\u200e\u200f\u202a-\u202e]", "", str(value or ""))
+              return re.sub(r"\s+", " ", value).strip().casefold()
 
           def search(pair):
               (country, city_key), town = pair
@@ -159,7 +159,7 @@ jobs:
           table_path = Path("web/table.js")
           text = table_path.read_text(encoding="utf-8")
           start_marker = "const CITY_TRANSLATIONS = {"
-          end_marker = "\\n};\\n\\nfunction titleCaseCity"
+          end_marker = "\n};\n\nfunction titleCaseCity"
           start = text.find(start_marker)
           end = text.find(end_marker, start)
           if start < 0 or end < 0:
@@ -174,7 +174,7 @@ jobs:
               lines.append("  },")
           lines.append("};")
 
-          table_path.write_text(text[:start] + "\\n".join(lines) + text[end + 3:], encoding="utf-8")
+          table_path.write_text(text[:start] + "\n".join(lines) + text[end + 3:], encoding="utf-8")
           print(f"PASS: generated {len(translations)} dataset city mappings")
           print(f"PASS: Cagliari mapping: {translations.get(('IT', 'CAGLIARI'))}")
           PY
