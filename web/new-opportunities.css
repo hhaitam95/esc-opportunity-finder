@@ -1,0 +1,97 @@
+.new-opportunities-section {
+  margin: 0 0 24px;
+  padding: 0;
+  border: 1px solid #e2c768;
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.new-opportunities-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: #fff8dc;
+  border-bottom: 1px solid #eadb9d;
+}
+
+.new-opportunities-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.new-opportunities-star {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.new-opportunities-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.new-opportunities-header .section-count {
+  margin: 3px 0 0;
+}
+
+.new-opportunities-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.new-opportunities-wrapper {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.new-opportunities-table tbody tr td {
+  background: #fffdf0;
+}
+
+.new-opportunities-table tbody tr:hover td {
+  background: #fff8dc;
+}
+
+.new-opportunities-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+html[data-theme="dark"] .new-opportunities-section {
+  border-color: #7d6b29;
+}
+
+html[data-theme="dark"] .new-opportunities-header {
+  background: #2f2a16;
+  border-bottom-color: #574d25;
+}
+
+html[data-theme="dark"] .new-opportunities-table tbody tr td {
+  background: #242216;
+}
+
+html[data-theme="dark"] .new-opportunities-table tbody tr:hover td {
+  background: #2f2a16;
+}
+
+@media (max-width: 700px) {
+  .new-opportunities-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .new-opportunities-note {
+    text-align: left;
+  }
+}
+
+html[dir="rtl"] .new-opportunities-note {
+  text-align: left;
+}
