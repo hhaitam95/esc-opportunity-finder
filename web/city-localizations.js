@@ -18,6 +18,7 @@ const CITY_LOCALIZATION_OVERRIDES = {
   "PL|WARSAW": { fr: "Varsovie", ar: "وارسو" },
   "PL|KRAKOW": { fr: "Cracovie", ar: "كراكوف" },
   "CZ|PRAGUE": { fr: "Prague", ar: "براغ" },
+  "CZ|NACHOD": { fr: "Náchod", ar: "ناخود" },
   "AT|VIENNA": { fr: "Vienne", ar: "فيينا" },
   "CH|GENEVA": { fr: "Genève", ar: "جنيف" },
   "RO|BUCHAREST": { fr: "Bucarest", ar: "بوخارست" },
@@ -56,7 +57,7 @@ const ARABIC_DIGRAPHS = [
   ["tch", "تش"],
   ["shr", "شر"],
   ["sh", "ش"],
-  ["ch", "تش"],
+  ["ch", "خ"],
   ["th", "ث"],
   ["dh", "ذ"],
   ["kh", "خ"],
@@ -101,7 +102,11 @@ const ARABIC_LETTERS = {
 };
 
 function arabicTransliteration(city) {
-  let value = String(city || "").trim().toLocaleLowerCase();
+  let value = String(city || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLocaleLowerCase();
   if (!value) return "";
 
   for (const [from, to] of ARABIC_DIGRAPHS) {
@@ -130,14 +135,20 @@ export function localizeNewCity(country, city, locale) {
       ? "ar"
       : "en";
 
-  if (language === "en") return String(city || "");
+  const original = String(city || "").trim();
+  if (language === "en" || !original) return original;
 
-  const key = normalizeCityKey(country, city);
+  const key = normalizeCityKey(country, original);
   const override = CITY_LOCALIZATION_OVERRIDES[key];
   if (override?.[language]) return override[language];
 
-  if (language === "fr") return String(city || "");
-  return arabicTransliteration(city) || String(city || "");
+  // French city names are often identical to the local/international name.
+  // Do not invent French translations for obscure towns.
+  if (language === "fr") return original;
+
+  // For previously unseen Arabic locations, use a deterministic transliteration
+  // rather than a network lookup. Explicit overrides remain authoritative.
+  return arabicTransliteration(original) || original;
 }
 
 export function normalizedCityKey(country, city) {
