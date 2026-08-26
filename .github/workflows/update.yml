@@ -65,6 +65,24 @@ jobs:
       - name: Prune recently expired opportunities
         run: python scraper/prune_expired.py
 
+      - name: Refresh published dataset timestamp
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime
+          from pathlib import Path
+
+          path = Path("data/opportunities.json")
+          data = json.loads(path.read_text(encoding="utf-8"))
+          generated_at = datetime.now().isoformat()
+          data["generated_at"] = generated_at
+          path.write_text(
+              json.dumps(data, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(f"PASS: refreshed generated_at: {generated_at}")
+          PY
+
       - name: Validate published dataset
         run: python scraper/validate_published.py
 
