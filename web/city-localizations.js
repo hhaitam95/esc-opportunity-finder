@@ -1,5 +1,5 @@
 const CITY_LOCALIZATION_OVERRIDES = {
-  "GE|MTSKHETA, TSEROVANI IDP SETTLEMENT": { fr: "Mtskheta / Tserovani", ar: "متسخيتا / تسيروفاني" },
+  "GE|MTSKHETA, TSEROVANI IDP SETTLEMENT": { fr: "Mtskheta", ar: "متسخيتا" },
   "IT|CAGLIARI": { fr: "Cagliari", ar: "كالياري" },
   "IT|PALERMO": { fr: "Palerme", ar: "باليرمو" },
   "IT|ROME": { fr: "Rome", ar: "روما" },
@@ -229,37 +229,42 @@ function looksLikeAddress(value) {
 function extractDisplayParts(value) {
   let text = cleanLocationValue(value);
   if (!text) return [];
-
   if (looksLikeAddress(text)) return [text];
 
-  const sentenceLike = text.length > 70 || /\b(?:the volunteer|volunteer will|will be living|will live|living in|based in|located in|work in|working in)\b/iu.test(text);
+  const sentenceLike = /\b(?:the volunteer|volunteer will|will be living|will live|living in|based in|located in|work in|working in)\b/iu.test(text)
+    || text.length > 70;
   if (sentenceLike) {
-    const livingAndWork = text.match(/\b(?:living in|will be living in|based in|located in)\s+(.+?)(?:\s+\([^)]*\))?\s+and\s+(?:work|working)\s+in\s+([^.;]+)[.;]?$/iu);
-    if (livingAndWork) text = `${livingAndWork[1]} / ${livingAndWork[2]}`;
+    const living = text.match(/\b(?:living in|will be living in|based in|located in)\s+(.+?)(?:\s+\([^)]*\))?(?:\s+and\s+(?:work|working)\s+in\s+[^.;]+)?[.;]?$/iu);
+    const working = text.match(/\b(?:work|working)\s+in\s+([^.;]+)[.;]?$/iu);
+    if (living?.[1]) text = living[1];
+    else if (working?.[1]) text = working[1];
     else {
-      const inMatch = text.match(/\b(?:in|at)\s+([^.;]+)[.;]?/iu);
-      if (inMatch) text = inMatch[1];
-      else {
-        const parenthetical = text.match(/\(([^)]+)\)/u);
-        if (parenthetical) text = parenthetical[1];
-      }
+      const parenthetical = text.match(/\(([^)]+)\)/u);
+      if (parenthetical?.[1]) text = parenthetical[1];
     }
   }
 
-  const parts = text
-    .split(/\s*\/\s*|\s*;\s*/u)
-    .flatMap((part) => part.split(/\s+and\s+/iu))
-    .map(cleanLocationValue)
-    .filter(Boolean);
+  text = cleanLocationValue(text)
+    .replace(/\s+IDP\s+settlement$/iu, '')
+    .replace(/\s+(?:internally displaced people|internally displaced persons)\s+settlement$/iu, '')
+    .replace(/\s+(?:settlement|village|municipality|municipality area|parish|province|district|county|region)$/iu, '')
+    .replace(/\s+\([^)]*\)$/u, '')
+    .replace(/^\d{4,6}\s*[-–]\s*/u, '')
+    .replace(/,?\s+(?:Italia|Italy|France|Deutschland|Germany|España|Spain|Portugal|Poland|Polska|Czechia|Türkiye|Turkey|Bolivia|Senegal|Romania|Nederland|Netherlands|Armenia|Georgia)$/iu, '')
+    .trim();
+  if (!text) return [];
 
-  if (parts.length === 1 && /,/.test(text)) {
-    const commaParts = text.split(/\s*,\s*/u).map(cleanLocationValue).filter(Boolean);
-    if (commaParts.length > 1 && (text.length > 35 || /\b(?:region|municipality|village|province)\b/iu.test(text))) return commaParts;
-  }
+  const separated = text.split(/\s*\/\s*|\s*;\s*/u).map(cleanLocationValue).filter(Boolean);
+  if (separated.length > 1) return [separated[0]];
 
-  return parts.length ? parts : [text];
+  const commaParts = text.split(/\s*,\s*/u).map(cleanLocationValue).filter(Boolean);
+  if (commaParts.length > 1) return [commaParts[0]];
+
+  const pragueDistrict = text.match(/^(praha|prague)\s+\d+(?:\s*[-–]\s*.*)?$/iu);
+  if (pragueDistrict) return [pragueDistrict[1]];
+
+  return [text];
 }
-
 const ARABIC_DIGRAPHS = [
   ["tsch", "تش"], ["sch", "ش"], ["tch", "تش"], ["ch", "تش"], ["sh", "ش"],
   ["th", "ث"], ["dh", "ذ"], ["kh", "خ"], ["gh", "غ"], ["ph", "ف"],
