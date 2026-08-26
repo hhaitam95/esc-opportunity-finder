@@ -1,6 +1,9 @@
 name: Extract city localization candidates
 
 on:
+  push:
+    paths:
+      - ".github/workflows/_extract_city_localization_candidates.yml"
   workflow_dispatch:
 
 permissions:
@@ -8,6 +11,7 @@ permissions:
 
 jobs:
   extract:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -25,14 +29,15 @@ jobs:
               town = str(item.get("town") or "").strip()
               if country and town:
                   pairs[f"{country}|{town.upper()}"] = {"country": country, "town": town}
-          Path("/tmp/city-localization-candidates.json").write_text(
+          output = Path("data/city-localization-candidates.json")
+          output.write_text(
               json.dumps([pairs[k] for k in sorted(pairs)], ensure_ascii=False, indent=2) + "\n",
               encoding="utf-8",
           )
           print(f"Extracted {len(pairs)} unique country/town pairs")
           PY
-      - uses: actions/upload-artifact@v6
-        with:
-          name: city-localization-candidates
-          path: /tmp/city-localization-candidates.json
-          if-no-files-found: error
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/city-localization-candidates.json
+          git commit -m "chore: extract current city localization candidates"
+          git push origin HEAD:main
