@@ -1,3 +1,5 @@
+# Canonical ESC opportunity update workflow.
+# Keep this filename unchanged: .github/workflows/update.yml
 name: Update ESC Opportunities
 
 on:
@@ -41,12 +43,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p web/assets
-
           curl --fail --location --silent --show-error --retry 3 \
             -A "Mozilla/5.0" \
             "https://youth.europa.eu/sites/default/files/eu-initiatives/logos/european-solidarity-corps.png" \
             -o web/assets/european-solidarity-corps.png
-
           test -s web/assets/european-solidarity-corps.png
           test -s web/assets/EYP-Logo.png
           file web/assets/european-solidarity-corps.png | grep -Eq 'PNG image data'
@@ -70,6 +70,7 @@ jobs:
                   raise SystemExit("ERROR: could not locate fetch_current_opportunities boundaries; no source change made.")
 
               new_function = '''def fetch_current_opportunities():
+    # API_PAGINATION_DEDUP_V2
     print("=" * 70)
     print("FETCHING CURRENT ESC OPPORTUNITIES")
     print("=" * 70)
@@ -148,6 +149,7 @@ jobs:
         )
 
     return opportunities
+
 '''
 
               text = text[:start] + new_function + text[end:]
