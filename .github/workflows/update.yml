@@ -58,22 +58,35 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
-          path = Path("scraper/scraper.py")
-          text = path.read_text(encoding="utf-8")
+          scraper_path = Path("scraper/scraper.py")
+          workflow_path = Path(".github/workflows/update.yml")
+          text = scraper_path.read_text(encoding="utf-8")
 
-          if "# API_PAGINATION_DEDUP_V2" in text:
-              print("PASS: permanent API pagination fix already present.")
-              raise SystemExit(0)
+          if "# API_PAGINATION_DEDUP_V2" not in text:
+              old = """    opportunities = []\n\n    offset = 0\n    total = None\n\n    try:\n        while True:\n            data = fetch_api_page(\n                session,\n                offset,\n            )\n\n            if data is None:\n                raise RuntimeError(\n                    \"Could not retrieve the current \"\n                    \"opportunity list.\"\n                )\n\n            hits = data.get(\n                \"hits\",\n                {},\n            )\n\n            total_info = hits.get(\n                \"total\",\n                {},\n            )\n\n            if total is None:\n                if isinstance(\n                    total_info,\n                    dict,\n                ):\n                    total = int(\n                        total_info.get(\n                            \"value\",\n                            0,\n                        )\n                        or 0\n                    )\n                else:\n                    total = int(\n                        total_info or 0\n                    )\n\n                print(\n                    f\"API reports {total} opportunities.\",\n                    flush=True,\n                )\n\n            page_hits = hits.get(\n                \"hits\",\n                [],\n            )\n\n            if not page_hits:\n                break\n\n            for hit in page_hits:\n                source = hit.get(\n                    \"_source\",\n                    {},\n                )\n\n                opid = source.get(\n                    \"opid\"\n                )\n\n                if opid is None:\n                    opid = hit.get(\n                        \"_id\"\n                    )\n\n                if opid is None:\n                    continue\n\n                try:\n                    source[\"opid\"] = int(opid)\n                except (\n                    TypeError,\n                    ValueError,\n                ):\n                    continue\n\n                opportunities.append(\n                    source\n                )\n\n            offset += len(page_hits)\n\n            print(\n                f\"Retrieved \"\n                f\"{len(opportunities)}/{total}\",\n                flush=True,\n            )\n\n            if (\n                total is not None\n                and offset >= total\n            ):\n                break\n\n    finally:\n        session.close()\n\n    if (\n        total is not None\n        and len(opportunities) != total\n    ):\n        raise RuntimeError(\n            \"Incomplete API retrieval: \"\n            f\"{len(opportunities)}/{total}\"\n        )\n\n    return opportunities\n"""
 
-          old = """    opportunities = []\n\n    offset = 0\n    total = None\n\n    try:\n        while True:\n            data = fetch_api_page(\n                session,\n                offset,\n            )\n\n            if data is None:\n                raise RuntimeError(\n                    \"Could not retrieve the current \"\n                    \"opportunity list.\"\n                )\n\n            hits = data.get(\n                \"hits\",\n                {},\n            )\n\n            total_info = hits.get(\n                \"total\",\n                {},\n            )\n\n            if total is None:\n                if isinstance(\n                    total_info,\n                    dict,\n                ):\n                    total = int(\n                        total_info.get(\n                            \"value\",\n                            0,\n                        )\n                        or 0\n                    )\n                else:\n                    total = int(\n                        total_info or 0\n                    )\n\n                print(\n                    f\"API reports {total} opportunities.\",\n                    flush=True,\n                )\n\n            page_hits = hits.get(\n                \"hits\",\n                [],\n            )\n\n            if not page_hits:\n                break\n\n            for hit in page_hits:\n                source = hit.get(\n                    \"_source\",\n                    {},\n                )\n\n                opid = source.get(\n                    \"opid\"\n                )\n\n                if opid is None:\n                    opid = hit.get(\n                        \"_id\"\n                    )\n\n                if opid is None:\n                    continue\n\n                try:\n                    source[\"opid\"] = int(opid)\n                except (\n                    TypeError,\n                    ValueError,\n                ):\n                    continue\n\n                opportunities.append(\n                    source\n                )\n\n            offset += len(page_hits)\n\n            print(\n                f\"Retrieved \"\n                f\"{len(opportunities)}/{total}\",\n                flush=True,\n            )\n\n            if (\n                total is not None\n                and offset >= total\n            ):\n                break\n\n    finally:\n        session.close()\n\n    if (\n        total is not None\n        and len(opportunities) != total\n    ):\n        raise RuntimeError(\n            \"Incomplete API retrieval: \"\n            f\"{len(opportunities)}/{total}\"\n        )\n\n    return opportunities\n"""
+              new = """    # API_PAGINATION_DEDUP_V2\n    opportunities_by_id = {}\n\n    offset = 0\n    total = None\n\n    try:\n        while True:\n            data = fetch_api_page(\n                session,\n                offset,\n            )\n\n            if data is None:\n                raise RuntimeError(\n                    \"Could not retrieve the current \"\n                    \"opportunity list.\"\n                )\n\n            hits = data.get(\n                \"hits\",\n                {},\n            )\n\n            total_info = hits.get(\n                \"total\",\n                {},\n            )\n\n            if total is None:\n                if isinstance(\n                    total_info,\n                    dict,\n                ):\n                    total = int(\n                        total_info.get(\n                            \"value\",\n                            0,\n                        )\n                        or 0\n                    )\n                else:\n                    total = int(\n                        total_info or 0\n                    )\n\n                print(\n                    f\"API reports {total} opportunities.\",\n                    flush=True,\n                )\n\n            page_hits = hits.get(\n                \"hits\",\n                [],\n            )\n\n            if not page_hits:\n                break\n\n            for hit in page_hits:\n                source = hit.get(\n                    \"_source\",\n                    {},\n                )\n\n                opid = source.get(\n                    \"opid\"\n                )\n\n                if opid is None:\n                    opid = hit.get(\n                        \"_id\"\n                    )\n\n                if opid is None:\n                    continue\n\n                try:\n                    source[\"opid\"] = int(opid)\n                except (\n                    TypeError,\n                    ValueError,\n                ):\n                    continue\n\n                opportunities_by_id.setdefault(\n                    str(source[\"opid\"]),\n                    source,\n                )\n\n            offset += len(page_hits)\n            unique_count = len(opportunities_by_id)\n\n            print(\n                f\"Retrieved \"\n                f\"{unique_count}/{total} unique opportunities \"\n                f\"(raw page hits: {len(page_hits)})\",\n                flush=True,\n            )\n\n            if (\n                total is not None\n                and unique_count >= total\n            ):\n                break\n\n    finally:\n        session.close()\n\n    opportunities = list(\n        opportunities_by_id.values()\n    )\n\n    if (\n        total is not None\n        and len(opportunities) != total\n    ):\n        raise RuntimeError(\n            \"Incomplete API retrieval: \"\n            f\"{len(opportunities)}/{total} unique opportunities\"\n        )\n\n    return opportunities\n"""
 
-          new = """    # API_PAGINATION_DEDUP_V2\n    opportunities_by_id = {}\n\n    offset = 0\n    total = None\n\n    try:\n        while True:\n            data = fetch_api_page(\n                session,\n                offset,\n            )\n\n            if data is None:\n                raise RuntimeError(\n                    \"Could not retrieve the current \"\n                    \"opportunity list.\"\n                )\n\n            hits = data.get(\n                \"hits\",\n                {},\n            )\n\n            total_info = hits.get(\n                \"total\",\n                {},\n            )\n\n            if total is None:\n                if isinstance(\n                    total_info,\n                    dict,\n                ):\n                    total = int(\n                        total_info.get(\n                            \"value\",\n                            0,\n                        )\n                        or 0\n                    )\n                else:\n                    total = int(\n                        total_info or 0\n                    )\n\n                print(\n                    f\"API reports {total} opportunities.\",\n                    flush=True,\n                )\n\n            page_hits = hits.get(\n                \"hits\",\n                [],\n            )\n\n            if not page_hits:\n                break\n\n            for hit in page_hits:\n                source = hit.get(\n                    \"_source\",\n                    {},\n                )\n\n                opid = source.get(\n                    \"opid\"\n                )\n\n                if opid is None:\n                    opid = hit.get(\n                        \"_id\"\n                    )\n\n                if opid is None:\n                    continue\n\n                try:\n                    source[\"opid\"] = int(opid)\n                except (\n                    TypeError,\n                    ValueError,\n                ):\n                    continue\n\n                opportunities_by_id.setdefault(\n                    str(source[\"opid\"]),\n                    source,\n                )\n\n            offset += len(page_hits)\n            unique_count = len(opportunities_by_id)\n\n            print(\n                f\"Retrieved \"\n                f\"{unique_count}/{total} unique opportunities \"\n                f\"(raw page hits: {len(page_hits)})\",\n                flush=True,\n            )\n\n            if (\n                total is not None\n                and unique_count >= total\n            ):\n                break\n\n    finally:\n        session.close()\n\n    opportunities = list(\n        opportunities_by_id.values()\n    )\n\n    if (\n        total is not None\n        and len(opportunities) != total\n    ):\n        raise RuntimeError(\n            \"Incomplete API retrieval: \"\n            f\"{len(opportunities)}/{total} unique opportunities\"\n        )\n\n    return opportunities\n"""
+              if old not in text:
+                  raise SystemExit("ERROR: expected original pagination block was not found; no source change made.")
 
-          if old not in text:
-              raise SystemExit("ERROR: expected original pagination block was not found; no source change made.")
+              scraper_path.write_text(text.replace(old, new, 1), encoding="utf-8")
+              print("PASS: permanent API pagination/deduplication fix applied.")
+          else:
+              print("PASS: permanent API pagination/deduplication fix already present.")
 
-          path.write_text(text.replace(old, new, 1), encoding="utf-8")
-          print("PASS: permanent API pagination/deduplication fix applied.")
+          workflow = workflow_path.read_text(encoding="utf-8")
+          marker = "      - name: Bootstrap permanent API pagination fix\n"
+          if marker in workflow:
+              start = workflow.index(marker)
+              next_step = workflow.find("      - name: ", start + len(marker))
+              if next_step == -1:
+                  raise SystemExit("ERROR: could not locate the next workflow step while removing bootstrap.")
+              workflow = workflow[:start] + workflow[next_step:]
+              workflow_path.write_text(workflow, encoding="utf-8")
+              print("PASS: bootstrap step removed from update.yml for future runs.")
+          else:
+              print("PASS: bootstrap step already absent from update.yml.")
           PY
 
           python -m py_compile scraper/scraper.py
@@ -134,7 +147,7 @@ jobs:
           print("PASS: canonical JSON data is valid.")
           PY
 
-      - name: Commit updated data and permanent source fix
+      - name: Commit updated data, source fix, and workflow cleanup
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -143,15 +156,20 @@ jobs:
           git add -- data/expired.json
           git add -- data/checkpoint.json
           git add -- scraper/scraper.py
+          git add -- .github/workflows/update.yml
           git add -- web/assets/european-solidarity-corps.png
 
           if git diff --cached --quiet; then
-            echo "No data/source/asset changes detected."
+            echo "No data/source/workflow/asset changes detected."
             exit 0
           fi
 
           git diff --cached --check
           git commit -m "chore: update ESC opportunities"
-          git push origin main
-          echo "ESC data/source/assets updated and pushed."
+
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
+
+          echo "ESC data/source/workflow/assets updated and pushed."
           echo "The push to main triggers deploy.yml."
