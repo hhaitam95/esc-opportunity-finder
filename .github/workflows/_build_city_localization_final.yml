@@ -1,0 +1,140 @@
+name: Build complete city localization map (final)
+
+on:
+  push:
+    paths:
+      - ".github/workflows/_build_city_localization_final.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-city-localization:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check requests
+      - name: Build localization map
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          import time
+          from pathlib import Path
+          import requests
+
+          data = json.loads(Path("data/opportunities.json").read_text(encoding="utf-8"))
+          opportunities = data.get("opportunities", [])
+          pairs = {}
+          for item in opportunities:
+              if not isinstance(item, dict):
+                  continue
+              country = str(item.get("country") or "").strip().upper()
+              town = str(item.get("town") or item.get("city") or "").strip()
+              if country and town:
+                  pairs.setdefault((country, town.upper()), town)
+
+          print(f"Dataset opportunities: {len(opportunities)}")
+          print(f"Unique country/city pairs: {len(pairs)}")
+
+          SPARQL = "https://query.wikidata.org/sparql"
+          headers = {"User-Agent": "ESC-Opportunity-Finder/1.0 city-localization-builder", "Accept": "application/sparql-results+json"}
+
+          def sparql_string(value):
+              return json.dumps(value, ensure_ascii=False)
+
+          translations = {}
+          items = list(pairs.items())
+
+          for offset in range(0, len(items), 80):
+              batch = items[offset:offset + 80]
+              values = " ".join(f"({sparql_string(town)} {sparql_string(country)})" for (country, _), town in batch)
+              query = f"""
+          PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+          SELECT DISTINCT ?name ?countryCode ?frLabel ?arLabel WHERE {{
+            VALUES (?name ?countryCode) {{ {values} }}
+            ?country wdt:P297 ?countryCode.
+            ?item wdt:P17 ?country.
+            {{ ?item rdfs:label ?sourceLabel. }} UNION {{ ?item skos:altLabel ?sourceLabel. }}
+            FILTER(LCASE(STR(?sourceLabel)) = LCASE(?name))
+            OPTIONAL {{ ?item rdfs:label ?frLabel. FILTER(LANG(?frLabel) = "fr") }}
+            OPTIONAL {{ ?item rdfs:label ?arLabel. FILTER(LANG(?arLabel) = "ar") }}
+          }}
+          """
+              for attempt in range(1, 4):
+                  try:
+                      response = requests.get(SPARQL, params={"query": query, "format": "json"}, headers=headers, timeout=60)
+                      response.raise_for_status()
+                      rows = response.json().get("results", {}).get("bindings", [])
+                      for row in rows:
+                          key = (row["countryCode"]["value"].upper(), row["name"]["value"].upper())
+                          if key not in pairs:
+                              continue
+                          translations[key] = {
+                              "fr": row.get("frLabel", {}).get("value") or pairs[key],
+                              "ar": row.get("arLabel", {}).get("value") or pairs[key],
+                          }
+                      print(f"Batch {min(offset + len(batch), len(items))}/{len(items)}: {len(rows)} matches")
+                      break
+                  except Exception as exc:
+                      if attempt == 3:
+                          print(f"WARN: batch {offset} failed: {exc}")
+                      else:
+                          time.sleep(attempt * 2)
+
+          for key, town in pairs.items():
+              translations.setdefault(key, {"fr": town, "ar": town})
+
+          assert "IT|CAGLIARI" not in translations or translations["IT|CAGLIARI"]["ar"] == "كالياري", translations.get("IT|CAGLIARI")
+
+          table_path = Path("web/table.js")
+          text = table_path.read_text(encoding="utf-8")
+          start_marker = "const CITY_TRANSLATIONS = {"
+          end_marker = "\n};\n\nfunction titleCaseCity"
+          start = text.find(start_marker)
+          end = text.find(end_marker, start)
+          if start < 0 or end < 0:
+              raise SystemExit("ERROR: CITY_TRANSLATIONS boundaries not found")
+
+          lines = [start_marker]
+          for (country, city_key), values in sorted(translations.items()):
+              key = f"{country}|{city_key}"
+              lines.append(f"  {json.dumps(key, ensure_ascii=False)}: {{")
+              lines.append(f"    fr: {json.dumps(values['fr'], ensure_ascii=False)},")
+              lines.append(f"    ar: {json.dumps(values['ar'], ensure_ascii=False)},")
+              lines.append("  },")
+          lines.append("};")
+
+          table_path.write_text(text[:start] + "\n".join(lines) + text[end + 3:], encoding="utf-8")
+          print(f"PASS: generated {len(translations)} dataset city mappings")
+          print(f"PASS: Cagliari mapping: {translations.get(('IT', 'CAGLIARI'))}")
+          PY
+      - name: Validate frontend JavaScript
+        run: node --check web/table.js
+      - name: Commit result and remove temporary builders
+        run: |
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/table.js
+          if ! git diff --cached --quiet; then
+            git commit -m "fix: localize all published opportunity cities"
+          fi
+          git rm .github/workflows/_build_city_localization_final.yml
+          git rm .github/workflows/_build_city_localization_fast.yml || true
+          git rm .github/workflows/_build_city_localization.yml || true
+          git commit -m "chore: remove temporary city localization builders"
+          git push origin HEAD:main
