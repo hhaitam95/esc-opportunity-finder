@@ -1,6 +1,6 @@
 # Canonical ESC opportunity update workflow.
 # Keep this filename unchanged: .github/workflows/update.yml
-name: Update ESC Opportunities
+name: ESC Opportunity Finder Update Workflow
 
 on:
   schedule:
@@ -167,7 +167,7 @@ jobs:
                   raise SystemExit("ERROR: could not locate next workflow step while removing bootstrap.")
               workflow = workflow[:start] + workflow[next_step:]
               workflow_path.write_text(workflow, encoding="utf-8")
-              print("PASS: bootstrap step removed from update.yml.")
+              print("PASS: bootstrap step removed from update.yml for future runs.")
           else:
               print("PASS: bootstrap step already absent from update.yml.")
           PY
@@ -213,8 +213,7 @@ jobs:
           if not isinstance(expired, dict): raise SystemExit("ERROR: expired data must be an object.")
           if not isinstance(opportunities.get("opportunities"), list) or not opportunities["opportunities"]:
               raise SystemExit("ERROR: scraper produced an empty opportunities list.")
-          if not isinstance(expired.get("opportunities"), list):
-              raise SystemExit("ERROR: expired data has no opportunities list.")
+          if not isinstance(expired.get("opportunities"), list): raise SystemExit("ERROR: expired data has no opportunities list.")
 
           print(f"PASS: saved {len(opportunities['opportunities'])} current opportunities.")
           print(f"PASS: saved {len(expired['opportunities'])} recently expired opportunities.")
