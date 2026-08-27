@@ -11,7 +11,6 @@ permissions:
 
 jobs:
   repair:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, 'fix: make pagination bootstrap replace page size safely') || contains(github.event.head_commit.message, 'noop')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout current main
