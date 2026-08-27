@@ -1,5 +1,6 @@
 # Canonical ESC opportunity update workflow.
 # Keep this filename unchanged: .github/workflows/update.yml
+# Registration marker: keep scheduled scraper active.
 name: Update ESC Opportunities
 
 on:
