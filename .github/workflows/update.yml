@@ -1,6 +1,7 @@
 # Canonical ESC opportunity update workflow.
 # Keep this filename unchanged: .github/workflows/update.yml
 # Registration marker: keep scheduled scraper active.
+# Manual verification trigger: 2026-08-27
 name: Update ESC Opportunities
 
 on:
@@ -34,11 +35,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
-      - name: Install scraper dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install pycountry requests beautifulsoup4
 
       - name: Apply permanent API pagination fix
         run: |
