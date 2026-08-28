@@ -119,7 +119,6 @@ function populateParticipantCountries() {
   const placeholder = document.createElement("option");
   placeholder.value = "";
   placeholder.textContent = t("selectParticipantCountry");
-  placeholder.disabled = false;
   placeholder.selected = !selected;
   dom.participantCountry.appendChild(placeholder);
 
@@ -134,11 +133,7 @@ function populateParticipantCountries() {
       dom.participantCountry.appendChild(option);
     });
 
-  if (selected && countries.includes(selected)) {
-    dom.participantCountry.value = selected;
-  } else {
-    dom.participantCountry.value = "";
-  }
+  dom.participantCountry.value = selected && countries.includes(selected) ? selected : "";
 }
 
 function populateTableFilters() {
@@ -312,7 +307,7 @@ async function initialize() {
 
   try {
     state.data = await loadData();
-    initTheme();
+    initTheme(t);
     initLanguage(handleLanguageChange);
     renderAll();
     show(dom.loadingMessage, false);
