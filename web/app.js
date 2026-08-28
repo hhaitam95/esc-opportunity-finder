@@ -44,8 +44,14 @@ const dom = {
   typeFilter: document.getElementById("type-filter"),
   sortSelect: document.getElementById("sort-select"),
   newOpportunitiesSection: document.getElementById("new-opportunities-section"),
+  newOpportunitiesToggle: document.getElementById("new-opportunities-toggle"),
   newOpportunitiesBody: document.getElementById("new-opportunities-body"),
   newOpportunityCount: document.getElementById("new-opportunity-count"),
+  newOpportunitiesContent: document.getElementById("new-opportunities-content"),
+  newOpportunitiesArrow: document.getElementById("new-opportunities-arrow"),
+  activeToggle: document.getElementById("active-toggle"),
+  activeContent: document.getElementById("active-content"),
+  activeArrow: document.getElementById("active-arrow"),
   opportunitiesBody: document.getElementById("opportunities-body"),
   opportunityCount: document.getElementById("opportunity-count"),
   activeResultCount: document.getElementById("active-result-count"),
@@ -263,6 +269,28 @@ function renderArchived() {
   window.normalizeCountryDisplay?.(dom.expiredBody);
 }
 
+function setSectionExpanded(toggle, content, arrow, expanded) {
+  if (!toggle || !content) return;
+  toggle.setAttribute("aria-expanded", String(expanded));
+  content.classList.toggle("hidden", !expanded);
+  if (arrow) arrow.textContent = expanded ? "⌃" : "⌄";
+}
+
+function bindCollapsibleSection(toggle, content, arrow) {
+  if (!toggle || !content || toggle.dataset.collapsibleBound === "true") return;
+  toggle.dataset.collapsibleBound = "true";
+  toggle.addEventListener("click", () => {
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    setSectionExpanded(toggle, content, arrow, !expanded);
+  });
+}
+
+function bindCollapsibleSections() {
+  bindCollapsibleSection(dom.newOpportunitiesToggle, dom.newOpportunitiesContent, dom.newOpportunitiesArrow);
+  bindCollapsibleSection(dom.activeToggle, dom.activeContent, dom.activeArrow);
+  bindCollapsibleSection(dom.expiredToggle, dom.expiredContent, dom.expiredArrow);
+}
+
 function renderAll() {
   populateParticipantCountries();
   populateTableFilters();
@@ -321,6 +349,7 @@ async function initialize() {
   try {
     initTheme(t);
     initLanguage(handleLanguageChange);
+    bindCollapsibleSections();
     renderAll();
     show(dom.errorMessage, false);
   } catch (error) {
@@ -339,11 +368,5 @@ dom.searchInput?.addEventListener("input", handleSearchInput);
 dom.countryFilter?.addEventListener("change", handleFilterChange);
 dom.typeFilter?.addEventListener("change", handleFilterChange);
 dom.sortSelect?.addEventListener("change", handleFilterChange);
-dom.expiredToggle?.addEventListener("click", () => {
-  const expanded = dom.expiredToggle.getAttribute("aria-expanded") === "true";
-  dom.expiredToggle.setAttribute("aria-expanded", String(!expanded));
-  show(dom.expiredContent, !expanded);
-  if (dom.expiredArrow) dom.expiredArrow.textContent = expanded ? "▾" : "▴";
-});
 
 initialize();
