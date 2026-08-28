@@ -112,6 +112,34 @@ function applySectionCountStyles() {
   if (dom.expiredCount) {
     dom.expiredCount.classList.add("section-count-badge", "expired-count-badge");
   }
+
+  if (!document.getElementById("section-count-badge-styles")) {
+    const style = document.createElement("style");
+    style.id = "section-count-badge-styles";
+    style.textContent = `
+      .section-count-badge.available-count {
+        border-color: #b7d8c2;
+        background: #eff8f1;
+        color: #287447;
+      }
+      .section-count-badge.expired-count-badge {
+        border-color: #e2aaa5;
+        background: #fff0ee;
+        color: #b42318;
+      }
+      html[data-theme="dark"] .section-count-badge.available-count {
+        border-color: #3d6f52;
+        background: #183323;
+        color: #7bd69c;
+      }
+      html[data-theme="dark"] .section-count-badge.expired-count-badge {
+        border-color: #7e403b;
+        background: #3a1e1b;
+        color: #ff8f87;
+      }
+    `;
+    document.head.appendChild(style);
+  }
 }
 
 function renderCounts(count) {
