@@ -305,17 +305,31 @@ async function initialize() {
   show(dom.loadingMessage, true);
   show(dom.errorMessage, false);
 
+  let data;
   try {
-    state.data = await loadData();
+    data = await loadData();
+  } catch (error) {
+    console.error("ESC opportunity data load failed:", error);
+    show(dom.loadingMessage, false);
+    show(dom.errorMessage, true);
+    return;
+  }
+
+  state.data = data;
+  updateLastUpdated();
+
+  try {
     initTheme(t);
     initLanguage(handleLanguageChange);
     renderAll();
-    show(dom.loadingMessage, false);
     show(dom.errorMessage, false);
   } catch (error) {
-    console.error("ESC Opportunity Finder initialization failed:", error);
+    console.error("ESC Opportunity Finder UI initialization failed:", error);
+    renderCounts(0);
+    show(dom.newOpportunitiesSection, false);
+    show(dom.emptyMessage, false);
+  } finally {
     show(dom.loadingMessage, false);
-    show(dom.errorMessage, true);
   }
 }
 
