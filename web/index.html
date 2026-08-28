@@ -7,7 +7,7 @@
     <meta name="description" content="Find European Solidarity Corps volunteering opportunities open to participants from your country." />
     <link rel="stylesheet" href="style.css?v=10" />
     <link rel="stylesheet" href="ui-fixes.css?v=2" />
-    <link rel="stylesheet" href="new-opportunities.css?v=3" />
+    <link rel="stylesheet" href="new-opportunities.css?v=4" />
     <link rel="stylesheet" href="branding.css?v=7" />
     <script>
       (() => {
@@ -74,44 +74,48 @@
       <section id="error-message" class="message error-message hidden"><strong data-i18n="errorTitle">We couldn't load the opportunities.</strong><p data-i18n="errorText">Please try again later.</p></section>
 
       <section id="new-opportunities-section" class="new-opportunities-section hidden" aria-live="polite">
-        <div class="new-opportunities-header">
-          <div class="new-opportunities-header-main">
-            <div class="new-opportunities-title">
+        <button id="new-opportunities-toggle" class="collapsible-section-header new-opportunities-header" type="button" aria-expanded="true" aria-controls="new-opportunities-content">
+          <span class="new-opportunities-header-main">
+            <span class="new-opportunities-title">
               <span class="new-opportunities-star" aria-hidden="true">✨</span>
-              <h2 id="new-opportunities-heading" data-i18n="newOpportunities">New opportunities</h2>
+              <span id="new-opportunities-heading" class="section-heading" data-i18n="newOpportunities">New opportunities</span>
               <span id="new-opportunity-count" class="new-opportunity-count" aria-label="0 new opportunities">0</span>
-            </div>
-            <p class="new-opportunities-note" data-i18n="newOpportunitiesNote">Added in the latest update</p>
+            </span>
+            <span class="new-opportunities-note" data-i18n="newOpportunitiesNote">Added in the latest update</span>
+          </span>
+          <span id="new-opportunities-arrow" class="collapsible-section-arrow" aria-hidden="true">⌃</span>
+        </button>
+        <div id="new-opportunities-content" class="collapsible-section-content">
+          <div id="new-opportunities" class="table-wrapper new-opportunities-wrapper">
+            <table class="opportunity-table new-opportunities-table">
+              <thead><tr><th data-i18n="opportunity">Opportunity</th><th data-i18n="location">Location</th><th data-i18n="activity">Activity</th><th data-i18n="deadline">Deadline</th><th data-i18n="type">Type</th><th class="apply-column"></th></tr></thead>
+              <tbody id="new-opportunities-body"></tbody>
+            </table>
           </div>
-        </div>
-        <div id="new-opportunities" class="table-wrapper new-opportunities-wrapper">
-          <table class="opportunity-table new-opportunities-table">
-            <thead><tr><th data-i18n="opportunity">Opportunity</th><th data-i18n="location">Location</th><th data-i18n="activity">Activity</th><th data-i18n="deadline">Deadline</th><th data-i18n="type">Type</th><th class="apply-column"></th></tr></thead>
-            <tbody id="new-opportunities-body"></tbody>
-          </table>
         </div>
       </section>
 
       <section id="active-section">
-        <div class="section-header"><div><h2 data-i18n="availableNow">Available now</h2><p id="active-result-count" class="section-count">—</p></div></div>
-        <div id="opportunities" class="table-wrapper"><table class="opportunity-table"><thead><tr><th data-i18n="opportunity">Opportunity</th><th data-i18n="location">Location</th><th data-i18n="activity">Activity</th><th data-i18n="deadline">Deadline</th><th data-i18n="type">Type</th><th class="apply-column"></th></tr></thead><tbody id="opportunities-body"></tbody></table></div>
+        <button id="active-toggle" class="collapsible-section-header standard-section-header" type="button" aria-expanded="true" aria-controls="active-content">
+          <span class="section-header-main"><span class="section-heading" data-i18n="availableNow">Available now</span><span id="active-result-count" class="section-count">—</span></span>
+          <span id="active-arrow" class="collapsible-section-arrow" aria-hidden="true">⌃</span>
+        </button>
+        <div id="active-content" class="collapsible-section-content">
+          <div id="opportunities" class="table-wrapper"><table class="opportunity-table"><thead><tr><th data-i18n="opportunity">Opportunity</th><th data-i18n="location">Location</th><th data-i18n="activity">Activity</th><th data-i18n="deadline">Deadline</th><th data-i18n="type">Type</th><th class="apply-column"></th></tr></thead><tbody id="opportunities-body"></tbody></table></div>
+        </div>
       </section>
 
       <section id="empty-message" class="message hidden"><strong data-i18n="noResultsTitle">No opportunities found.</strong><p data-i18n="noResultsText">Try changing your search or filters.</p></section>
 
       <section id="expired-section" class="expired-section hidden">
-        <button id="expired-toggle" class="expired-toggle" type="button"><span><span data-i18n="archivedOpportunities">Recently expired</span><span id="expired-count" class="expired-count">0</span></span><span id="expired-arrow" class="expired-arrow">▾</span></button>
-        <div id="expired-content" class="table-wrapper expired-content hidden"><table class="opportunity-table expired-table"><thead><tr><th data-i18n="opportunity">Opportunity</th><th data-i18n="location">Location</th><th data-i18n="activity">Activity</th><th data-i18n="expired">Expired</th><th data-i18n="type">Type</th><th class="apply-column"></th></tr></thead><tbody id="expired-body"></tbody></table></div>
+        <button id="expired-toggle" class="collapsible-section-header standard-section-header expired-toggle" type="button" aria-expanded="false" aria-controls="expired-content"><span class="section-header-main"><span class="section-heading" data-i18n="archivedOpportunities">Recently expired</span><span id="expired-count" class="expired-count">0</span></span><span id="expired-arrow" class="collapsible-section-arrow" aria-hidden="true">⌄</span></button>
+        <div id="expired-content" class="table-wrapper collapsible-section-content hidden"><table class="opportunity-table expired-table"><thead><tr><th data-i18n="opportunity">Opportunity</th><th data-i18n="location">Location</th><th data-i18n="activity">Activity</th><th data-i18n="expired">Expired</th><th data-i18n="type">Type</th><th class="apply-column"></th></tr></thead><tbody id="expired-body"></tbody></table></div>
       </section>
 
       <footer class="footer">
         <div class="footer-branding" aria-label="European Solidarity Corps and European Youth Portal">
-          <a class="footer-logo-link" href="https://youth.europa.eu/solidarity_en" target="_blank" rel="noopener noreferrer" aria-label="European Solidarity Corps">
-            <img class="footer-logo footer-logo-esc" src="assets/european-solidarity-corps.png" alt="European Solidarity Corps" loading="lazy" />
-          </a>
-          <a class="footer-logo-link footer-logo-portal-wrap" href="https://eurodesk.eu/our-work/european-youth-portal-2/" target="_blank" rel="noopener noreferrer" aria-label="European Youth Portal">
-            <img class="footer-logo footer-logo-portal" src="assets/EYP-Logo.png" alt="European Youth Portal" loading="lazy" />
-          </a>
+          <a class="footer-logo-link" href="https://youth.europa.eu/solidarity_en" target="_blank" rel="noopener noreferrer" aria-label="European Solidarity Corps"><img class="footer-logo footer-logo-esc" src="assets/european-solidarity-corps.png" alt="European Solidarity Corps" loading="lazy" /></a>
+          <a class="footer-logo-link footer-logo-portal-wrap" href="https://eurodesk.eu/our-work/european-youth-portal-2/" target="_blank" rel="noopener noreferrer" aria-label="European Youth Portal"><img class="footer-logo footer-logo-portal" src="assets/EYP-Logo.png" alt="European Youth Portal" loading="lazy" /></a>
         </div>
         <p class="footer-project-note">ESC Opportunity Finder</p>
         <p class="footer-made-with" dir="ltr" style="direction:ltr;unicode-bidi:isolate;">Made with <span class="footer-made-with-heart" aria-hidden="true">♥</span> &amp; ☕</p>
@@ -148,7 +152,7 @@
     <script src="table-sort.js?v=1"></script>
     <script src="relative-deadline-labels.js?v=1"></script>
     <script src="type-filter-translations.js?v=1"></script>
-    <script type="module" src="app.js?v=27"></script>
+    <script type="module" src="app.js?v=28"></script>
   </body>
 </html>
 <!-- ESC-MOROCCO-PAGES-REDEPLOY -->
