@@ -105,10 +105,20 @@ function updateLastUpdated() {
   }).format(date);
 }
 
+function applySectionCountStyles() {
+  if (dom.activeResultCount) {
+    dom.activeResultCount.classList.add("section-count-badge", "available-count");
+  }
+  if (dom.expiredCount) {
+    dom.expiredCount.classList.add("section-count-badge", "expired-count-badge");
+  }
+}
+
 function renderCounts(count) {
   const text = count === 1 ? `1 ${t("result")}` : `${count} ${t("results")}`;
   if (dom.opportunityCount) dom.opportunityCount.textContent = text;
   if (dom.activeResultCount) dom.activeResultCount.textContent = String(count);
+  applySectionCountStyles();
 }
 
 function populateParticipantCountries() {
@@ -260,6 +270,7 @@ function renderArchived() {
   }
   show(dom.expiredSection, true);
   if (dom.expiredCount) dom.expiredCount.textContent = String(results.length);
+  applySectionCountStyles();
   dom.expiredBody.innerHTML = renderRows(sortRows(results, "expired"), {
     archived: true,
     newIds: new Set(),
@@ -297,6 +308,7 @@ function renderAll() {
   renderActive();
   renderArchived();
   updateLastUpdated();
+  applySectionCountStyles();
 }
 
 function applyParticipantSearch() {
