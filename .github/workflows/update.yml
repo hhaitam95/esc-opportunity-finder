@@ -1,7 +1,6 @@
 # Canonical ESC opportunity update workflow.
 # Keep this filename unchanged: .github/workflows/update.yml
 # Registration marker: keep scheduled scraper active.
-# Manual verification trigger: 2026-08-27
 name: Update ESC Opportunities
 
 on:
@@ -10,10 +9,17 @@ on:
   push:
     paths:
       - ".github/workflows/update.yml"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      recovery:
+        description: "Run as an automatic recovery attempt"
+        required: false
+        default: "false"
+        type: string
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: esc-opportunity-update
@@ -23,7 +29,7 @@ jobs:
   update:
     name: Scrape and save ESC opportunities
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
@@ -83,16 +89,7 @@ jobs:
               json.dumps(data, ensure_ascii=False, indent=2) + "\n",
               encoding="utf-8",
           )
-          Path("data/last_successful_run.json").write_text(
-              json.dumps(
-                  {"last_successful_run_at": generated_at},
-                  ensure_ascii=False,
-                  indent=2,
-              )
-              + "\n",
-              encoding="utf-8",
-          )
-          print(f"PASS: refreshed successful-run timestamp: {generated_at}")
+          print(f"PASS: refreshed dataset timestamp candidate: {generated_at}")
           PY
 
       - name: Validate published dataset
@@ -118,23 +115,17 @@ jobs:
 
           opportunities_path = Path("data/opportunities.json")
           expired_path = Path("data/expired.json")
-          heartbeat_path = Path("data/last_successful_run.json")
           if not opportunities_path.exists():
               raise SystemExit("ERROR: data/opportunities.json was not created.")
           if not expired_path.exists():
               raise SystemExit("ERROR: data/expired.json was not created.")
-          if not heartbeat_path.exists():
-              raise SystemExit("ERROR: data/last_successful_run.json was not created.")
 
           opportunities = json.loads(opportunities_path.read_text(encoding="utf-8"))
           expired = json.loads(expired_path.read_text(encoding="utf-8"))
-          heartbeat = json.loads(heartbeat_path.read_text(encoding="utf-8"))
           if not isinstance(opportunities, dict):
               raise SystemExit("ERROR: opportunities data must be an object.")
           if not isinstance(expired, dict):
               raise SystemExit("ERROR: expired data must be an object.")
-          if not isinstance(heartbeat, dict) or not heartbeat.get("last_successful_run_at"):
-              raise SystemExit("ERROR: successful-run heartbeat is invalid.")
           if not isinstance(opportunities.get("opportunities"), list) or not opportunities["opportunities"]:
               raise SystemExit("ERROR: scraper produced an empty opportunities list.")
           if not isinstance(expired.get("opportunities"), list):
@@ -142,8 +133,23 @@ jobs:
 
           print(f"PASS: saved {len(opportunities['opportunities'])} current opportunities.")
           print(f"PASS: saved {len(expired['opportunities'])} recently expired opportunities.")
-          print(f"PASS: heartbeat: {heartbeat['last_successful_run_at']}")
+          print(f"PASS: dataset timestamp: {opportunities.get('generated_at')}")
           print("PASS: canonical JSON data is valid.")
+          PY
+
+      - name: Refresh successful-run heartbeat
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          generated_at = json.loads(Path("data/opportunities.json").read_text(encoding="utf-8"))["generated_at"]
+          Path("data/last_successful_run.json").write_text(
+              json.dumps({"last_successful_run_at": generated_at}, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(f"PASS: successful-run heartbeat committed at: {generated_at}")
           PY
 
       - name: Commit updated data, source fix, assets, and heartbeat
@@ -164,3 +170,22 @@ jobs:
           git push origin HEAD:main
           echo "ESC data/source/assets/heartbeat updated and pushed."
           echo "The push to main triggers deploy.yml."
+
+  recover-on-failure:
+    name: Automatic recovery retry
+    needs: update
+    if: >-
+      failure() &&
+      (github.event_name != 'workflow_dispatch' || github.event.inputs.recovery != 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Dispatch one recovery attempt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          echo "The canonical scraper run failed. Dispatching one automatic recovery attempt..."
+          gh workflow run update.yml --ref main -f recovery=true
+          echo "PASS: automatic recovery dispatch accepted."
