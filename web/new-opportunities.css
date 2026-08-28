@@ -69,6 +69,24 @@
   line-height: 1.3;
 }
 
+.section-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.55rem;
+  height: 1.55rem;
+  padding: 0 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
 .standard-section-header {
   margin: 0;
   border: 1px solid var(--border);
@@ -99,8 +117,6 @@
 }
 
 .new-opportunities-header {
-  align-items: flex-start;
-  justify-content: flex-start;
   background: #fff8dc;
   border-bottom-color: #eadb9d;
 }
@@ -132,21 +148,10 @@
   font-size: 1.05rem;
 }
 
-.new-opportunity-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.55rem;
-  height: 1.55rem;
-  padding: 0 0.45rem;
-  border: 1px solid #dfc25f;
-  border-radius: 999px;
+.new-opportunities-header .section-count-badge {
+  border-color: #dfc25f;
   background: rgba(255, 255, 255, 0.72);
   color: var(--text);
-  font-size: 0.76rem;
-  font-weight: 700;
-  line-height: 1;
-  box-sizing: border-box;
 }
 
 .new-opportunities-note {
@@ -191,7 +196,7 @@ html[data-theme="dark"] .new-opportunities-header:hover {
   background: #39331a;
 }
 
-html[data-theme="dark"] .new-opportunity-count {
+html[data-theme="dark"] .new-opportunities-header .section-count-badge {
   border-color: #8c7830;
   background: rgba(255, 255, 255, 0.08);
   color: var(--text);
