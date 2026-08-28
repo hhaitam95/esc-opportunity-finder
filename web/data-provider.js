@@ -253,17 +253,25 @@ function mergeArchived(
 }
 
 export async function loadData() {
-  const [
-    activePayload,
-    expiredPayload,
-  ] = await Promise.all([
-    fetchJson(
-      "opportunities.json",
-    ),
-    fetchJson(
-      "expired.json",
-    ),
+  const [activeResult, expiredResult] = await Promise.allSettled([
+    fetchJson("opportunities.json"),
+    fetchJson("expired.json"),
   ]);
+
+  if (activeResult.status === "rejected") {
+    throw activeResult.reason instanceof Error
+      ? activeResult.reason
+      : new Error(String(activeResult.reason));
+  }
+
+  const activePayload = activeResult.value;
+  const expiredPayload = expiredResult.status === "fulfilled"
+    ? expiredResult.value
+    : { opportunities: [] };
+
+  if (expiredResult.status === "rejected") {
+    console.warn("Could not load expired opportunities; continuing with active data.", expiredResult.reason);
+  }
 
   const rawActive =
     normalizeList(
