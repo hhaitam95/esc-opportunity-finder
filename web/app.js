@@ -237,7 +237,13 @@ function renderNewOpportunities(results) {
     return;
   }
 
-  if (dom.newOpportunityCount) dom.newOpportunityCount.textContent = String(newest.length);
+  if (dom.newOpportunityCount) {
+    dom.newOpportunityCount.textContent = String(newest.length);
+    dom.newOpportunityCount.setAttribute(
+      "aria-label",
+      `${newest.length} new opportunities`,
+    );
+  }
   show(dom.newOpportunitiesSection, true);
 
   dom.newOpportunitiesBody.innerHTML = renderRows(newest, {
@@ -260,35 +266,22 @@ function renderActive() {
   }
 
   const results = filteredActive();
-  renderNewOpportunities(results);
   renderCounts(results.length);
-
-  if (!results.length) {
-    dom.opportunitiesBody.innerHTML = "";
-    show(dom.emptyMessage, true);
-    return;
-  }
-
-  show(dom.emptyMessage, false);
   dom.opportunitiesBody.innerHTML = renderRows(results, {
     archived: false,
-    newIds: enabled("newBadges") ? (state.data?.newIds || new Set()) : new Set(),
+    newIds: state.data?.newIds || new Set(),
     locale: locale(),
     t,
   });
-
+  renderNewOpportunities(results);
   window.normalizeCountryDisplay?.(dom.opportunitiesBody);
   window.updateRelativeDeadlineLabels?.();
+  show(dom.emptyMessage, results.length === 0);
 }
 
 function renderArchived() {
-  if (!enabled("archives") || !state.participantSearchApplied) {
-    show(dom.expiredSection, false);
-    return;
-  }
-
   const results = archivedForParticipantCountry();
-  if (!results.length) {
+  if (!state.participantSearchApplied || !results.length) {
     show(dom.expiredSection, false);
     return;
   }
@@ -296,7 +289,8 @@ function renderArchived() {
   show(dom.expiredSection, true);
   if (dom.expiredCount) dom.expiredCount.textContent = String(results.length);
 
-  dom.expiredBody.innerHTML = renderRows(results, {
+  const visible = sortRows(results, "expired");
+  dom.expiredBody.innerHTML = renderRows(visible, {
     archived: true,
     newIds: new Set(),
     locale: locale(),
@@ -304,97 +298,44 @@ function renderArchived() {
   });
 
   window.normalizeCountryDisplay?.(dom.expiredBody);
-  window.updateRelativeDeadlineLabels?.();
 }
 
-function renderAll(force = false) {
-  const signature = JSON.stringify({
-    participant: state.selectedParticipantCountry,
-    applied: state.participantSearchApplied,
-    search: state.filters.search,
-    country: state.filters.country,
-    type: state.filters.type,
-    sort: state.filters.sort,
-    language: locale(),
-    newIds: state.data?.newIds ? [...state.data.newIds].sort() : [],
-  });
-
-  if (!force && signature === lastRenderedState) return;
-  lastRenderedState = signature;
-
-  updateLastUpdated();
+function renderAll() {
+  populateParticipantCountries();
+  populateTableFilters();
   renderActive();
   renderArchived();
-  window.refreshTableSort?.();
+  updateLastUpdated();
 }
 
-function applyParticipantCountry() {
-  const value = normalizeCountryCode(dom.participantCountry?.value);
-  setParticipantCountry(state, value);
-  populateTableFilters();
-  renderAll(true);
+function applyParticipantSearch() {
+  const country = normalizeCountryCode(dom.participantCountry?.value || "");
+  setParticipantCountry(state, country);
+  renderAll();
 }
 
-function clearFilters() {
+function clearFiltersAndRender() {
   clearTableFilters(state);
-
-  if (searchRenderTimer) {
-    clearTimeout(searchRenderTimer);
-    searchRenderTimer = null;
-  }
-
   if (dom.searchInput) dom.searchInput.value = "";
-  if (dom.countryFilter) dom.countryFilter.value = "";
-  if (dom.typeFilter) dom.typeFilter.value = "";
-  if (dom.sortSelect) dom.sortSelect.value = "deadline";
+  renderAll();
+}
 
-  lastRenderedSearch = "";
+function handleLanguageChange() {
+  populateParticipantCountries();
   populateTableFilters();
-  renderAll(true);
+  renderAll();
 }
 
-function scheduleSearchRender() {
-  if (!dom.searchInput) return;
-
-  const value = dom.searchInput.value;
-  state.filters.search = value;
-
-  if (searchRenderTimer) clearTimeout(searchRenderTimer);
-  if (value === lastRenderedSearch) return;
-
-  searchRenderTimer = setTimeout(() => {
-    searchRenderTimer = null;
-    lastRenderedSearch = state.filters.search;
-    renderAll(true);
-  }, 180);
+function handleSearchInput() {
+  if (searchRenderTimer) window.clearTimeout(searchRenderTimer);
+  searchRenderTimer = window.setTimeout(renderAll, 120);
 }
 
-function bindEvents() {
-  dom.applyParticipantCountry?.addEventListener("click", applyParticipantCountry);
-  dom.clearFilters?.addEventListener("click", clearFilters);
-  dom.searchInput?.addEventListener("input", scheduleSearchRender);
-
-  dom.countryFilter?.addEventListener("change", () => {
-    state.filters.country = dom.countryFilter.value;
-    renderAll(true);
-  });
-
-  dom.typeFilter?.addEventListener("change", () => {
-    state.filters.type = dom.typeFilter.value;
-    renderAll(true);
-  });
-
-  dom.sortSelect?.addEventListener("change", () => {
-    state.filters.sort = dom.sortSelect.value;
-    renderAll(true);
-  });
-
-  dom.expiredToggle?.addEventListener("click", () => {
-    const hidden = dom.expiredContent.classList.contains("hidden");
-    dom.expiredContent.classList.toggle("hidden", !hidden);
-    dom.expiredArrow?.classList.toggle("open", hidden);
-    dom.expiredToggle?.setAttribute("aria-expanded", hidden ? "true" : "false");
-  });
+function handleFilterChange() {
+  state.filters.country = dom.countryFilter?.value || "";
+  state.filters.type = dom.typeFilter?.value || "";
+  state.filters.sort = dom.sortSelect?.value || "deadline";
+  renderAll();
 }
 
 async function initialize() {
@@ -403,33 +344,30 @@ async function initialize() {
 
   try {
     state.data = await loadData();
-    populateParticipantCountries();
-    state.participantSearchApplied = false;
-    populateTableFilters();
-    renderAll(true);
-  } catch (error) {
-    console.error("Could not load frontend data:", error);
-    show(dom.errorMessage, true);
-    if (dom.lastUpdated) dom.lastUpdated.textContent = "—";
-    if (dom.opportunitiesBody) dom.opportunitiesBody.innerHTML = "";
-    if (dom.newOpportunitiesBody) dom.newOpportunitiesBody.innerHTML = "";
-    show(dom.newOpportunitiesSection, false);
-  } finally {
+    initTheme();
+    initLanguage({
+      render: handleLanguageChange,
+    });
+    renderAll();
     show(dom.loadingMessage, false);
+  } catch (error) {
+    console.error(error);
+    show(dom.loadingMessage, false);
+    show(dom.errorMessage, true);
   }
 }
 
-initLanguage(() => {
-  populateParticipantCountries();
-  populateTableFilters();
-  renderAll(true);
-  updateThemeControl(t);
-  window.translateTypeFilter?.();
-  window.refreshTableSort?.();
-  window.normalizeCountryDisplay?.();
-  window.updateRelativeDeadlineLabels?.();
+dom.applyParticipantCountry?.addEventListener("click", applyParticipantSearch);
+dom.clearFilters?.addEventListener("click", clearFiltersAndRender);
+dom.searchInput?.addEventListener("input", handleSearchInput);
+dom.countryFilter?.addEventListener("change", handleFilterChange);
+dom.typeFilter?.addEventListener("change", handleFilterChange);
+dom.sortSelect?.addEventListener("change", handleFilterChange);
+dom.expiredToggle?.addEventListener("click", () => {
+  const expanded = dom.expiredToggle.getAttribute("aria-expanded") === "true";
+  dom.expiredToggle.setAttribute("aria-expanded", String(!expanded));
+  show(dom.expiredContent, !expanded);
+  if (dom.expiredArrow) dom.expiredArrow.textContent = expanded ? "▾" : "▴";
 });
 
-initTheme(t);
-bindEvents();
 initialize();
