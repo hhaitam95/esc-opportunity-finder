@@ -261,6 +261,7 @@ function renderActive() {
   if (!state.participantSearchApplied) {
     dom.opportunitiesBody.innerHTML = "";
     renderCounts(0);
+    renderNewOpportunities([]);
     show(dom.emptyMessage, false);
     return;
   }
