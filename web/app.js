@@ -108,7 +108,7 @@ function updateLastUpdated() {
 function renderCounts(count) {
   const text = count === 1 ? `1 ${t("result")}` : `${count} ${t("results")}`;
   if (dom.opportunityCount) dom.opportunityCount.textContent = text;
-  if (dom.activeResultCount) dom.activeResultCount.textContent = text;
+  if (dom.activeResultCount) dom.activeResultCount.textContent = String(count);
 }
 
 function populateParticipantCountries() {
