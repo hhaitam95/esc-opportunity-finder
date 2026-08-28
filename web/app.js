@@ -14,7 +14,6 @@ import {
 
 import {
   initTheme,
-  updateThemeControl,
 } from "./features/theme.js";
 
 import {
@@ -63,8 +62,6 @@ const dom = {
 };
 
 let searchRenderTimer = null;
-let lastRenderedSearch = "";
-let lastRenderedState = null;
 
 function show(element, value) {
   element?.classList.toggle("hidden", !value);
@@ -86,19 +83,16 @@ function archivedForParticipantCountry() {
 
 function updateLastUpdated() {
   if (!dom.lastUpdated) return;
-
   const value = state.data?.generatedAt;
   if (!value) {
     dom.lastUpdated.textContent = "—";
     return;
   }
-
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
     dom.lastUpdated.textContent = String(value);
     return;
   }
-
   dom.lastUpdated.textContent = new Intl.DateTimeFormat(locale(), {
     dateStyle: "medium",
     timeStyle: "short",
@@ -120,12 +114,13 @@ function populateParticipantCountries() {
   ]);
 
   const selected = normalizeCountryCode(state.selectedParticipantCountry);
-
   dom.participantCountry.replaceChildren();
 
   const placeholder = document.createElement("option");
   placeholder.value = "";
   placeholder.textContent = t("selectParticipantCountry");
+  placeholder.disabled = false;
+  placeholder.selected = !selected;
   dom.participantCountry.appendChild(placeholder);
 
   countries
@@ -135,33 +130,26 @@ function populateParticipantCountries() {
       const option = document.createElement("option");
       option.value = country.code;
       option.textContent = `${country.flag} ${country.name}`;
+      option.selected = selected === country.code;
       dom.participantCountry.appendChild(option);
     });
 
   if (selected && countries.includes(selected)) {
     dom.participantCountry.value = selected;
+  } else {
+    dom.participantCountry.value = "";
   }
 }
 
 function populateTableFilters() {
   const active = activeForParticipantCountry();
-
   if (dom.countryFilter && enabled("filters")) {
-    const countries = [
-      ...new Set(
-        active
-          .map((item) => normalizeCountryCode(item.country))
-          .filter(Boolean),
-      ),
-    ].sort();
-
+    const countries = [...new Set(active.map((item) => normalizeCountryCode(item.country)).filter(Boolean))].sort();
     dom.countryFilter.replaceChildren();
-
     const all = document.createElement("option");
     all.value = "";
     all.textContent = t("allCountries");
     dom.countryFilter.appendChild(all);
-
     countries.forEach((code) => {
       const display = displayCountry(code, locale());
       const option = document.createElement("option");
@@ -169,33 +157,22 @@ function populateTableFilters() {
       option.textContent = `${display.flag} ${display.name}`;
       dom.countryFilter.appendChild(option);
     });
-
     dom.countryFilter.value = state.filters.country;
   }
 
   if (dom.typeFilter && enabled("filters")) {
-    const types = [
-      ...new Set(
-        active
-          .map((item) => String(item.activity_type || "").trim())
-          .filter(Boolean),
-      ),
-    ].sort();
-
+    const types = [...new Set(active.map((item) => String(item.activity_type || "").trim()).filter(Boolean))].sort();
     dom.typeFilter.replaceChildren();
-
     const all = document.createElement("option");
     all.value = "";
     all.textContent = t("allTypes");
     dom.typeFilter.appendChild(all);
-
     types.forEach((type) => {
       const option = document.createElement("option");
       option.value = type;
       option.textContent = type;
       dom.typeFilter.appendChild(option);
     });
-
     dom.typeFilter.value = state.filters.type;
   }
 
@@ -215,44 +192,38 @@ function isNewOpportunity(opportunity) {
 }
 
 function newOpportunitiesFrom(results) {
-  const newest = results.filter(isNewOpportunity);
-  return sortRows(newest, "created");
+  return sortRows(results.filter(isNewOpportunity), "created");
 }
 
 function renderNewOpportunities(results) {
   if (!dom.newOpportunitiesSection || !dom.newOpportunitiesBody) return;
 
-  if (!state.participantSearchApplied || !enabled("newBadges")) {
-    dom.newOpportunitiesBody.innerHTML = "";
-    if (dom.newOpportunityCount) dom.newOpportunityCount.textContent = "0";
-    show(dom.newOpportunitiesSection, false);
-    return;
-  }
+  const newest = state.participantSearchApplied && enabled("newBadges")
+    ? newOpportunitiesFrom(results)
+    : [];
 
-  const newest = newOpportunitiesFrom(results);
   if (!newest.length) {
     dom.newOpportunitiesBody.innerHTML = "";
-    if (dom.newOpportunityCount) dom.newOpportunityCount.textContent = "0";
+    if (dom.newOpportunityCount) {
+      dom.newOpportunityCount.textContent = "0";
+      dom.newOpportunityCount.removeAttribute("aria-label");
+    }
     show(dom.newOpportunitiesSection, false);
     return;
   }
 
   if (dom.newOpportunityCount) {
     dom.newOpportunityCount.textContent = String(newest.length);
-    dom.newOpportunityCount.setAttribute(
-      "aria-label",
-      `${newest.length} new opportunities`,
-    );
+    dom.newOpportunityCount.setAttribute("aria-label", `${newest.length} new opportunities`);
   }
-  show(dom.newOpportunitiesSection, true);
 
+  show(dom.newOpportunitiesSection, true);
   dom.newOpportunitiesBody.innerHTML = renderRows(newest, {
     archived: false,
     newIds: state.data?.newIds || new Set(),
     locale: locale(),
     t,
   });
-
   window.normalizeCountryDisplay?.(dom.newOpportunitiesBody);
   window.updateRelativeDeadlineLabels?.();
 }
@@ -286,18 +257,14 @@ function renderArchived() {
     show(dom.expiredSection, false);
     return;
   }
-
   show(dom.expiredSection, true);
   if (dom.expiredCount) dom.expiredCount.textContent = String(results.length);
-
-  const visible = sortRows(results, "expired");
-  dom.expiredBody.innerHTML = renderRows(visible, {
+  dom.expiredBody.innerHTML = renderRows(sortRows(results, "expired"), {
     archived: true,
     newIds: new Set(),
     locale: locale(),
     t,
   });
-
   window.normalizeCountryDisplay?.(dom.expiredBody);
 }
 
@@ -351,7 +318,7 @@ async function initialize() {
     show(dom.loadingMessage, false);
     show(dom.errorMessage, false);
   } catch (error) {
-    console.error(error);
+    console.error("ESC Opportunity Finder initialization failed:", error);
     show(dom.loadingMessage, false);
     show(dom.errorMessage, true);
   }
