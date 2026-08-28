@@ -87,6 +87,18 @@
   white-space: nowrap;
 }
 
+#active-section .section-count-badge {
+  border-color: #a8d5b9;
+  background: #eef9f2;
+  color: #18794e;
+}
+
+#expired-section .section-count-badge {
+  border-color: #efc4c0;
+  background: #fff0ee;
+  color: #b42318;
+}
+
 .standard-section-header {
   margin: 0;
   border: 1px solid var(--border);
@@ -200,6 +212,18 @@ html[data-theme="dark"] .new-opportunities-header .section-count-badge {
   border-color: #8c7830;
   background: rgba(255, 255, 255, 0.08);
   color: var(--text);
+}
+
+html[data-theme="dark"] #active-section .section-count-badge {
+  border-color: #2f7250;
+  background: #18392a;
+  color: #7ae2a8;
+}
+
+html[data-theme="dark"] #expired-section .section-count-badge {
+  border-color: #7f3430;
+  background: #432320;
+  color: #ff8f86;
 }
 
 html[data-theme="dark"] .new-opportunities-table tbody tr td {
