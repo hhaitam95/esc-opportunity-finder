@@ -346,11 +346,10 @@ async function initialize() {
   try {
     state.data = await loadData();
     initTheme();
-    initLanguage({
-      render: handleLanguageChange,
-    });
+    initLanguage(handleLanguageChange);
     renderAll();
     show(dom.loadingMessage, false);
+    show(dom.errorMessage, false);
   } catch (error) {
     console.error(error);
     show(dom.loadingMessage, false);
