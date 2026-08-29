@@ -358,6 +358,7 @@ function handleLanguageChange() {
 }
 
 function handleSearchInput() {
+  state.filters.search = dom.searchInput?.value || "";
   if (searchRenderTimer) window.clearTimeout(searchRenderTimer);
   searchRenderTimer = window.setTimeout(renderAll, 120);
 }
