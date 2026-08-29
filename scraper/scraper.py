@@ -379,8 +379,7 @@ def build_api_params(offset):
         "fields[8]": "duration",
         "fields[9]": "created",
         "fields[10]": "is_esc_related",
-
-        "sort[created]": "desc",
+        "sort[opid]": "asc",
     }
 
 
@@ -713,7 +712,7 @@ def fetch_api_page(session, offset):
 
 
 def fetch_current_opportunities():
-    # API_PAGINATION_DEDUP_V3
+    # API_PAGINATION_DEDUP_V4
     print("=" * 70)
     print("FETCHING CURRENT ESC OPPORTUNITIES")
     print("=" * 70)
@@ -728,9 +727,7 @@ def fetch_current_opportunities():
             data = fetch_api_page(session, offset)
 
             if data is None:
-                raise RuntimeError(
-                    "Could not retrieve the current opportunity list."
-                )
+                raise RuntimeError("Could not retrieve the current opportunity list.")
 
             hits = data.get("hits", {})
             total_info = hits.get("total", {})
@@ -740,61 +737,36 @@ def fetch_current_opportunities():
                     total = int(total_info.get("value", 0) or 0)
                 else:
                     total = int(total_info or 0)
-
-                print(
-                    f"API reports {total} opportunities.",
-                    flush=True,
-                )
+                print(f"API reports {total} opportunities.", flush=True)
 
             page_hits = hits.get("hits", [])
-
             if not page_hits:
                 break
 
             for hit in page_hits:
                 source = hit.get("_source", {})
-                opid = source.get("opid")
-
-                if opid is None:
-                    opid = hit.get("_id")
-
+                opid = source.get("opid") or hit.get("_id")
                 if opid is None:
                     continue
-
                 try:
                     source["opid"] = int(opid)
                 except (TypeError, ValueError):
                     continue
-
-                opportunities_by_id.setdefault(
-                    str(source["opid"]),
-                    source,
-                )
+                opportunities_by_id.setdefault(str(source["opid"]), source)
 
             offset += API_PAGE_SIZE
             unique_count = len(opportunities_by_id)
-
-            print(
-                f"Retrieved {unique_count}/{total} unique opportunities "
-                f"(raw page hits: {len(page_hits)})",
-                flush=True,
-            )
-
+            print(f"Retrieved {unique_count}/{total} unique opportunities (raw page hits: {len(page_hits)})", flush=True)
             if total is not None and unique_count >= total:
                 break
-
     finally:
         session.close()
 
     opportunities = list(opportunities_by_id.values())
-
     if total is not None and len(opportunities) != total:
-        raise RuntimeError(
-            "Incomplete API retrieval: "
-            f"{len(opportunities)}/{total} unique opportunities"
-        )
-
+        raise RuntimeError(f"Incomplete API retrieval: {len(opportunities)}/{total} unique opportunities")
     return opportunities
+
 
 # ============================================================================
 # DETAIL PAGE PARSING
@@ -1817,6 +1789,28 @@ def main():
     history = checkpoint[
         "history"
     ]
+
+    new_first_seen = checkpoint.setdefault(
+        "new_opportunity_first_seen_at",
+        {},
+    )
+
+    discovered_at = now_iso()
+    newly_discovered = 0
+
+    for current_opportunity in current_opportunities:
+        current_id = str(current_opportunity["opid"])
+        if current_id not in processed and current_id not in new_first_seen:
+            new_first_seen[current_id] = discovered_at
+            newly_discovered += 1
+
+    if newly_discovered:
+        print(
+            f"New opportunities discovered in API snapshot: {newly_discovered}",
+            flush=True,
+        )
+
+    save_checkpoint(checkpoint)
 
     # ------------------------------------------------------------------
     # 3. Archive opportunities that disappeared from the API.
