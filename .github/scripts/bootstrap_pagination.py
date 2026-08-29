@@ -110,6 +110,14 @@ def main():
             "ERROR: could not safely switch API ordering to stable opid ordering; no source change made."
         )
 
+    first_seen_marker = '    history = checkpoint[\n        "history"\n    ]\n'
+    first_seen_block = first_seen_marker + '''\n    new_first_seen = checkpoint.setdefault(\n        "new_opportunity_first_seen_at",\n        {},\n    )\n\n    discovered_at = now_iso()\n    newly_discovered = 0\n\n    for current_opportunity in current_opportunities:\n        current_id = str(current_opportunity["opid"])\n        if current_id not in processed and current_id not in new_first_seen:\n            new_first_seen[current_id] = discovered_at\n            newly_discovered += 1\n\n    if newly_discovered:\n        print(\n            f"New opportunities discovered in API snapshot: {newly_discovered}",\n            flush=True,\n        )\n\n    save_checkpoint(checkpoint)\n'''
+    if first_seen_marker not in text:
+        raise SystemExit(
+            "ERROR: could not locate checkpoint history block for NEW discovery tracking; no source change made."
+        )
+    text = text.replace(first_seen_marker, first_seen_block, 1)
+
     if MARKER not in text:
         raise SystemExit(
             "ERROR: pagination marker was not written; no source change made."
@@ -119,6 +127,7 @@ def main():
     print("PASS: stable API pagination/deduplication fix applied.")
     print("PASS: API page size remains 1000; detail batch size unchanged.")
     print("PASS: API ordering now uses stable opid ordering to prevent page shifts during updates.")
+    print("PASS: new API IDs are recorded immediately for the 24-hour NEW window.")
     return 0
 
 
