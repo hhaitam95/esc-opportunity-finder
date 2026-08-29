@@ -181,9 +181,12 @@ function populateParticipantCountries() {
 }
 
 function populateTableFilters() {
-  const active = activeForParticipantCountry();
+  const participantActive = activeForParticipantCountry();
+  const participantArchived = archivedForParticipantCountry();
+  const allParticipantResults = [...participantActive, ...participantArchived];
+
   if (dom.countryFilter && enabled("filters")) {
-    const countries = [...new Set(active.map((item) => normalizeCountryCode(item.country)).filter(Boolean))].sort();
+    const countries = [...new Set(allParticipantResults.map((item) => normalizeCountryCode(item.country)).filter(Boolean))].sort();
     dom.countryFilter.replaceChildren();
     const all = document.createElement("option");
     all.value = "";
@@ -200,7 +203,7 @@ function populateTableFilters() {
   }
 
   if (dom.typeFilter && enabled("filters")) {
-    const types = [...new Set(active.map((item) => String(item.activity_type || "").trim()).filter(Boolean))].sort();
+    const types = [...new Set(allParticipantResults.map((item) => String(item.activity_type || "").trim()).filter(Boolean))].sort();
     dom.typeFilter.replaceChildren();
     const all = document.createElement("option");
     all.value = "";
@@ -223,6 +226,12 @@ function filteredActive() {
   if (enabled("filters")) results = filterRows(results, state.filters);
   if (enabled("sorting")) results = sortRows(results, state.filters.sort);
   return results;
+}
+
+function filteredArchived() {
+  let results = archivedForParticipantCountry();
+  if (enabled("filters")) results = filterRows(results, state.filters);
+  return sortRows(results, "expired");
 }
 
 function isNewOpportunity(opportunity) {
@@ -291,7 +300,7 @@ function renderActive() {
 }
 
 function renderArchived() {
-  const results = archivedForParticipantCountry();
+  const results = filteredArchived();
   if (!state.participantSearchApplied || !results.length) {
     show(dom.expiredSection, false);
     return;
@@ -299,7 +308,7 @@ function renderArchived() {
   show(dom.expiredSection, true);
   if (dom.expiredCount) dom.expiredCount.textContent = String(results.length);
   applySectionCountStyles();
-  dom.expiredBody.innerHTML = renderRows(sortRows(results, "expired"), {
+  dom.expiredBody.innerHTML = renderRows(results, {
     archived: true,
     newIds: new Set(),
     locale: locale(),
