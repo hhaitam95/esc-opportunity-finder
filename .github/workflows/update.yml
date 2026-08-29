@@ -1,7 +1,7 @@
 # Canonical ESC opportunity update workflow.
 # Keep this filename unchanged: .github/workflows/update.yml
 # Registration marker: keep scheduled scraper active.
-# Stable pagination + 24h NEW retention + idempotent frontend repair.
+# Stable pagination + 24h NEW retention + complete eligibility recheck + search repair.
 name: Update ESC Opportunities
 
 on:
@@ -49,13 +49,13 @@ jobs:
           python -m pip install pycountry requests beautifulsoup4
           python -c "import pycountry, requests, bs4; print('PASS: scraper dependencies imported successfully.')"
 
-      - name: Apply stable API pagination and frontend fixes
+      - name: Apply stable backend and frontend fixes
         run: |
-          python .github/scripts/bootstrap_pagination.py
+          python .github/scripts/bootstrap_backend_fixes.py
           python .github/scripts/bootstrap_frontend_fixes.py
           python -m py_compile scraper/scraper.py
-          python -m py_compile .github/scripts/bootstrap_pagination.py .github/scripts/bootstrap_frontend_fixes.py
-          echo "PASS: scraper pagination and frontend fix sources compile."
+          python -m py_compile .github/scripts/bootstrap_backend_fixes.py .github/scripts/bootstrap_frontend_fixes.py
+          echo "PASS: backend and frontend fix sources compile."
 
       - name: Download and validate footer logos
         run: |
@@ -158,7 +158,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- data/opportunities.json data/expired.json data/checkpoint.json data/last_successful_run.json scraper/scraper.py .github/scripts/bootstrap_pagination.py .github/scripts/bootstrap_frontend_fixes.py web/app.js web/assets/european-solidarity-corps.png
+          git add -- data/opportunities.json data/expired.json data/checkpoint.json data/last_successful_run.json scraper/scraper.py .github/scripts/bootstrap_backend_fixes.py .github/scripts/bootstrap_frontend_fixes.py web/app.js web/assets/european-solidarity-corps.png
 
           if git diff --cached --quiet; then
             echo "No data/source/asset/heartbeat changes detected."
