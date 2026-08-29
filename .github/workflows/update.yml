@@ -48,11 +48,13 @@ jobs:
           python -m pip install pycountry requests beautifulsoup4
           python -c "import pycountry, requests, bs4; print('PASS: scraper dependencies imported successfully.')"
 
-      - name: Apply permanent API pagination fix
+      - name: Apply stable API pagination and frontend fixes
         run: |
           python .github/scripts/bootstrap_pagination.py
+          python .github/scripts/bootstrap_frontend_fixes.py
           python -m py_compile scraper/scraper.py
-          echo "PASS: scraper pagination source compiles."
+          python -m py_compile .github/scripts/bootstrap_pagination.py .github/scripts/bootstrap_frontend_fixes.py
+          echo "PASS: scraper pagination and frontend fix sources compile."
 
       - name: Download and validate footer logos
         run: |
@@ -141,7 +143,6 @@ jobs:
         run: |
           python - <<'PY'
           import json
-          from datetime import datetime, timezone
           from pathlib import Path
 
           generated_at = json.loads(Path("data/opportunities.json").read_text(encoding="utf-8"))["generated_at"]
@@ -152,11 +153,11 @@ jobs:
           print(f"PASS: successful-run heartbeat committed at: {generated_at}")
           PY
 
-      - name: Commit updated data, source fix, assets, and heartbeat
+      - name: Commit updated data, source fixes, assets, and heartbeat
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- data/opportunities.json data/expired.json data/checkpoint.json data/last_successful_run.json scraper/scraper.py .github/scripts/bootstrap_pagination.py web/assets/european-solidarity-corps.png
+          git add -- data/opportunities.json data/expired.json data/checkpoint.json data/last_successful_run.json scraper/scraper.py .github/scripts/bootstrap_pagination.py .github/scripts/bootstrap_frontend_fixes.py web/app.js web/assets/european-solidarity-corps.png
 
           if git diff --cached --quiet; then
             echo "No data/source/asset/heartbeat changes detected."
