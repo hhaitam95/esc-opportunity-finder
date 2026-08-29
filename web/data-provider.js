@@ -3,6 +3,7 @@ const DATA_BASE =
   + "hhaitam95/esc-opportunity-finder/main/data/";
 
 const RECENTLY_EXPIRED_DAYS = 7;
+const NEW_OPPORTUNITY_DISPLAY_WINDOW = 24 * 60 * 60 * 1000;
 
 async function fetchJson(filename) {
   const response = await fetch(
@@ -252,6 +253,20 @@ function mergeArchived(
   return merged;
 }
 
+function isRecentlyCreated(opportunity) {
+  const created = parseDateOnlyOrValue(
+    opportunity.created,
+    false,
+  );
+
+  if (!created) {
+    return false;
+  }
+
+  const age = Date.now() - created.getTime();
+  return age >= 0 && age <= NEW_OPPORTUNITY_DISPLAY_WINDOW;
+}
+
 export async function loadData() {
   const [activeResult, expiredResult] = await Promise.allSettled([
     fetchJson("opportunities.json"),
@@ -311,6 +326,17 @@ export async function loadData() {
           )
         : [],
     );
+
+  // Defensive frontend fallback: EYP's `created` timestamp identifies
+  // opportunities that entered the source dataset within the last 24 hours.
+  // Union this with backend NEW IDs so a backend tracking hiccup cannot hide
+  // genuinely recent opportunities from users.
+  for (const opportunity of active) {
+    if (isRecentlyCreated(opportunity)) {
+      const id = String(opportunity.id || "").trim();
+      if (id) newIds.add(id);
+    }
+  }
 
   return {
     active,
