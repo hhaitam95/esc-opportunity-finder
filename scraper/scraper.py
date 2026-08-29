@@ -4,7 +4,7 @@ import json
 import re
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pycountry
@@ -43,6 +43,9 @@ MAX_RATE_LIMIT_WAIT = 120
 
 # Archive.
 MAX_ARCHIVED_OPPORTUNITIES = 30
+
+# NEW opportunities remain highlighted for 24 hours after first discovery.
+NEW_OPPORTUNITY_DISPLAY_WINDOW = 24 * 60 * 60
 
 
 # ============================================================================
@@ -465,6 +468,7 @@ def default_checkpoint():
         "history": {},
         "last_scan_at": None,
         "updated_at": None,
+        "new_opportunity_first_seen_at": {},
     }
 
 
@@ -502,6 +506,11 @@ def load_checkpoint():
         data.setdefault(
             "updated_at",
             None,
+        )
+
+        data.setdefault(
+            "new_opportunity_first_seen_at",
+            {},
         )
 
         for entry in data["processed"].values():
@@ -1481,6 +1490,35 @@ def build_work_queue(
 # ============================================================================
 
 
+def get_active_new_opportunity_ids(checkpoint, current_ids):
+    """Return newly discovered IDs that are still within the 24-hour window."""
+    first_seen = checkpoint.get("new_opportunity_first_seen_at", {})
+    now = datetime.now()
+    active = []
+    stale = []
+
+    for raw_id, raw_timestamp in first_seen.items():
+        opid = str(raw_id)
+        if opid not in current_ids:
+            stale.append(opid)
+            continue
+
+        seen_at = parse_iso_datetime(raw_timestamp)
+        if seen_at is None:
+            stale.append(opid)
+            continue
+
+        if (now - seen_at.replace(tzinfo=None)).total_seconds() <= NEW_OPPORTUNITY_DISPLAY_WINDOW:
+            active.append(opid)
+        else:
+            stale.append(opid)
+
+    for opid in stale:
+        first_seen.pop(opid, None)
+
+    return sorted(set(active))
+
+
 def get_current_results(
     checkpoint,
     current_ids,
@@ -1859,12 +1897,17 @@ def main():
             current_ids,
         )
 
+        active_new_ids = get_active_new_opportunity_ids(
+            checkpoint,
+            current_ids,
+        )
+
         save_public_output(
             opportunities,
             checkpoint,
             current_ids,
             generated_at=cycle_generated_at,
-            new_opportunity_ids=newly_scanned_ids,
+            new_opportunity_ids=active_new_ids,
         )
 
         save_expired_output(
@@ -2062,9 +2105,12 @@ def main():
                 if new_status == "scanned":
                     # PHASE3_UPDATE_CYCLE_METADATA
                     if previous_entry is None:
-                        newly_scanned_ids.add(
-                            str(opid)
-                        )
+                        new_id = str(opid)
+                        newly_scanned_ids.add(new_id)
+                        checkpoint.setdefault(
+                            "new_opportunity_first_seen_at",
+                            {},
+                        )[new_id] = checked_at
                     history.pop(
                         opid,
                         None,
@@ -2142,12 +2188,17 @@ def main():
         current_ids,
     )
 
+    active_new_ids = get_active_new_opportunity_ids(
+        checkpoint,
+        current_ids,
+    )
+
     output = save_public_output(
         opportunities,
         checkpoint,
         current_ids,
         generated_at=cycle_generated_at,
-        new_opportunity_ids=newly_scanned_ids,
+        new_opportunity_ids=active_new_ids,
     )
 
     save_expired_output(
