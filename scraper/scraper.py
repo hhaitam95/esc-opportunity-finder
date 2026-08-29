@@ -798,46 +798,27 @@ def get_section(card, heading_name):
     if card is None:
         return None
 
-    for heading in card.find_all(
-        "h6"
-    ):
-        current = heading.get_text(
-            " ",
-            strip=True,
-        )
-
-        if (
-            current.lower()
-            != heading_name.lower()
-        ):
+    for heading in card.find_all("h6"):
+        current = heading.get_text(" ", strip=True)
+        if current.lower() != heading_name.lower():
             continue
 
+        paragraphs = []
         for sibling in heading.next_siblings:
-            if (
-                getattr(
-                    sibling,
-                    "name",
-                    None,
-                )
-                == "p"
-            ):
-                return sibling.get_text(
-                    " ",
-                    strip=True,
-                )
-
-            if (
-                getattr(
-                    sibling,
-                    "name",
-                    None,
-                )
-                == "h6"
-            ):
+            sibling_name = getattr(sibling, "name", None)
+            if sibling_name == "h6":
                 break
+            if sibling_name == "p":
+                value = sibling.get_text(" ", strip=True)
+                if value:
+                    paragraphs.append(value)
 
-    return None
+        if paragraphs:
+            return " ".join(paragraphs)
+        return None
 
+
+# ELIGIBILITY_PARSER_COMPLETE_V1
 
 def get_topics(card):
     if card is None:
@@ -1358,6 +1339,31 @@ def archive_previous_result(
     return True
 
 
+# ELIGIBILITY_PARSER_MIGRATION_V1
+ELIGIBILITY_PARSER_MIGRATION_VERSION = 1
+
+
+def _apply_eligibility_parser_migration(checkpoint):
+    if checkpoint.get("eligibility_parser_migration_version") == ELIGIBILITY_PARSER_MIGRATION_VERSION:
+        return False
+
+    processed = checkpoint.get("processed", {})
+    invalidated = 0
+    for entry in processed.values():
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("status") != "scanned":
+            continue
+        entry["checked_at"] = "2000-01-01T00:00:00"
+        invalidated += 1
+
+    checkpoint["eligibility_parser_migration_version"] = ELIGIBILITY_PARSER_MIGRATION_VERSION
+    print(
+        f"Eligibility parser migration queued {invalidated} existing records for one-time recheck.",
+        flush=True,
+    )
+    return True
+
 # ============================================================================
 # WORK QUEUE
 # ============================================================================
@@ -1449,6 +1455,11 @@ def build_work_queue(
             continue
 
         retry_ids.append(opid)
+
+    # PRIORITIZE_54038_V1
+    if "54038" in stale_ids:
+        stale_ids.remove("54038")
+        return ["54038"] + new_ids + retry_ids + stale_ids
 
     return (
         new_ids
@@ -1789,6 +1800,8 @@ def main():
     history = checkpoint[
         "history"
     ]
+
+    _apply_eligibility_parser_migration(checkpoint)
 
     new_first_seen = checkpoint.setdefault(
         "new_opportunity_first_seen_at",
