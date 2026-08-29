@@ -4,13 +4,7 @@ from pathlib import Path
 APP_PATH = Path("web/app.js")
 
 
-def replace_once(text, old, new, label):
-    count = text.count(old)
-    if count != 1:
-        raise SystemExit(
-            f"ERROR: expected exactly one {label} target, found {count}."
-        )
-    return text.replace(old, new, 1)
+SEARCH_FIXED = '  state.filters.search = dom.searchInput?.value || "";\n'
 
 
 def main():
@@ -18,6 +12,10 @@ def main():
         raise SystemExit("ERROR: web/app.js does not exist.")
 
     text = APP_PATH.read_text(encoding="utf-8")
+
+    if SEARCH_FIXED in text:
+        print("PASS: search input state fix already present.")
+        return 0
 
     old = '''function handleSearchInput() {
   if (searchRenderTimer) window.clearTimeout(searchRenderTimer);
@@ -32,13 +30,13 @@ def main():
 }
 '''
 
-    text = replace_once(
-        text,
-        old,
-        new,
-        "handleSearchInput",
-    )
+    count = text.count(old)
+    if count != 1:
+        raise SystemExit(
+            f"ERROR: expected exactly one handleSearchInput target, found {count}."
+        )
 
+    text = text.replace(old, new, 1)
     APP_PATH.write_text(text, encoding="utf-8")
     print("PASS: search input now updates state.filters.search.")
     return 0
