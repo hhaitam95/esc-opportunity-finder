@@ -48,8 +48,8 @@ NEW_FUNCTION_LINES = [
     "                    continue",
     "                try:",
     "                    source[\"opid\"] = int(opid)",
-    "                except (TypeError, ValueError):
-                    continue",
+    "                except (TypeError, ValueError):",
+    "                    continue",
     "                opportunities_by_id.setdefault(str(source[\"opid\"]), source)",
     "",
     "            offset += API_PAGE_SIZE",
