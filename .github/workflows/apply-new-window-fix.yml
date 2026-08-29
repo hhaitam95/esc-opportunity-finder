@@ -1,6 +1,9 @@
 name: Apply NEW opportunity 24-hour window fix
 
 on:
+  push:
+    paths:
+      - ".github/workflows/apply-new-window-fix.yml"
   workflow_dispatch:
 
 permissions:
@@ -18,7 +21,6 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import re
 
           path = Path("scraper/scraper.py")
           text = path.read_text(encoding="utf-8")
@@ -48,7 +50,7 @@ jobs:
               text = text.replace(old, new, 1)
 
           marker = '''def get_current_results(\n    checkpoint,\n    current_ids,\n):\n'''
-          helper = '''def get_active_new_opportunity_ids(checkpoint, current_ids):\n    """Return newly discovered IDs that are still within the 24-hour window."""\n    first_seen = checkpoint.get("new_opportunity_first_seen_at", {})\n    now = datetime.now()\n    active = []\n    stale = []\n\n    for raw_id, raw_timestamp in first_seen.items():\n        opid = str(raw_id)\n        if opid not in current_ids:\n            stale.append(opid)\n            continue\n\n        seen_at = parse_iso_datetime(raw_timestamp)\n        if seen_at is None:\n            stale.append(opid)\n            continue\n\n        if (now - seen_at).total_seconds() <= NEW_OPPORTUNITY_DISPLAY_WINDOW:\n            active.append(opid)\n        else:\n            stale.append(opid)\n\n    for opid in stale:\n        first_seen.pop(opid, None)\n\n    return sorted(set(active))\n\n\ndef get_current_results(\n    checkpoint,\n    current_ids,\n):\n'''
+          helper = '''def get_active_new_opportunity_ids(checkpoint, current_ids):\n    """Return newly discovered IDs that are still within the 24-hour window."""\n    first_seen = checkpoint.get("new_opportunity_first_seen_at", {})\n    now = datetime.now()\n    active = []\n    stale = []\n\n    for raw_id, raw_timestamp in first_seen.items():\n        opid = str(raw_id)\n        if opid not in current_ids:\n            stale.append(opid)\n            continue\n\n        seen_at = parse_iso_datetime(raw_timestamp)\n        if seen_at is None:\n            stale.append(opid)\n            continue\n\n        if (now - seen_at.replace(tzinfo=None)).total_seconds() <= NEW_OPPORTUNITY_DISPLAY_WINDOW:\n            active.append(opid)\n        else:\n            stale.append(opid)\n\n    for opid in stale:\n        first_seen.pop(opid, None)\n\n    return sorted(set(active))\n\n\ndef get_current_results(\n    checkpoint,\n    current_ids,\n):\n'''
           if marker not in text:
               raise SystemExit("PATCH TARGET NOT FOUND: get_current_results marker")
           text = text.replace(marker, helper, 1)
@@ -81,7 +83,7 @@ jobs:
           grep -F 'new_opportunity_first_seen_at' scraper/scraper.py
           echo 'PASS: 24-hour NEW retention patch validated.'
 
-      - name: Commit and push
+      - name: Commit and push scraper fix
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
