@@ -338,10 +338,10 @@ def normalize_result_country_schema(result):
 # ============================================================================
 
 
-def build_api_params(offset):
+def build_api_params(offset, page_size=None):
     return {
         "type": "Opportunity",
-        "size": API_PAGE_SIZE,
+        "size": page_size or API_PAGE_SIZE,
         "from": offset,
 
         "filters[status]": "open",
@@ -591,20 +591,19 @@ def get_retry_after_seconds(response):
     return 30
 
 
-def fetch_api_page(session, offset):
-    params = build_api_params(offset)
+def fetch_api_page(session, offset, page_size=None):
+    params = build_api_params(
+        offset,
+        page_size,
+    )
 
-    for attempt in range(
-        1,
-        MAX_RETRIES + 1,
-    ):
+    for attempt in range(1, MAX_RETRIES + 1):
         try:
+            effective_size = page_size or API_PAGE_SIZE
             print(
-                f"API request: from={offset}, "
-                f"size={API_PAGE_SIZE}",
+                f"API request: from={offset}, size={effective_size}",
                 flush=True,
             )
-
             response = session.get(
                 API_URL,
                 params=params,
@@ -616,162 +615,167 @@ def fetch_api_page(session, offset):
                 try:
                     return response.json()
                 except ValueError as exc:
-                    print(
-                        f"Invalid API JSON: {exc}",
-                        flush=True,
-                    )
-
+                    print(f"Invalid API JSON: {exc}", flush=True)
                     if attempt < MAX_RETRIES:
                         time.sleep(2**attempt)
                         continue
-
                     return None
 
             if response.status_code == 429:
-                wait = get_retry_after_seconds(
-                    response
-                )
-
-                print(
-                    f"API HTTP 429. "
-                    f"Waiting {wait}s "
-                    f"({attempt}/{MAX_RETRIES})...",
-                    flush=True,
-                )
-
+                wait = get_retry_after_seconds(response)
+                print(f"API HTTP 429. Waiting {wait}s ({attempt}/{MAX_RETRIES})...", flush=True)
                 if attempt >= MAX_RETRIES:
                     return None
-
                 time.sleep(wait)
                 continue
 
             if response.status_code >= 500:
                 if attempt < MAX_RETRIES:
                     wait = 2**attempt
-
-                    print(
-                        f"API HTTP "
-                        f"{response.status_code}. "
-                        f"Retrying in {wait}s...",
-                        flush=True,
-                    )
-
+                    print(f"API HTTP {response.status_code}. Retrying in {wait}s...", flush=True)
                     time.sleep(wait)
                     continue
-
                 return None
 
-            print(
-                f"API error: HTTP "
-                f"{response.status_code}",
-                flush=True,
-            )
-
+            print(f"API error: HTTP {response.status_code}", flush=True)
             return None
 
         except requests.Timeout:
             if attempt < MAX_RETRIES:
                 wait = 2**attempt
-
-                print(
-                    f"API timeout. "
-                    f"Retrying in {wait}s...",
-                    flush=True,
-                )
-
+                print(f"API timeout. Retrying in {wait}s...", flush=True)
                 time.sleep(wait)
                 continue
-
             return None
 
         except requests.RequestException as exc:
             if attempt < MAX_RETRIES:
                 wait = 2**attempt
-
-                print(
-                    f"API request error: {exc}",
-                    flush=True,
-                )
-
-                print(
-                    f"Retrying in {wait}s...",
-                    flush=True,
-                )
-
+                print(f"API request error: {exc}", flush=True)
+                print(f"Retrying in {wait}s...", flush=True)
                 time.sleep(wait)
                 continue
-
-            print(
-                f"API request failed: {exc}",
-                flush=True,
-            )
-
+            print(f"API request failed: {exc}", flush=True)
             return None
 
     return None
 
-
 def fetch_current_opportunities():
-    # API_PAGINATION_DEDUP_V4
+    # BACKEND_AUTOMATION_FIXES_V8
     print("=" * 70)
     print("FETCHING CURRENT ESC OPPORTUNITIES")
     print("=" * 70)
 
     session = requests.Session()
-    opportunities_by_id = {}
-    offset = 0
     total = None
 
+    def total_from(data):
+        hits = data.get("hits", {}) if data else {}
+        total_info = hits.get("total", {})
+        if isinstance(total_info, dict):
+            return int(total_info.get("value", 0) or 0)
+        return int(total_info or 0)
+
+    def add_page(target, data):
+        if not data:
+            return 0
+        page_hits = data.get("hits", {}).get("hits", [])
+        added = 0
+        for hit in page_hits:
+            source = hit.get("_source", {})
+            opid = source.get("opid") or hit.get("_id")
+            if opid is None:
+                continue
+            try:
+                source["opid"] = int(opid)
+            except (TypeError, ValueError):
+                continue
+            key = str(source["opid"])
+            if key not in target:
+                target[key] = source
+                added += 1
+        return added
+
     try:
-        while True:
+        opportunities_by_id = {}
+        first = fetch_api_page(session, 0)
+        if first is None:
+            raise RuntimeError("Could not retrieve the current opportunity list.")
+
+        total = total_from(first)
+        print(f"API reports {total} opportunities.", flush=True)
+        add_page(opportunities_by_id, first)
+        print(
+            f"Retrieved {len(opportunities_by_id)}/{total} unique opportunities "
+            f"(raw page hits: {len(first.get('hits', {}).get('hits', []))})",
+            flush=True,
+        )
+
+        offset = API_PAGE_SIZE
+        while len(opportunities_by_id) < total:
             data = fetch_api_page(session, offset)
-
             if data is None:
-                raise RuntimeError("Could not retrieve the current opportunity list.")
-
-            hits = data.get("hits", {})
-            total_info = hits.get("total", {})
-
-            if total is None:
-                if isinstance(total_info, dict):
-                    total = int(total_info.get("value", 0) or 0)
-                else:
-                    total = int(total_info or 0)
-                print(f"API reports {total} opportunities.", flush=True)
-
-            page_hits = hits.get("hits", [])
+                break
+            page_hits = data.get("hits", {}).get("hits", [])
+            add_page(opportunities_by_id, data)
+            print(
+                f"Retrieved {len(opportunities_by_id)}/{total} unique opportunities "
+                f"(raw page hits: {len(page_hits)})",
+                flush=True,
+            )
             if not page_hits:
                 break
-
-            for hit in page_hits:
-                source = hit.get("_source", {})
-                opid = source.get("opid") or hit.get("_id")
-                if opid is None:
-                    continue
-                try:
-                    source["opid"] = int(opid)
-                except (TypeError, ValueError):
-                    continue
-                opportunities_by_id.setdefault(str(source["opid"]), source)
-
             offset += API_PAGE_SIZE
-            unique_count = len(opportunities_by_id)
-            print(f"Retrieved {unique_count}/{total} unique opportunities (raw page hits: {len(page_hits)})", flush=True)
-            if total is not None and unique_count >= total:
-                break
+
+        if len(opportunities_by_id) >= total:
+            return list(opportunities_by_id.values())
+
+        print(
+            f"WARN: normal pagination produced {len(opportunities_by_id)}/{total}. "
+            "Starting automatic recovery fetch.",
+            flush=True,
+        )
+
+        # Recovery 1: one larger request; normal 1,000-page traffic is unchanged.
+        recovery_size = max(API_PAGE_SIZE, min(total + 100, 2000))
+        recovery = fetch_api_page(session, 0, recovery_size)
+        add_page(opportunities_by_id, recovery)
+        if len(opportunities_by_id) >= total:
+            print(
+                f"PASS: larger-request recovery restored {len(opportunities_by_id)}/{total}.",
+                flush=True,
+            )
+            return list(opportunities_by_id.values())
+
+        # Recovery 2: overlapping 500-record pages tolerate unstable API offsets.
+        recovery_page_size = 500
+        overlap = 100
+        step = recovery_page_size - overlap
+        recovery_offset = 0
+        while recovery_offset < total:
+            recovery_page = fetch_api_page(
+                session,
+                recovery_offset,
+                recovery_page_size,
+            )
+            added = add_page(opportunities_by_id, recovery_page)
+            print(
+                f"Recovery page from={recovery_offset}: +{added} unique; "
+                f"total {len(opportunities_by_id)}/{total}.",
+                flush=True,
+            )
+            if len(opportunities_by_id) >= total:
+                print("PASS: overlapping-pagination recovery restored the complete set.", flush=True)
+                return list(opportunities_by_id.values())
+            recovery_offset += step
+
+        raise RuntimeError(
+            "Incomplete API retrieval after automatic recovery: "
+            f"{len(opportunities_by_id)}/{total} unique opportunities"
+        )
+
     finally:
         session.close()
-
-    opportunities = list(opportunities_by_id.values())
-    if total is not None and len(opportunities) != total:
-        raise RuntimeError(f"Incomplete API retrieval: {len(opportunities)}/{total} unique opportunities")
-    return opportunities
-
-
-# ============================================================================
-# DETAIL PAGE PARSING
-# ============================================================================
-
 
 def find_detail_card(soup):
     for card in soup.find_all(
@@ -818,7 +822,7 @@ def get_section(card, heading_name):
         return None
 
 
-# ELIGIBILITY_PARSER_COMPLETE_V1
+# ELIGIBILITY_PARSER_COMPLETE_V2
 
 def get_topics(card):
     if card is None:
@@ -1364,6 +1368,31 @@ def _apply_eligibility_parser_migration(checkpoint):
     )
     return True
 
+# ELIGIBILITY_PARSER_MIGRATION_V2
+ELIGIBILITY_PARSER_MIGRATION_VERSION = 2
+
+
+def _apply_eligibility_parser_migration(checkpoint):
+    if checkpoint.get("eligibility_parser_migration_version") == ELIGIBILITY_PARSER_MIGRATION_VERSION:
+        return False
+
+    processed = checkpoint.get("processed", {})
+    invalidated = 0
+    for entry in processed.values():
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("status") != "scanned":
+            continue
+        entry["checked_at"] = "2000-01-01T00:00:00"
+        invalidated += 1
+
+    checkpoint["eligibility_parser_migration_version"] = ELIGIBILITY_PARSER_MIGRATION_VERSION
+    print(
+        f"Eligibility parser migration queued {invalidated} existing records for one-time recheck.",
+        flush=True,
+    )
+    return True
+
 # ============================================================================
 # WORK QUEUE
 # ============================================================================
@@ -1457,6 +1486,11 @@ def build_work_queue(
         retry_ids.append(opid)
 
     # PRIORITIZE_54038_V1
+    if "54038" in stale_ids:
+        stale_ids.remove("54038")
+        return ["54038"] + new_ids + retry_ids + stale_ids
+
+    # PRIORITIZE_54038_V2
     if "54038" in stale_ids:
         stale_ids.remove("54038")
         return ["54038"] + new_ids + retry_ids + stale_ids
