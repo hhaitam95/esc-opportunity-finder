@@ -1,8 +1,90 @@
 {
-  "generated_at": "2026-09-01T23:36:08.579333",
+  "generated_at": "2026-09-02T00:14:02.855158",
   "recently_expired_days": 7,
-  "count": 22,
+  "count": 23,
   "opportunities": [
+    {
+      "id": 54060,
+      "opid": 54060,
+      "title": "Gaia Terra",
+      "location": "Via Petrarca, 45, Flambruzzo , Rivignano Teor, Italy",
+      "country": "IT",
+      "town": "Rivignano Teor",
+      "activity_type": "Individual volunteering",
+      "start_date": "2026-09-18",
+      "end_date": "2026-11-14",
+      "deadline": "2026-09-01",
+      "eligible_countries": [
+        "DE",
+        "FR",
+        "NL"
+      ],
+      "eligibility_known": true,
+      "topics": [
+        "Environment and natural protection"
+      ],
+      "project_code": "2025-2-IT03-ESC51-VTJ-000372640",
+      "created": "2026-08-31T14:16:37",
+      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/ESC-in-FVG-logo_0.jpg?itok=YY77ViS1",
+      "url": "https://youth.europa.eu/solidarity/opportunity/54060_en",
+      "last_seen": "2026-09-02T00:10:19.024637",
+      "reason": "No longer present in the active opportunity list."
+    },
+    {
+      "id": 9867,
+      "opid": 9867,
+      "title": "Freiwilligendienst in Öko-Dorf im Hinterland von Sevilla/Spanien",
+      "location": "Sevilla, Spain",
+      "country": "ES",
+      "town": "Sevilla",
+      "activity_type": "Individual volunteering",
+      "start_date": "2026-10-01",
+      "end_date": "2027-05-31",
+      "deadline": "2026-09-01",
+      "eligible_countries": [
+        "DE"
+      ],
+      "eligibility_known": true,
+      "topics": [
+        "Environment and natural protection",
+        "Health and wellbeing",
+        "Education and training",
+        "Creativity and culture"
+      ],
+      "project_code": "2025-1-ES02-ESC51-VTJ-000346125",
+      "created": "2018-11-19T19:07:17",
+      "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
+      "url": "https://youth.europa.eu/solidarity/opportunity/9867_en",
+      "last_seen": "2026-09-02T00:10:19.024623",
+      "reason": "No longer present in the active opportunity list."
+    },
+    {
+      "id": 35070,
+      "opid": 35070,
+      "title": "Freiwilligendienst in Vire/Normandie/Frankreich",
+      "location": "Vire, France",
+      "country": "FR",
+      "town": "Vire",
+      "activity_type": "Individual volunteering",
+      "start_date": "2026-10-01",
+      "end_date": "2027-09-30",
+      "deadline": "2026-09-01",
+      "eligible_countries": [
+        "DE"
+      ],
+      "eligibility_known": true,
+      "topics": [
+        "Social challenges",
+        "Creativity and culture",
+        "Physical education and sport"
+      ],
+      "project_code": "2026-1-FR02-ESC51-VTJ-000400611",
+      "created": "2023-05-13T10:39:44",
+      "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
+      "url": "https://youth.europa.eu/solidarity/opportunity/35070_en",
+      "last_seen": "2026-09-02T00:10:19.024584",
+      "reason": "No longer present in the active opportunity list."
+    },
     {
       "id": 53005,
       "opid": 53005,
@@ -26,7 +108,70 @@
       "created": "2026-07-02T10:20:15",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-recorte_1.png?itok=p_-eWosQ",
       "url": "https://youth.europa.eu/solidarity/opportunity/53005_en",
-      "last_seen": "2026-09-01T23:34:10.350519",
+      "last_seen": "2026-09-02T00:10:19.024574",
+      "reason": "No longer present in the active opportunity list."
+    },
+    {
+      "id": 53967,
+      "opid": 53967,
+      "title": "Oriel Community EPIcentre",
+      "location": "Via Brenta 9, Verona, Italy",
+      "country": "IT",
+      "town": "Verona",
+      "activity_type": "Individual volunteering",
+      "start_date": "2026-09-14",
+      "end_date": "2027-09-08",
+      "deadline": "2026-09-01",
+      "eligible_countries": [
+        "AL",
+        "AT",
+        "BA",
+        "BE",
+        "BG",
+        "CY",
+        "CZ",
+        "DE",
+        "DK",
+        "EE",
+        "ES",
+        "FI",
+        "FR",
+        "GR",
+        "HR",
+        "HU",
+        "IE",
+        "IS",
+        "LI",
+        "LT",
+        "LU",
+        "LV",
+        "MD",
+        "MK",
+        "MT",
+        "NL",
+        "NO",
+        "PL",
+        "PT",
+        "RO",
+        "RS",
+        "SE",
+        "SI",
+        "SK",
+        "TR",
+        "UA"
+      ],
+      "eligibility_known": true,
+      "topics": [
+        "Social challenges",
+        "Citizenship and democratic participation",
+        "Education and training",
+        "Creativity and culture"
+      ],
+      "project_code": "2024-2-IT03-ESC51-VTJ-000280685",
+      "created": "2026-08-25T05:48:34",
+      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/organisation-logos/img028.jpg?itok=QVmnej16",
+      "url": "https://youth.europa.eu/solidarity/opportunity/53967_en",
+      "last_seen": "2026-09-02T00:10:19.024571",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -78,7 +223,7 @@
       "created": "2022-05-10T12:41:31",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/esc-logo-en_13.png?itok=rKpyIVUn",
       "url": "https://youth.europa.eu/solidarity/opportunity/30490_en",
-      "last_seen": "2026-09-01T23:34:10.350550",
+      "last_seen": "2026-09-02T00:10:19.024615",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -125,7 +270,7 @@
       "created": "2022-05-17T14:53:42",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/esc-logo-en_13.png?itok=rKpyIVUn",
       "url": "https://youth.europa.eu/solidarity/opportunity/30581_en",
-      "last_seen": "2026-09-01T23:34:10.350548",
+      "last_seen": "2026-09-02T00:10:19.024612",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -165,7 +310,7 @@
       "created": "2026-06-11T12:02:40",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/be-you---european-youth-association_6.png?itok=QEDO82nV",
       "url": "https://youth.europa.eu/solidarity/opportunity/52516_en",
-      "last_seen": "2026-09-01T23:34:10.350546",
+      "last_seen": "2026-09-02T00:10:19.024608",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -192,7 +337,7 @@
       "created": "2026-08-27T08:15:17",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54000_en",
-      "last_seen": "2026-09-01T23:34:10.350540",
+      "last_seen": "2026-09-02T00:10:19.024602",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -222,7 +367,7 @@
       "created": "2018-08-13T11:22:43",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/keric_fb_180x180px_biela.png?itok=aHTnvja7",
       "url": "https://youth.europa.eu/solidarity/opportunity/8639_en",
-      "last_seen": "2026-09-01T23:34:10.350529",
+      "last_seen": "2026-09-02T00:10:19.024588",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -266,7 +411,7 @@
       "created": "2025-01-30T14:43:37",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/keric_fb_180x180px_biela.png?itok=aHTnvja7",
       "url": "https://youth.europa.eu/solidarity/opportunity/44101_en",
-      "last_seen": "2026-09-01T23:34:10.350525",
+      "last_seen": "2026-09-02T00:10:19.024581",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -294,7 +439,7 @@
       "created": "2026-08-25T12:28:26",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/53973_en",
-      "last_seen": "2026-09-01T23:34:10.350516",
+      "last_seen": "2026-09-02T00:10:19.024567",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -343,7 +488,7 @@
       "created": "2026-08-25T19:07:18",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/IntegrART_Logotype_4_BLACK-%281%29_0_1_0_1.png?itok=y6RcEQgN",
       "url": "https://youth.europa.eu/solidarity/opportunity/53983_en",
-      "last_seen": "2026-09-01T23:34:10.350509",
+      "last_seen": "2026-09-02T00:10:19.024558",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -399,7 +544,7 @@
       "created": "2026-08-24T16:06:30",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/VIAC-logo-color_105.png?itok=vQ1Z5Iyx",
       "url": "https://youth.europa.eu/solidarity/opportunity/53954_en",
-      "last_seen": "2026-09-01T23:34:10.350496",
+      "last_seen": "2026-09-02T00:10:19.024541",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -456,7 +601,7 @@
       "created": "2026-08-24T16:10:45",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/VIAC-logo-color_105.png?itok=vQ1Z5Iyx",
       "url": "https://youth.europa.eu/solidarity/opportunity/53955_en",
-      "last_seen": "2026-09-01T23:34:10.350494",
+      "last_seen": "2026-09-02T00:10:19.024538",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -479,7 +624,7 @@
       "created": "2025-03-11T10:49:26",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Teams-in-Greece-%282%29.png?itok=t1ypHknN",
       "url": "https://youth.europa.eu/solidarity/opportunity/44826_en",
-      "last_seen": "2026-09-01T23:34:10.350523",
+      "last_seen": "2026-09-02T00:10:19.024579",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -507,7 +652,7 @@
       "created": "2026-08-26T16:14:38",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/53997_en",
-      "last_seen": "2026-09-01T23:34:10.350502",
+      "last_seen": "2026-09-02T00:10:19.024549",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -558,7 +703,7 @@
       "created": "2026-07-17T13:55:00",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/BASE_1.png?itok=HN90AFa3",
       "url": "https://youth.europa.eu/solidarity/opportunity/53322_en",
-      "last_seen": "2026-09-01T23:34:10.350543",
+      "last_seen": "2026-09-02T00:10:19.024605",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -609,7 +754,7 @@
       "created": "2026-08-25T14:51:30",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/EXE_logo_Accoord_3.png?itok=e9I8arV9",
       "url": "https://youth.europa.eu/solidarity/opportunity/53974_en",
-      "last_seen": "2026-09-01T23:34:10.350514",
+      "last_seen": "2026-09-02T00:10:19.024565",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -660,7 +805,7 @@
       "created": "2026-08-25T15:01:36",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/EXE_logo_Accoord_3.png?itok=e9I8arV9",
       "url": "https://youth.europa.eu/solidarity/opportunity/53975_en",
-      "last_seen": "2026-09-01T23:34:10.350512",
+      "last_seen": "2026-09-02T00:10:19.024562",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -705,7 +850,7 @@
       "created": "2026-08-24T17:18:02",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Il-cesto_109.png?itok=H93uoYCy",
       "url": "https://youth.europa.eu/solidarity/opportunity/53959_en",
-      "last_seen": "2026-09-01T23:34:10.350491",
+      "last_seen": "2026-09-02T00:10:19.024535",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -760,7 +905,7 @@
       "created": "2026-08-24T17:25:46",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Il-cesto_109.png?itok=H93uoYCy",
       "url": "https://youth.europa.eu/solidarity/opportunity/53960_en",
-      "last_seen": "2026-09-01T23:34:10.350489",
+      "last_seen": "2026-09-02T00:10:19.024532",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -809,158 +954,7 @@
       "created": "2026-08-24T17:41:52",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Il-cesto_109.png?itok=H93uoYCy",
       "url": "https://youth.europa.eu/solidarity/opportunity/53961_en",
-      "last_seen": "2026-09-01T23:34:10.350487",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 53962,
-      "opid": 53962,
-      "title": "ESC VOLUNTEERING WITH MIGRANTS",
-      "location": "Vico San Donato 2, Genova, Italy",
-      "country": "IT",
-      "town": "Genova",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-09-09",
-      "end_date": "2027-02-09",
-      "deadline": "2026-08-28",
-      "eligible_countries": [
-        "AL",
-        "AT",
-        "BE",
-        "BG",
-        "CZ",
-        "DE",
-        "DK",
-        "EE",
-        "ES",
-        "FI",
-        "FR",
-        "GR",
-        "HU",
-        "LT",
-        "LV",
-        "MT",
-        "NL",
-        "NO",
-        "PL",
-        "PT",
-        "RO",
-        "SI",
-        "SK",
-        "UA"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Social challenges",
-        "Reception and integration of refugees and migrants",
-        "Shelter"
-      ],
-      "project_code": "2024-2-IT03-ESC51-VTJ-000280408",
-      "created": "2026-08-24T18:05:12",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Il-cesto_109.png?itok=H93uoYCy",
-      "url": "https://youth.europa.eu/solidarity/opportunity/53962_en",
-      "last_seen": "2026-09-01T23:34:10.350485",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 53963,
-      "opid": 53963,
-      "title": "ESC VOLUNTEERING WITH TEENS AND CHILDREN",
-      "location": "Vico San Donato 2, Genova, Italy",
-      "country": "IT",
-      "town": "Genova",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-09-09",
-      "end_date": "2027-02-09",
-      "deadline": "2026-08-28",
-      "eligible_countries": [
-        "AL",
-        "AT",
-        "BE",
-        "BG",
-        "CZ",
-        "DE",
-        "DK",
-        "EE",
-        "ES",
-        "FI",
-        "FR",
-        "GR",
-        "HR",
-        "HU",
-        "LT",
-        "LV",
-        "MT",
-        "NL",
-        "NO",
-        "PL",
-        "RO",
-        "SE",
-        "SI",
-        "SK",
-        "UA"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Social challenges",
-        "Education and training",
-        "Creativity and culture"
-      ],
-      "project_code": "2024-2-IT03-ESC51-VTJ-000280408",
-      "created": "2026-08-24T18:12:22",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Il-cesto_109.png?itok=H93uoYCy",
-      "url": "https://youth.europa.eu/solidarity/opportunity/53963_en",
-      "last_seen": "2026-09-01T23:34:10.350483",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 53946,
-      "opid": 53946,
-      "title": "Communication and social media of a Butterflies House Museum",
-      "location": "Via Roma 45, Bordano (UD), Italy",
-      "country": "IT",
-      "town": "Bordano (UD)",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-08-27",
-      "end_date": "2027-03-30",
-      "deadline": "2026-08-27",
-      "eligible_countries": [
-        "AT",
-        "BE",
-        "BG",
-        "DK",
-        "EE",
-        "ES",
-        "FI",
-        "GR",
-        "HR",
-        "HU",
-        "IE",
-        "LT",
-        "LV",
-        "NL",
-        "NO",
-        "PL",
-        "PT",
-        "RO",
-        "SE",
-        "SI",
-        "SK",
-        "UA"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Environment and natural protection",
-        "Education and training",
-        "Employment and entrepreneurship",
-        "Creativity and culture",
-        "Support to local Small and Medium Enterprise"
-      ],
-      "project_code": "2024-2-IT03-ESC51-VTJ-000278366",
-      "created": "2026-08-24T10:44:28",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-farfalle_11.jpeg?itok=CVQ9PzFN",
-      "url": "https://youth.europa.eu/solidarity/opportunity/53946_en",
-      "last_seen": "2026-09-01T23:34:10.350479",
+      "last_seen": "2026-09-02T00:10:19.024530",
       "reason": "No longer present in the active opportunity list."
     }
   ]
