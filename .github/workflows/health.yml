@@ -53,14 +53,14 @@ jobs:
             exit 1
           fi
 
-          if (( age_seconds > 7200 )); then
-            echo "ERROR: no successful scraper update in the last 2 hours."
+          if (( age_seconds > 3600 )); then
+            echo "ERROR: no successful scraper update in the last hour."
             echo "stale=true" >> "$GITHUB_OUTPUT"
             exit 1
           fi
 
           echo "stale=false" >> "$GITHUB_OUTPUT"
-          echo "PASS: scraper workflow is updating within the expected window."
+          echo "PASS: scraper workflow is updating within the expected one-hour window."
 
       - name: Attempt automatic scraper recovery
         if: steps.check.outputs.stale == 'true'
@@ -75,6 +75,6 @@ jobs:
       - name: Fail health check when stale
         if: steps.check.outputs.stale == 'true'
         run: |
-          echo "ERROR: scraper freshness is outside the 2-hour window."
+          echo "ERROR: scraper freshness is outside the one-hour window."
           echo "An automatic recovery run was dispatched; inspect Update ESC Opportunities for the root cause."
           exit 1
