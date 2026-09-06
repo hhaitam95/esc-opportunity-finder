@@ -311,7 +311,7 @@ function formatLiveRemaining(deadlineValue, locale, t) {
       : `${hours}h ${minutes}m remaining`;
 }
 
-function renderDeadline(opportunity, locale, t) {
+function renderDeadline(opportunity, locale, t, archived = false) {
   if (!opportunity.deadline) {
     return `<span class="deadline-none"><span class="deadline-icon" aria-hidden="true">⏰</span><span class="deadline-date">${escapeHtml(t("noDeadline"))}</span></span>`;
   }
@@ -321,13 +321,25 @@ function renderDeadline(opportunity, locale, t) {
     return `<span class="deadline-normal"><span class="deadline-icon" aria-hidden="true">⏰</span><span class="deadline-date">${escapeHtml(t("noDeadline"))}</span></span>`;
   }
 
+  const formatted = formatDate(opportunity.deadline, locale, t("noDeadline"));
+
+  if (archived) {
+    const language = locale.startsWith("fr") ? "fr" : locale.startsWith("ar") ? "ar" : "en";
+    const passedLabel = language === "fr"
+      ? "Date limite dépassée"
+      : language === "ar"
+        ? "انتهى الموعد النهائي"
+        : "Deadline passed";
+
+    return `<span class="deadline-urgent archived-deadline"><span class="deadline-icon" aria-hidden="true">⏰</span><span><span class="deadline-date">${escapeHtml(formatted)}</span><span class="deadline-relative">${escapeHtml(passedLabel)}</span></span></span>`;
+  }
+
   const remaining = deadline.getTime() - Date.now();
   let statusClass = "deadline-normal";
   if (remaining <= 86400000 && remaining > 0) statusClass = "deadline-urgent";
   else if (remaining <= 7 * 86400000 && remaining > 0) statusClass = "deadline-soon";
   else if (remaining <= 0) statusClass = "deadline-urgent";
 
-  const formatted = formatDate(opportunity.deadline, locale, t("noDeadline"));
   const countdown = formatLiveRemaining(opportunity.deadline, locale, t);
   return `<span class="${statusClass} live-deadline" data-deadline-timestamp="${deadline.getTime()}" data-deadline-locale="${escapeHtml(locale)}"><span class="deadline-icon" aria-hidden="true">⏰</span><span><span class="deadline-date">${escapeHtml(formatted)}</span><span class="deadline-relative">${escapeHtml(countdown)}</span></span></span>`;
 }
@@ -362,7 +374,7 @@ function renderRow(opportunity, options) {
       <div class="location-country">${renderCountry(opportunity, locale)}</div>
     </td>
     <td class="activity-cell">${renderActivityDates(opportunity, locale, t)}</td>
-    <td class="deadline-cell">${renderDeadline(opportunity, locale, t)}</td>
+    <td class="deadline-cell">${renderDeadline(opportunity, locale, t, archived)}</td>
     <td class="type-cell">${renderActivityType(opportunity, locale, t)}</td>
     <td class="apply-column">${link ? `<a class="apply-button" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("view"))}</a>` : ""}</td>
   </tr>`;
