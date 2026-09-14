@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-09-14T11:33:46.084416",
+  "generated_at": "2026-09-14T14:00:20.989603",
   "recently_expired_days": 7,
-  "count": 14,
+  "count": 11,
   "opportunities": [
     {
       "id": 53592,
@@ -66,7 +66,7 @@
       "created": "2026-07-31T12:49:31",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/53592_en",
-      "last_seen": "2026-09-14T11:30:01.212569",
+      "last_seen": "2026-09-14T13:56:30.300524",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -120,7 +120,7 @@
       "created": "2026-09-07T09:38:45",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54164_en",
-      "last_seen": "2026-09-14T11:30:01.212537",
+      "last_seen": "2026-09-14T13:56:30.300483",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -168,47 +168,7 @@
       "created": "2026-09-07T08:36:41",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54163_en",
-      "last_seen": "2026-09-14T11:30:01.212535",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 54148,
-      "opid": 54148,
-      "title": "European Solidarity Corps in Bologna with Scambieuropei",
-      "location": "VIA SAN GIOVANNI BOSCO 32, MONTEGRANARO, Italy",
-      "country": "IT",
-      "town": "MONTEGRANARO",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-09-25",
-      "end_date": "2027-07-23",
-      "deadline": "2026-09-13",
-      "eligible_countries": [
-        "AT",
-        "BE",
-        "CZ",
-        "DE",
-        "DK",
-        "ES",
-        "FR",
-        "GR",
-        "HU",
-        "PL",
-        "PT",
-        "RO",
-        "SE",
-        "SK"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Social challenges",
-        "Citizenship and democratic participation",
-        "Education and training"
-      ],
-      "project_code": "2025-1-IT03-ESC51-VTJ-000346886",
-      "created": "2026-09-04T11:39:37",
-      "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
-      "url": "https://youth.europa.eu/solidarity/opportunity/54148_en",
-      "last_seen": "2026-09-14T11:30:01.212501",
+      "last_seen": "2026-09-14T13:56:30.300480",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -257,7 +217,7 @@
       "created": "2026-09-10T17:13:37",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Il-cesto_114.png?itok=MtE6xIfo",
       "url": "https://youth.europa.eu/solidarity/opportunity/54249_en",
-      "last_seen": "2026-09-14T11:30:01.212606",
+      "last_seen": "2026-09-14T13:56:30.300567",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -285,7 +245,7 @@
       "created": "2025-09-09T11:50:35",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/OnOff-logo-2025.png?itok=3itEWsdc",
       "url": "https://youth.europa.eu/solidarity/opportunity/48200_en",
-      "last_seen": "2026-09-14T11:30:01.212596",
+      "last_seen": "2026-09-14T13:56:30.300555",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -332,7 +292,7 @@
       "created": "2026-09-09T11:37:54",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Il-cesto_114.png?itok=MtE6xIfo",
       "url": "https://youth.europa.eu/solidarity/opportunity/54210_en",
-      "last_seen": "2026-09-14T11:30:01.212574",
+      "last_seen": "2026-09-14T13:56:30.300529",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -381,53 +341,7 @@
       "created": "2026-09-08T08:56:56",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Logo-couleur_13.png?itok=QOgTD2aW",
       "url": "https://youth.europa.eu/solidarity/opportunity/54185_en",
-      "last_seen": "2026-09-14T11:30:01.212558",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 54144,
-      "opid": 54144,
-      "title": "European volunterre-School life activities, boarding school activities ans civic engagement",
-      "location": "Les Granges Route d'Aubusson, FELLETIN, France",
-      "country": "FR",
-      "town": "FELLETIN",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-10-01",
-      "end_date": "2027-06-25",
-      "deadline": "2026-09-11",
-      "eligible_countries": [
-        "AT",
-        "BE",
-        "BG",
-        "CZ",
-        "DE",
-        "DK",
-        "EE",
-        "ES",
-        "GR",
-        "HR",
-        "HU",
-        "IE",
-        "IT",
-        "LT",
-        "LV",
-        "NL",
-        "PL",
-        "PT",
-        "RO",
-        "SI",
-        "SK"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Citizenship and democratic participation",
-        "Education and training"
-      ],
-      "project_code": "2025-1-FR02-ESC51-VTJ-000347228",
-      "created": "2026-09-04T10:58:23",
-      "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
-      "url": "https://youth.europa.eu/solidarity/opportunity/54144_en",
-      "last_seen": "2026-09-14T11:30:01.212494",
+      "last_seen": "2026-09-14T13:56:30.300504",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -514,7 +428,7 @@
       "created": "2026-09-10T20:04:43",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54252_en",
-      "last_seen": "2026-09-14T11:30:01.212612",
+      "last_seen": "2026-09-14T13:56:30.300573",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -574,7 +488,7 @@
       "created": "2026-09-05T13:33:39",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Logo-EVEC-Athens_2.jpg?itok=8xRZLjST",
       "url": "https://youth.europa.eu/solidarity/opportunity/54160_en",
-      "last_seen": "2026-09-14T11:30:01.212515",
+      "last_seen": "2026-09-14T13:56:30.300477",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -627,7 +541,7 @@
       "created": "2026-09-07T11:36:08",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/La-comunita_105.jpeg?itok=Ndd6oh4o",
       "url": "https://youth.europa.eu/solidarity/opportunity/54166_en",
-      "last_seen": "2026-09-14T11:30:01.212543",
+      "last_seen": "2026-09-14T13:56:30.300488",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -676,51 +590,7 @@
       "created": "2026-09-07T11:30:01",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/La-comunita_105.jpeg?itok=Ndd6oh4o",
       "url": "https://youth.europa.eu/solidarity/opportunity/54165_en",
-      "last_seen": "2026-09-14T11:30:01.212540",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 53013,
-      "opid": 53013,
-      "title": "Island Extravaganza 2026",
-      "location": "Pijaca Društva seoske izobraženosti 2, MURTER, Croatia",
-      "country": "HR",
-      "town": "MURTER",
-      "activity_type": "Volunteering teams",
-      "start_date": "2026-09-15",
-      "end_date": "2026-10-13",
-      "deadline": "2026-09-09",
-      "eligible_countries": [
-        "AT",
-        "BE",
-        "CZ",
-        "DE",
-        "DK",
-        "EE",
-        "ES",
-        "FI",
-        "FR",
-        "HU",
-        "IE",
-        "IS",
-        "IT",
-        "LV",
-        "NL",
-        "NO",
-        "PL",
-        "PT",
-        "SI",
-        "SK"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Environment and natural protection"
-      ],
-      "project_code": "2026-1-HR01-ESC51-VTJ-000401303",
-      "created": "2026-07-02T14:23:17",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Argonauta-logo.pdf_.png?itok=YfsBe2iF",
-      "url": "https://youth.europa.eu/solidarity/opportunity/53013_en",
-      "last_seen": "2026-09-14T11:30:01.212491",
+      "last_seen": "2026-09-14T13:56:30.300485",
       "reason": "No longer present in the active opportunity list."
     }
   ]
