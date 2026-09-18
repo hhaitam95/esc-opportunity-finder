@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-09-18T06:17:17.794483",
+  "generated_at": "2026-09-18T11:38:40.575365",
   "recently_expired_days": 7,
-  "count": 14,
+  "count": 11,
   "opportunities": [
     {
       "id": 54295,
@@ -51,7 +51,7 @@
       "created": "2026-09-14T13:46:18",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Il-cesto_114.png?itok=MtE6xIfo",
       "url": "https://youth.europa.eu/solidarity/opportunity/54295_en",
-      "last_seen": "2026-09-18T06:13:33.748975",
+      "last_seen": "2026-09-18T11:34:55.036654",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -107,56 +107,7 @@
       "created": "2026-07-31T14:07:55",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/organisation-logos/kean_logo_en.jpg?itok=Ucd23ybn",
       "url": "https://youth.europa.eu/solidarity/opportunity/53597_en",
-      "last_seen": "2026-09-18T06:13:33.748945",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 54231,
-      "opid": 54231,
-      "title": "Office Administration and Operations Volunteer",
-      "location": "C/ Jaén, 13 Local – 28020 – Madrid, España, Madrid, Spain",
-      "country": "ES",
-      "town": "Madrid",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-10-19",
-      "end_date": "2027-06-19",
-      "deadline": "2026-09-17",
-      "eligible_countries": [
-        "AL",
-        "AT",
-        "BA",
-        "BE",
-        "CY",
-        "CZ",
-        "DE",
-        "DK",
-        "EE",
-        "ES",
-        "FI",
-        "FR",
-        "GR",
-        "HR",
-        "HU",
-        "IE",
-        "IT",
-        "LT",
-        "LU",
-        "MD",
-        "MT",
-        "PL",
-        "PT",
-        "RO"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Citizenship and democratic participation",
-        "Working against discrimination (including gender discrimination)"
-      ],
-      "project_code": "2026-1-ES02-ESC51-VTJ-000401221",
-      "created": "2026-09-10T09:33:59",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-action-aid_0.png?itok=dtp1DJle",
-      "url": "https://youth.europa.eu/solidarity/opportunity/54231_en",
-      "last_seen": "2026-09-18T06:13:33.748902",
+      "last_seen": "2026-09-18T11:34:55.036625",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -213,7 +164,7 @@
       "created": "2026-05-22T12:16:59",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/aha_Logo_new.png?itok=H0OYSLhC",
       "url": "https://youth.europa.eu/solidarity/opportunity/52037_en",
-      "last_seen": "2026-09-18T06:13:33.748990",
+      "last_seen": "2026-09-18T11:34:55.036668",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -281,7 +232,7 @@
       "created": "2026-09-12T08:58:30",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/you-future-foto.png?itok=OlT5WL0E",
       "url": "https://youth.europa.eu/solidarity/opportunity/54273_en",
-      "last_seen": "2026-09-18T06:13:33.748959",
+      "last_seen": "2026-09-18T11:34:55.036637",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -338,7 +289,7 @@
       "created": "2026-09-12T08:34:51",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/organisation-logos/img028.jpg?itok=QVmnej16",
       "url": "https://youth.europa.eu/solidarity/opportunity/54272_en",
-      "last_seen": "2026-09-18T06:13:33.748956",
+      "last_seen": "2026-09-18T11:34:55.036635",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -389,59 +340,7 @@
       "created": "2026-09-10T13:55:43",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-action-aid_0.png?itok=dtp1DJle",
       "url": "https://youth.europa.eu/solidarity/opportunity/54242_en",
-      "last_seen": "2026-09-18T06:13:33.748912",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 54233,
-      "opid": 54233,
-      "title": "Content Creation & Digital Communications Volunteer",
-      "location": "C/ Jaén, 13 Local – 28020 – Madrid, España, Madrid, Spain",
-      "country": "ES",
-      "town": "Madrid",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-10-19",
-      "end_date": "2027-06-19",
-      "deadline": "2026-09-16",
-      "eligible_countries": [
-        "AL",
-        "AT",
-        "BA",
-        "BE",
-        "BG",
-        "CY",
-        "CZ",
-        "DE",
-        "DK",
-        "EE",
-        "ES",
-        "FI",
-        "FR",
-        "GR",
-        "HR",
-        "HU",
-        "IT",
-        "LT",
-        "LU",
-        "MT",
-        "NL",
-        "PL",
-        "PT",
-        "RO",
-        "RS",
-        "SI",
-        "SK"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Citizenship and democratic participation",
-        "Working against discrimination (including gender discrimination)"
-      ],
-      "project_code": "2026-1-ES02-ESC51-VTJ-000401221",
-      "created": "2026-09-10T09:51:16",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-action-aid_0.png?itok=dtp1DJle",
-      "url": "https://youth.europa.eu/solidarity/opportunity/54233_en",
-      "last_seen": "2026-09-18T06:13:33.748904",
+      "last_seen": "2026-09-18T11:34:55.036593",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -486,7 +385,7 @@
       "created": "2026-09-11T15:54:07",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/walden_menfi_24_10_60.png?itok=O46fuvwx",
       "url": "https://youth.europa.eu/solidarity/opportunity/54269_en",
-      "last_seen": "2026-09-18T06:13:33.748953",
+      "last_seen": "2026-09-18T11:34:55.036632",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -509,7 +408,7 @@
       "created": "2026-07-16T14:11:48",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/IBG_Logo_color_long_m_0.png?itok=lrO2kUh7",
       "url": "https://youth.europa.eu/solidarity/opportunity/53299_en",
-      "last_seen": "2026-09-18T06:13:33.748935",
+      "last_seen": "2026-09-18T11:34:55.036616",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -577,7 +476,7 @@
       "created": "2026-09-10T20:37:34",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/you-future-foto.png?itok=OlT5WL0E",
       "url": "https://youth.europa.eu/solidarity/opportunity/54253_en",
-      "last_seen": "2026-09-18T06:13:33.748928",
+      "last_seen": "2026-09-18T11:34:55.036608",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -626,7 +525,7 @@
       "created": "2026-09-10T12:17:23",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54239_en",
-      "last_seen": "2026-09-18T06:13:33.748908",
+      "last_seen": "2026-09-18T11:34:55.036589",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -675,35 +574,7 @@
       "created": "2026-09-10T17:13:37",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Il-cesto_114.png?itok=MtE6xIfo",
       "url": "https://youth.europa.eu/solidarity/opportunity/54249_en",
-      "last_seen": "2026-09-18T06:13:33.748920",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 48200,
-      "opid": 48200,
-      "title": "Activist Culture",
-      "location": "Calle Gran Vía Juan Carlos I, 56 13ºT, Logroño, Spain",
-      "country": "ES",
-      "town": "Logroño",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-09-01",
-      "end_date": "2027-06-30",
-      "deadline": "2026-09-11",
-      "eligible_countries": [
-        "AT"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Social challenges",
-        "Education and training",
-        "Creativity and culture",
-        "Working against discrimination (including gender discrimination)"
-      ],
-      "project_code": "2025-1-ES02-ESC51-VTJ-000346969",
-      "created": "2025-09-09T11:50:35",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/OnOff-logo-2025.png?itok=3itEWsdc",
-      "url": "https://youth.europa.eu/solidarity/opportunity/48200_en",
-      "last_seen": "2026-09-18T06:13:33.748899",
+      "last_seen": "2026-09-18T11:34:55.036601",
       "reason": "No longer present in the active opportunity list."
     }
   ]
