@@ -1,8 +1,58 @@
 {
-  "generated_at": "2026-09-23T07:14:32.374130",
+  "generated_at": "2026-09-23T12:12:03.547725",
   "recently_expired_days": 7,
-  "count": 15,
+  "count": 13,
   "opportunities": [
+    {
+      "id": 54432,
+      "opid": 54432,
+      "title": "LAST CALL: ESC VOLUNTEERING WITH TEENS AND CHILDREN",
+      "location": "Vico San Donato 2, Genova, Italy",
+      "country": "IT",
+      "town": "Genova",
+      "activity_type": "Individual volunteering",
+      "start_date": "2026-09-24",
+      "end_date": "2026-12-31",
+      "deadline": "2026-09-23",
+      "eligible_countries": [
+        "AL",
+        "AT",
+        "BE",
+        "BG",
+        "CZ",
+        "DE",
+        "DK",
+        "EE",
+        "ES",
+        "FI",
+        "FR",
+        "GR",
+        "HR",
+        "HU",
+        "LT",
+        "LV",
+        "NL",
+        "NO",
+        "PL",
+        "RO",
+        "SE",
+        "SI",
+        "SK",
+        "UA"
+      ],
+      "eligibility_known": true,
+      "topics": [
+        "Social challenges",
+        "Education and training",
+        "Creativity and culture"
+      ],
+      "project_code": "2024-2-IT03-ESC51-VTJ-000280408",
+      "created": "2026-09-21T17:58:51",
+      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/peco_1.png?itok=wy66_twq",
+      "url": "https://youth.europa.eu/solidarity/opportunity/54432_en",
+      "last_seen": "2026-09-23T12:08:12.907663",
+      "reason": "No longer present in the active opportunity list."
+    },
     {
       "id": 54441,
       "opid": 54441,
@@ -88,7 +138,7 @@
       "created": "2026-09-22T11:46:52",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54441_en",
-      "last_seen": "2026-09-23T07:10:31.054574",
+      "last_seen": "2026-09-23T12:08:12.907669",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -135,7 +185,7 @@
       "created": "2026-09-18T10:36:10",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/La-comunita_106.jpeg?itok=04esz1rm",
       "url": "https://youth.europa.eu/solidarity/opportunity/54386_en",
-      "last_seen": "2026-09-23T07:10:31.054542",
+      "last_seen": "2026-09-23T12:08:12.907634",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -183,7 +233,7 @@
       "created": "2026-09-18T10:29:30",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/La-comunita_106.jpeg?itok=04esz1rm",
       "url": "https://youth.europa.eu/solidarity/opportunity/54385_en",
-      "last_seen": "2026-09-23T07:10:31.054540",
+      "last_seen": "2026-09-23T12:08:12.907619",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -210,7 +260,7 @@
       "created": "2026-09-15T13:11:51",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Cucujaes-Logo-vertical_cores_RGB-%283%29_27.png?itok=24y7Yhva",
       "url": "https://youth.europa.eu/solidarity/opportunity/54318_en",
-      "last_seen": "2026-09-23T07:10:31.054488",
+      "last_seen": "2026-09-23T12:08:12.907570",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -278,7 +328,7 @@
       "created": "2026-09-15T18:58:42",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/741839788_18451150714185331_8363951811413769599_n.jpeg?itok=56djJd89",
       "url": "https://youth.europa.eu/solidarity/opportunity/54326_en",
-      "last_seen": "2026-09-23T07:10:31.054502",
+      "last_seen": "2026-09-23T12:08:12.907584",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -325,7 +375,7 @@
       "created": "2026-09-15T16:45:17",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/La-comunita_106.jpeg?itok=04esz1rm",
       "url": "https://youth.europa.eu/solidarity/opportunity/54324_en",
-      "last_seen": "2026-09-23T07:10:31.054499",
+      "last_seen": "2026-09-23T12:08:12.907581",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -374,106 +424,7 @@
       "created": "2026-09-15T16:41:27",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/La-comunita_106.jpeg?itok=04esz1rm",
       "url": "https://youth.europa.eu/solidarity/opportunity/54323_en",
-      "last_seen": "2026-09-23T07:10:31.054496",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 54274,
-      "opid": 54274,
-      "title": "ROAD TO PARTICIPATION 2026",
-      "location": "Susana Benitez 5 y 7, Puente Genil, Spain",
-      "country": "ES",
-      "town": "Puente Genil",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-10-01",
-      "end_date": "2027-07-15",
-      "deadline": "2026-09-20",
-      "eligible_countries": [
-        "ES"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Citizenship and democratic participation"
-      ],
-      "project_code": "2026-1-ES02-ESC51-VTJ-000402211",
-      "created": "2026-09-12T09:41:10",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/LOGO_6.jpeg?itok=uFbV4CHk",
-      "url": "https://youth.europa.eu/solidarity/opportunity/54274_en",
-      "last_seen": "2026-09-23T07:10:31.054457",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 54275,
-      "opid": 54275,
-      "title": "SOLIDARITY AND YOUTH 2026",
-      "location": "PASEO ANTONIO FERNÁNDEZ DÍAZ, S/N , PUENTE GENIL, Spain",
-      "country": "ES",
-      "town": "PUENTE GENIL",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-10-01",
-      "end_date": "2027-07-15",
-      "deadline": "2026-09-20",
-      "eligible_countries": [
-        "ES"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Citizenship and democratic participation"
-      ],
-      "project_code": "2026-1-ES02-ESC51-VTJ-000402211",
-      "created": "2026-09-12T09:46:21",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/LOGO_6.jpeg?itok=uFbV4CHk",
-      "url": "https://youth.europa.eu/solidarity/opportunity/54275_en",
-      "last_seen": "2026-09-23T07:10:31.054455",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 49377,
-      "opid": 49377,
-      "title": "Stay Active Volunteer vol. 5 - ONLY EUROPEANS",
-      "location": "Piazza Municipio snc - angolo via Morte, Molfetta, Italy",
-      "country": "IT",
-      "town": "Molfetta",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-09-01",
-      "end_date": "2027-06-15",
-      "deadline": "2026-09-20",
-      "eligible_countries": [
-        "AT",
-        "BE",
-        "BG",
-        "CY",
-        "CZ",
-        "DE",
-        "DK",
-        "EE",
-        "ES",
-        "FI",
-        "FR",
-        "GL",
-        "GR",
-        "HR",
-        "HU",
-        "IE",
-        "IS",
-        "LT",
-        "LU",
-        "LV",
-        "MT",
-        "PL",
-        "PT",
-        "RO",
-        "SE",
-        "SI",
-        "SK"
-      ],
-      "eligibility_known": true,
-      "topics": [],
-      "project_code": "2025-1-IT03-ESC51-VTJ-000346097",
-      "created": "2025-12-21T11:49:55",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-inco.png?itok=Ppri8vBL",
-      "url": "https://youth.europa.eu/solidarity/opportunity/49377_en",
-      "last_seen": "2026-09-23T07:10:31.054447",
+      "last_seen": "2026-09-23T12:08:12.907579",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -519,7 +470,7 @@
       "created": "2026-09-16T10:11:29",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/La-comunita_106.jpeg?itok=04esz1rm",
       "url": "https://youth.europa.eu/solidarity/opportunity/54334_en",
-      "last_seen": "2026-09-23T07:10:31.054512",
+      "last_seen": "2026-09-23T12:08:12.907594",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -570,7 +521,7 @@
       "created": "2026-09-14T13:46:18",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Il-cesto_114.png?itok=MtE6xIfo",
       "url": "https://youth.europa.eu/solidarity/opportunity/54295_en",
-      "last_seen": "2026-09-23T07:10:31.054470",
+      "last_seen": "2026-09-23T12:08:12.907553",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -627,7 +578,7 @@
       "created": "2026-05-22T12:16:59",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/aha_Logo_new.png?itok=H0OYSLhC",
       "url": "https://youth.europa.eu/solidarity/opportunity/52037_en",
-      "last_seen": "2026-09-23T07:10:31.054490",
+      "last_seen": "2026-09-23T12:08:12.907573",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -695,7 +646,7 @@
       "created": "2026-09-12T08:58:30",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/you-future-foto.png?itok=OlT5WL0E",
       "url": "https://youth.europa.eu/solidarity/opportunity/54273_en",
-      "last_seen": "2026-09-23T07:10:31.054453",
+      "last_seen": "2026-09-23T12:08:12.907539",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -752,7 +703,7 @@
       "created": "2026-09-12T08:34:51",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/organisation-logos/img028.jpg?itok=QVmnej16",
       "url": "https://youth.europa.eu/solidarity/opportunity/54272_en",
-      "last_seen": "2026-09-23T07:10:31.054450",
+      "last_seen": "2026-09-23T12:08:12.907536",
       "reason": "No longer present in the active opportunity list."
     }
   ]
