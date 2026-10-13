@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-13T12:11:19.130173",
+  "generated_at": "2026-10-13T12:54:31.540593",
   "recently_expired_days": 7,
-  "count": 15,
+  "count": 14,
   "opportunities": [
     {
       "id": 43789,
@@ -34,7 +34,7 @@
       "created": "2025-01-08T17:13:48",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/43789_en",
-      "last_seen": "2026-10-13T12:07:21.090422",
+      "last_seen": "2026-10-13T12:50:25.097389",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -106,7 +106,7 @@
       "created": "2026-10-06T20:08:16",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/4f24d811-35e7-4964-a291-afd0702032c9.jpeg?itok=83x54wwp",
       "url": "https://youth.europa.eu/solidarity/opportunity/54700_en",
-      "last_seen": "2026-10-13T12:07:21.090406",
+      "last_seen": "2026-10-13T12:50:25.097372",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -158,7 +158,7 @@
       "created": "2026-10-06T18:31:33",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54699_en",
-      "last_seen": "2026-10-13T12:07:21.090403",
+      "last_seen": "2026-10-13T12:50:25.097370",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -215,49 +215,7 @@
       "created": "2026-10-06T15:28:10",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54696_en",
-      "last_seen": "2026-10-13T12:07:21.090399",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 54686,
-      "opid": 54686,
-      "title": "Education & Community Volunteering in Rural Granada: Dinamización de la Vega Granadina ",
-      "location": "C/Barrio bajo 16, Trasmulas / Granada, Spain",
-      "country": "ES",
-      "town": "Trasmulas / Granada",
-      "activity_type": "Individual volunteering",
-      "start_date": "2027-01-01",
-      "end_date": "2027-07-31",
-      "deadline": "2026-10-10",
-      "eligible_countries": [
-        "BE",
-        "CY",
-        "CZ",
-        "DE",
-        "EE",
-        "FI",
-        "FR",
-        "GR",
-        "IT",
-        "NL",
-        "NO",
-        "PT",
-        "SE"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Social challenges",
-        "Citizenship and democratic participation",
-        "Environment and natural protection",
-        "Education and training",
-        "Creativity and culture",
-        "Support to local Small and Medium Enterprise"
-      ],
-      "project_code": "2025-1-ES02-ESC51-VTJ-000347693",
-      "created": "2026-10-05T16:08:18",
-      "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
-      "url": "https://youth.europa.eu/solidarity/opportunity/54686_en",
-      "last_seen": "2026-10-13T12:07:21.090384",
+      "last_seen": "2026-10-13T12:50:25.097366",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -328,7 +286,7 @@
       "created": "2026-10-03T10:03:46",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/573579116_18410061586185331_540330984084286677_n.jpeg?itok=1vbUZq5D",
       "url": "https://youth.europa.eu/solidarity/opportunity/54671_en",
-      "last_seen": "2026-10-13T12:07:21.090365",
+      "last_seen": "2026-10-13T12:50:25.097336",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -353,7 +311,7 @@
       "created": "2026-10-07T12:59:14",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54707_en",
-      "last_seen": "2026-10-13T12:07:21.090413",
+      "last_seen": "2026-10-13T12:50:25.097379",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -405,7 +363,7 @@
       "created": "2026-10-06T07:08:17",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Democracy-International-150_Transparent_0.png?itok=P36FGO55",
       "url": "https://youth.europa.eu/solidarity/opportunity/54688_en",
-      "last_seen": "2026-10-13T12:07:21.090391",
+      "last_seen": "2026-10-13T12:50:25.097357",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -461,7 +419,7 @@
       "created": "2026-10-02T20:04:56",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-LLP_25.jpg?itok=eZuDa72J",
       "url": "https://youth.europa.eu/solidarity/opportunity/54668_en",
-      "last_seen": "2026-10-13T12:07:21.090352",
+      "last_seen": "2026-10-13T12:50:25.097329",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -517,7 +475,7 @@
       "created": "2026-10-02T19:57:26",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-LLP_25.jpg?itok=eZuDa72J",
       "url": "https://youth.europa.eu/solidarity/opportunity/54666_en",
-      "last_seen": "2026-10-13T12:07:21.090346",
+      "last_seen": "2026-10-13T12:50:25.097324",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -572,7 +530,7 @@
       "created": "2026-10-02T19:46:00",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-LLP_25.jpg?itok=eZuDa72J",
       "url": "https://youth.europa.eu/solidarity/opportunity/54664_en",
-      "last_seen": "2026-10-13T12:07:21.090341",
+      "last_seen": "2026-10-13T12:50:25.097319",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -628,7 +586,7 @@
       "created": "2026-10-02T19:38:53",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-LLP_25.jpg?itok=eZuDa72J",
       "url": "https://youth.europa.eu/solidarity/opportunity/54663_en",
-      "last_seen": "2026-10-13T12:07:21.090338",
+      "last_seen": "2026-10-13T12:50:25.097317",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -683,7 +641,7 @@
       "created": "2026-10-02T19:30:05",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-LLP_25.jpg?itok=eZuDa72J",
       "url": "https://youth.europa.eu/solidarity/opportunity/54661_en",
-      "last_seen": "2026-10-13T12:07:21.090333",
+      "last_seen": "2026-10-13T12:50:25.097312",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -739,7 +697,7 @@
       "created": "2026-10-02T19:18:21",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-LLP_25.jpg?itok=eZuDa72J",
       "url": "https://youth.europa.eu/solidarity/opportunity/54659_en",
-      "last_seen": "2026-10-13T12:07:21.090327",
+      "last_seen": "2026-10-13T12:50:25.097307",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -781,7 +739,7 @@
       "created": "2025-08-23T13:43:52",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/ccifcy-logo.png?itok=L8OogqdI",
       "url": "https://youth.europa.eu/solidarity/opportunity/48006_en",
-      "last_seen": "2026-10-13T12:07:21.090374",
+      "last_seen": "2026-10-13T12:50:25.097343",
       "reason": "No longer present in the active opportunity list."
     }
   ]
