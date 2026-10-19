@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-19T04:58:48.279836",
+  "generated_at": "2026-10-19T17:16:52.234810",
   "recently_expired_days": 7,
-  "count": 15,
+  "count": 12,
   "opportunities": [
     {
       "id": 54812,
@@ -51,7 +51,7 @@
       "created": "2026-10-13T18:22:06",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54812_en",
-      "last_seen": "2026-10-19T04:54:39.167874",
+      "last_seen": "2026-10-19T17:12:44.477072",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -105,7 +105,7 @@
       "created": "2026-10-12T13:44:58",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-cb_3.jpg?itok=Dg2JCuhq",
       "url": "https://youth.europa.eu/solidarity/opportunity/54771_en",
-      "last_seen": "2026-10-19T04:54:39.167846",
+      "last_seen": "2026-10-19T17:12:44.477039",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -166,7 +166,7 @@
       "created": "2026-10-12T10:54:18",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-trasparente-e1637018413643.png?itok=YIL_A2Qc",
       "url": "https://youth.europa.eu/solidarity/opportunity/54764_en",
-      "last_seen": "2026-10-19T04:54:39.167842",
+      "last_seen": "2026-10-19T17:12:44.477033",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -193,7 +193,7 @@
       "created": "2026-10-12T09:06:13",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/LOGOS-%281%29_0.png?itok=LEvOx0Cg",
       "url": "https://youth.europa.eu/solidarity/opportunity/54757_en",
-      "last_seen": "2026-10-19T04:54:39.167837",
+      "last_seen": "2026-10-19T17:12:44.477025",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -287,7 +287,7 @@
       "created": "2026-10-09T13:17:57",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/AWO_Logo_n_8_3.jpg?itok=IQbtC-Tx",
       "url": "https://youth.europa.eu/solidarity/opportunity/54743_en",
-      "last_seen": "2026-10-19T04:54:39.167819",
+      "last_seen": "2026-10-19T17:12:44.477008",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -381,7 +381,7 @@
       "created": "2026-10-07T17:41:46",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54714_en",
-      "last_seen": "2026-10-19T04:54:39.167793",
+      "last_seen": "2026-10-19T17:12:44.476984",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -429,34 +429,7 @@
       "created": "2026-10-07T13:24:36",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Care2Travel-Logo_4_0.jpeg?itok=FljTjBa4",
       "url": "https://youth.europa.eu/solidarity/opportunity/54709_en",
-      "last_seen": "2026-10-19T04:54:39.167789",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 54705,
-      "opid": 54705,
-      "title": "Long-term ESC volunteering at Fryshuset as a Relationship Host",
-      "location": "Mårtendalsgatan 2-8, Stockholm, Sweden",
-      "country": "SE",
-      "town": "Stockholm",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-10-19",
-      "end_date": "2027-10-17",
-      "deadline": "2026-10-18",
-      "eligible_countries": [
-        "SE"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Social challenges",
-        "Citizenship and democratic participation",
-        "Creativity and culture"
-      ],
-      "project_code": "2026-1-SE02-ESC51-VTJ-000401337",
-      "created": "2026-10-07T10:15:31",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Fryshuset_logo_rod_7.png?itok=XmlekcPK",
-      "url": "https://youth.europa.eu/solidarity/opportunity/54705_en",
-      "last_seen": "2026-10-19T04:54:39.167785",
+      "last_seen": "2026-10-19T17:12:44.476978",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -502,7 +475,7 @@
       "created": "2024-09-24T10:26:17",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-gemeinwesenverein-heerstrasse-nord.png?itok=Yi4W6F-F",
       "url": "https://youth.europa.eu/solidarity/opportunity/42641_en",
-      "last_seen": "2026-10-19T04:54:39.167888",
+      "last_seen": "2026-10-19T17:12:44.477086",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -567,7 +540,7 @@
       "created": "2026-10-12T18:25:11",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54779_en",
-      "last_seen": "2026-10-19T04:54:39.167853",
+      "last_seen": "2026-10-19T17:12:44.477047",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -633,7 +606,7 @@
       "created": "2026-10-11T10:21:58",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/347092504_2654792637996711_6838943739425459015_n-%281%29.jpg?itok=UuRC27z8",
       "url": "https://youth.europa.eu/solidarity/opportunity/54754_en",
-      "last_seen": "2026-10-19T04:54:39.167830",
+      "last_seen": "2026-10-19T17:12:44.477019",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -692,56 +665,7 @@
       "created": "2026-10-08T15:27:17",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-trasparente-e1637018413643.png?itok=YIL_A2Qc",
       "url": "https://youth.europa.eu/solidarity/opportunity/54731_en",
-      "last_seen": "2026-10-19T04:54:39.167808",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 39992,
-      "opid": 39992,
-      "title": "New horizon",
-      "location": "Lomma Kommun Hamngatan 3, Lomma, Sweden",
-      "country": "SE",
-      "town": "Lomma",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-10-30",
-      "end_date": "2027-10-29",
-      "deadline": "2026-10-16",
-      "eligible_countries": [
-        "AT",
-        "BE",
-        "BG",
-        "CY",
-        "CZ",
-        "DE",
-        "EE",
-        "ES",
-        "FR",
-        "GR",
-        "HR",
-        "HU",
-        "IE",
-        "IS",
-        "IT",
-        "LT",
-        "LV",
-        "MT",
-        "NL",
-        "PL",
-        "PT",
-        "RO",
-        "SI",
-        "SK",
-        "UA"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Creativity and culture"
-      ],
-      "project_code": "2026-1-SE02-ESC51-VTJ-000401539",
-      "created": "2024-05-06T14:24:45",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo_lomma_1_red_2.jpg?itok=7OYnkW9Q",
-      "url": "https://youth.europa.eu/solidarity/opportunity/39992_en",
-      "last_seen": "2026-10-19T04:54:39.167770",
+      "last_seen": "2026-10-19T17:12:44.476999",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -811,74 +735,7 @@
       "created": "2026-10-09T16:38:47",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/347092504_2654792637996711_6838943739425459015_n-%281%29.jpg?itok=UuRC27z8",
       "url": "https://youth.europa.eu/solidarity/opportunity/54751_en",
-      "last_seen": "2026-10-19T04:54:39.167825",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 54701,
-      "opid": 54701,
-      "title": "You FuTuRe (30 DAYS TEAM VOLUNTEERING)",
-      "location": "BAHÇELİEVLER MAHALLESİ BELEDİYE CADDESİ NO:2/35 66700 SORGUN/YOZGAT, YOZGAT, Türkiye",
-      "country": "TR",
-      "town": "YOZGAT",
-      "activity_type": "Volunteering teams",
-      "start_date": "2026-11-15",
-      "end_date": "2026-12-14",
-      "deadline": "2026-10-15",
-      "eligible_countries": [
-        "AL",
-        "AT",
-        "AZ",
-        "BA",
-        "BE",
-        "BG",
-        "CZ",
-        "DE",
-        "DK",
-        "EE",
-        "ES",
-        "FI",
-        "FR",
-        "GE",
-        "GR",
-        "HR",
-        "HU",
-        "IE",
-        "IS",
-        "IT",
-        "LI",
-        "LT",
-        "LU",
-        "LV",
-        "MD",
-        "ME",
-        "MK",
-        "MT",
-        "NL",
-        "NO",
-        "PL",
-        "PT",
-        "RO",
-        "RS",
-        "SE",
-        "SI",
-        "SK",
-        "UA",
-        "XK"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Disaster prevention and recovery",
-        "Environment and natural protection",
-        "Education and training",
-        "Disaster Preparedness",
-        "Post Disaster relief"
-      ],
-      "project_code": "2024-1-EACEA-VTHPA-101179717",
-      "created": "2026-10-06T20:19:37",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/4f24d811-35e7-4964-a291-afd0702032c9.jpeg?itok=83x54wwp",
-      "url": "https://youth.europa.eu/solidarity/opportunity/54701_en",
-      "last_seen": "2026-10-19T04:54:39.167778",
+      "last_seen": "2026-10-19T17:12:44.477016",
       "reason": "No longer present in the active opportunity list."
     }
   ]
