@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-26T12:09:15.906842",
+  "generated_at": "2026-10-26T17:21:35.045630",
   "recently_expired_days": 7,
-  "count": 24,
+  "count": 23,
   "opportunities": [
     {
       "id": 54909,
@@ -60,7 +60,7 @@
       "created": "2026-10-21T22:28:08",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-trasparente-e1637018413643_0.png?itok=d0JKw_AR",
       "url": "https://youth.europa.eu/solidarity/opportunity/54909_en",
-      "last_seen": "2026-10-26T12:05:14.629932",
+      "last_seen": "2026-10-26T17:17:33.768341",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -116,7 +116,7 @@
       "created": "2026-10-18T11:23:52",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo-trasparente-e1637018413643.png?itok=YIL_A2Qc",
       "url": "https://youth.europa.eu/solidarity/opportunity/54863_en",
-      "last_seen": "2026-10-26T12:05:14.629900",
+      "last_seen": "2026-10-26T17:17:33.768313",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -170,7 +170,7 @@
       "created": "2026-10-21T08:48:28",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Logo-Kiribil.png?itok=8q13TjTS",
       "url": "https://youth.europa.eu/solidarity/opportunity/54900_en",
-      "last_seen": "2026-10-26T12:05:14.629926",
+      "last_seen": "2026-10-26T17:17:33.768336",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -223,7 +223,7 @@
       "created": "2025-10-28T20:21:45",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/LOGO-TEXTO-HORIZONTAL-SIN-FONDO_0.png?itok=BKwkMUrN",
       "url": "https://youth.europa.eu/solidarity/opportunity/48818_en",
-      "last_seen": "2026-10-26T12:05:14.629894",
+      "last_seen": "2026-10-26T17:17:33.768308",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -279,7 +279,7 @@
       "created": "2026-10-16T10:16:04",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/VIAC-logo-color_105.png?itok=vQ1Z5Iyx",
       "url": "https://youth.europa.eu/solidarity/opportunity/54851_en",
-      "last_seen": "2026-10-26T12:05:14.629890",
+      "last_seen": "2026-10-26T17:17:33.768303",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -336,33 +336,7 @@
       "created": "2026-10-16T10:07:54",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/VIAC-logo-color_105.png?itok=vQ1Z5Iyx",
       "url": "https://youth.europa.eu/solidarity/opportunity/54850_en",
-      "last_seen": "2026-10-26T12:05:14.629887",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 54837,
-      "opid": 54837,
-      "title": "Volontariato in asili: condividi la tua cultura e i tuoi interessi con i bambini!",
-      "location": "Ulica Ruska 46/a, Breslavia, Poland",
-      "country": "PL",
-      "town": "Breslavia",
-      "activity_type": "Individual volunteering",
-      "start_date": "2026-11-09",
-      "end_date": "2027-08-29",
-      "deadline": "2026-10-25",
-      "eligible_countries": [
-        "IT"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Education and training",
-        "Creativity and culture"
-      ],
-      "project_code": "2025-1-PL01-ESC51-VTJ-000348272",
-      "created": "2026-10-15T15:45:39",
-      "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Logo-Antigona-carta-intestata_258.JPG?itok=hMks4Fa6",
-      "url": "https://youth.europa.eu/solidarity/opportunity/54837_en",
-      "last_seen": "2026-10-26T12:05:14.629860",
+      "last_seen": "2026-10-26T17:17:33.768300",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -389,7 +363,7 @@
       "created": "2026-10-22T09:58:47",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/organisation-logos/amal_liggande_text_webb_cmyk.png?itok=aBhyv0xR",
       "url": "https://youth.europa.eu/solidarity/opportunity/54915_en",
-      "last_seen": "2026-10-26T12:05:14.629939",
+      "last_seen": "2026-10-26T17:17:33.768347",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -483,7 +457,7 @@
       "created": "2026-10-20T00:58:30",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Dance_Lab_Call.jpg?itok=XlQ0K1pk",
       "url": "https://youth.europa.eu/solidarity/opportunity/54877_en",
-      "last_seen": "2026-10-26T12:05:14.629915",
+      "last_seen": "2026-10-26T17:17:33.768326",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -509,7 +483,7 @@
       "created": "2026-10-19T09:54:11",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/organisation-logos/fristaende_drake_svart.png?itok=M-SN0h79",
       "url": "https://youth.europa.eu/solidarity/opportunity/54865_en",
-      "last_seen": "2026-10-26T12:05:14.629907",
+      "last_seen": "2026-10-26T17:17:33.768320",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -538,7 +512,7 @@
       "created": "2026-10-19T08:57:57",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54864_en",
-      "last_seen": "2026-10-26T12:05:14.629905",
+      "last_seen": "2026-10-26T17:17:33.768318",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -604,7 +578,7 @@
       "created": "2026-10-16T09:55:23",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/347092504_2654792637996711_6838943739425459015_n-%281%29.jpg?itok=UuRC27z8",
       "url": "https://youth.europa.eu/solidarity/opportunity/54848_en",
-      "last_seen": "2026-10-26T12:05:14.629882",
+      "last_seen": "2026-10-26T17:17:33.768295",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -635,7 +609,7 @@
       "created": "2026-10-16T09:44:03",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/347092504_2654792637996711_6838943739425459015_n-%281%29.jpg?itok=UuRC27z8",
       "url": "https://youth.europa.eu/solidarity/opportunity/54847_en",
-      "last_seen": "2026-10-26T12:05:14.629880",
+      "last_seen": "2026-10-26T17:17:33.768293",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -687,7 +661,7 @@
       "created": "2026-05-04T18:31:54",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/LOGO_ESCAPES_cor.jpg?itok=2mOOp5ml",
       "url": "https://youth.europa.eu/solidarity/opportunity/51538_en",
-      "last_seen": "2026-10-26T12:05:14.629849",
+      "last_seen": "2026-10-26T17:17:33.768268",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -738,7 +712,7 @@
       "created": "2026-10-19T14:26:28",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/organisation-logos/logo_coordi_blanco.png?itok=1A8tOmsB",
       "url": "https://youth.europa.eu/solidarity/opportunity/54872_en",
-      "last_seen": "2026-10-26T12:05:14.629911",
+      "last_seen": "2026-10-26T17:17:33.768323",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -771,7 +745,7 @@
       "created": "2025-12-17T11:17:43",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/49321_en",
-      "last_seen": "2026-10-26T12:05:14.629903",
+      "last_seen": "2026-10-26T17:17:33.768316",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -813,7 +787,7 @@
       "created": "2026-10-16T08:01:17",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Copy-of-Logo-OAZAe-finalni.jpg?itok=L0uYgm1g",
       "url": "https://youth.europa.eu/solidarity/opportunity/54844_en",
-      "last_seen": "2026-10-26T12:05:14.629873",
+      "last_seen": "2026-10-26T17:17:33.768289",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -866,7 +840,7 @@
       "created": "2026-10-13T19:21:14",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/54813_en",
-      "last_seen": "2026-10-26T12:05:14.629864",
+      "last_seen": "2026-10-26T17:17:33.768281",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -939,7 +913,7 @@
       "created": "2026-10-16T10:03:15",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/347092504_2654792637996711_6838943739425459015_n-%281%29.jpg?itok=UuRC27z8",
       "url": "https://youth.europa.eu/solidarity/opportunity/54849_en",
-      "last_seen": "2026-10-26T12:05:14.629885",
+      "last_seen": "2026-10-26T17:17:33.768298",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -1000,7 +974,7 @@
       "created": "2026-10-16T10:49:57",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/AAE-no-background.png?itok=N3Luz_Y_",
       "url": "https://youth.europa.eu/solidarity/opportunity/54852_en",
-      "last_seen": "2026-10-26T12:05:14.629892",
+      "last_seen": "2026-10-26T17:17:33.768306",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -1063,7 +1037,7 @@
       "created": "2026-10-15T11:50:04",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/AAE-no-background.png?itok=N3Luz_Y_",
       "url": "https://youth.europa.eu/solidarity/opportunity/54834_en",
-      "last_seen": "2026-10-26T12:05:14.629857",
+      "last_seen": "2026-10-26T17:17:33.768276",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -1090,7 +1064,7 @@
       "created": "2026-10-15T12:30:02",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/MAKEDONYA-2026-5.png?itok=xBGtI-qE",
       "url": "https://youth.europa.eu/solidarity/opportunity/54833_en",
-      "last_seen": "2026-10-26T12:05:14.629854",
+      "last_seen": "2026-10-26T17:17:33.768273",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -1153,7 +1127,7 @@
       "created": "2026-10-14T11:45:47",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/AAE-no-background.png?itok=N3Luz_Y_",
       "url": "https://youth.europa.eu/solidarity/opportunity/54820_en",
-      "last_seen": "2026-10-26T12:05:14.629844",
+      "last_seen": "2026-10-26T17:17:33.768264",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -1206,7 +1180,7 @@
       "created": "2026-10-14T09:15:37",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Noformejums-Bez-Nosaukuma---1.png?itok=r4sLuI7-",
       "url": "https://youth.europa.eu/solidarity/opportunity/54814_en",
-      "last_seen": "2026-10-26T12:05:14.629840",
+      "last_seen": "2026-10-26T17:17:33.768261",
       "reason": "No longer present in the active opportunity list."
     }
   ]
