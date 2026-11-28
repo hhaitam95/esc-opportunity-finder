@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-28T13:23:14.302994",
+  "generated_at": "2026-11-28T17:58:35.963952",
   "recently_expired_days": 7,
   "count": 15,
   "opportunities": [
@@ -99,7 +99,7 @@
       "created": "2026-11-24T12:35:56",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/55339_en",
-      "last_seen": "2026-11-28T13:19:17.327567",
+      "last_seen": "2026-11-28T17:54:28.532576",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -168,7 +168,7 @@
       "created": "2026-11-23T11:18:36",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/nobordersblu_2.png?itok=4Jv6VXUt",
       "url": "https://youth.europa.eu/solidarity/opportunity/55314_en",
-      "last_seen": "2026-11-28T13:19:17.327548",
+      "last_seen": "2026-11-28T17:54:28.532560",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -233,7 +233,7 @@
       "created": "2026-11-18T10:46:36",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Logo-LH-Aurich-Wittmund_mitSchrift_1.png?itok=7fGnWLtZ",
       "url": "https://youth.europa.eu/solidarity/opportunity/55268_en",
-      "last_seen": "2026-11-28T13:19:17.327525",
+      "last_seen": "2026-11-28T17:54:28.532544",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -298,7 +298,7 @@
       "created": "2026-11-18T10:19:42",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Logo-LH-Aurich-Wittmund_mitSchrift_1.png?itok=7fGnWLtZ",
       "url": "https://youth.europa.eu/solidarity/opportunity/55267_en",
-      "last_seen": "2026-11-28T13:19:17.327523",
+      "last_seen": "2026-11-28T17:54:28.532543",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -352,7 +352,7 @@
       "created": "2026-11-13T11:03:42",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/logo_noiateurope_page-0001-removebg-preview_2.png?itok=W_LzYQH3",
       "url": "https://youth.europa.eu/solidarity/opportunity/55223_en",
-      "last_seen": "2026-11-28T13:19:17.327506",
+      "last_seen": "2026-11-28T17:54:28.532529",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -377,7 +377,7 @@
       "created": "2026-11-24T17:13:09",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Cucujaes-Logo-vertical_cores_RGB-%283%29_27.png?itok=24y7Yhva",
       "url": "https://youth.europa.eu/solidarity/opportunity/55347_en",
-      "last_seen": "2026-11-28T13:19:17.327571",
+      "last_seen": "2026-11-28T17:54:28.532578",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -442,8 +442,40 @@
       "created": "2026-11-19T09:27:21",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/nobordersblu_2.png?itok=4Jv6VXUt",
       "url": "https://youth.europa.eu/solidarity/opportunity/55277_en",
-      "last_seen": "2026-11-28T13:19:17.327531",
+      "last_seen": "2026-11-28T17:54:28.532547",
       "reason": "No longer present in the active opportunity list."
+    },
+    {
+      "id": 13151,
+      "opid": 13151,
+      "title": "Freiwilligendienst in Lucainena de las Torres/Spanien",
+      "location": "Lucainena de las Torres, Spain",
+      "country": "ES",
+      "town": "Lucainena de las Torres",
+      "activity_type": "Individual volunteering",
+      "start_date": "2027-01-10",
+      "end_date": "2027-10-10",
+      "deadline": "2026-11-25",
+      "eligible_countries": [
+        "DE"
+      ],
+      "eligibility_known": true,
+      "topics": [
+        "Agriculture, forestry and fisheries",
+        "Development of disadvantaged rural and urban areas",
+        "Environment and climate change",
+        "Green skills",
+        "Tackling Geographical remoteness and involving rural areas",
+        "Environment and natural protection",
+        "Health and wellbeing",
+        "Creativity and culture"
+      ],
+      "project_code": "2024-1-ES02-ESC51-VTJ-000206308",
+      "created": "2019-05-17T12:52:19",
+      "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
+      "url": "https://youth.europa.eu/solidarity/opportunity/13151_en",
+      "last_seen": "2026-11-28T17:54:38.942999",
+      "reason": "Application deadline has expired."
     },
     {
       "id": 55262,
@@ -499,7 +531,7 @@
       "created": "2026-11-17T14:50:16",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/Logo-Librazione.png?itok=bj8qynWL",
       "url": "https://youth.europa.eu/solidarity/opportunity/55262_en",
-      "last_seen": "2026-11-28T13:19:17.327521",
+      "last_seen": "2026-11-28T17:54:28.532540",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -551,39 +583,7 @@
       "created": "2023-08-17T15:17:10",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/36751_en",
-      "last_seen": "2026-11-28T13:19:17.327515",
-      "reason": "No longer present in the active opportunity list."
-    },
-    {
-      "id": 13151,
-      "opid": 13151,
-      "title": "Freiwilligendienst in Lucainena de las Torres/Spanien",
-      "location": "Lucainena de las Torres, Spain",
-      "country": "ES",
-      "town": "Lucainena de las Torres",
-      "activity_type": "Individual volunteering",
-      "start_date": "2027-01-10",
-      "end_date": "2027-10-10",
-      "deadline": "2026-11-25",
-      "eligible_countries": [
-        "DE"
-      ],
-      "eligibility_known": true,
-      "topics": [
-        "Agriculture, forestry and fisheries",
-        "Development of disadvantaged rural and urban areas",
-        "Environment and climate change",
-        "Green skills",
-        "Tackling Geographical remoteness and involving rural areas",
-        "Environment and natural protection",
-        "Health and wellbeing",
-        "Creativity and culture"
-      ],
-      "project_code": "2024-1-ES02-ESC51-VTJ-000206308",
-      "created": "2019-05-17T12:52:19",
-      "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
-      "url": "https://youth.europa.eu/solidarity/opportunity/13151_en",
-      "last_seen": "2026-11-28T13:19:17.327499",
+      "last_seen": "2026-11-28T17:54:28.532535",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -642,7 +642,7 @@
       "created": "2026-11-20T18:38:23",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/TCTP.jpg?itok=V0NkDwDc",
       "url": "https://youth.europa.eu/solidarity/opportunity/55308_en",
-      "last_seen": "2026-11-28T13:19:17.327545",
+      "last_seen": "2026-11-28T17:54:28.532558",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -701,7 +701,7 @@
       "created": "2026-11-16T15:42:13",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/nobordersblu_2.png?itok=4Jv6VXUt",
       "url": "https://youth.europa.eu/solidarity/opportunity/55245_en",
-      "last_seen": "2026-11-28T13:19:17.327510",
+      "last_seen": "2026-11-28T17:54:28.532532",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -739,7 +739,7 @@
       "created": "2026-11-19T23:10:10",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/organisation-logos/2020-04-30_-_fekete_sereg_logo.jpg?itok=4ILL0peb",
       "url": "https://youth.europa.eu/solidarity/opportunity/55292_en",
-      "last_seen": "2026-11-28T13:19:17.327538",
+      "last_seen": "2026-11-28T17:54:28.532553",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -832,7 +832,7 @@
       "created": "2026-11-17T13:33:43",
       "image_url": "https://youth.europa.eu/modules/custom/eyp_esc/images/esc-logo-en.png",
       "url": "https://youth.europa.eu/solidarity/opportunity/55259_en",
-      "last_seen": "2026-11-28T13:19:17.327518",
+      "last_seen": "2026-11-28T17:54:28.532538",
       "reason": "No longer present in the active opportunity list."
     },
     {
@@ -877,7 +877,7 @@
       "created": "2026-11-16T17:27:07",
       "image_url": "https://youth.europa.eu/sites/default/files/styles/medium/public/opportunity-images/walden_menfi_24_10_63.png?itok=eWLnvUfX",
       "url": "https://youth.europa.eu/solidarity/opportunity/55249_en",
-      "last_seen": "2026-11-28T13:19:17.327513",
+      "last_seen": "2026-11-28T17:54:28.532534",
       "reason": "No longer present in the active opportunity list."
     }
   ]
